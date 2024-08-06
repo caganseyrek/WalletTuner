@@ -5,6 +5,20 @@ export const statusMessages = {
 };
 
 export const controllerMessages = {
+  account: {
+    accountDetails: {},
+    allAccountDetails: {},
+    createAccount: {},
+    deleteAccount: {},
+    updateAccount: {},
+  },
+  transaction: {
+    allTransactionDetails: {},
+    createTransaction: {},
+    deleteTransaction: {},
+    transactionDetails: {},
+    updateTransaction: {},
+  },
   user: {
     login: {
       loginSuccessful: "Successfully logged in.",
@@ -18,8 +32,8 @@ export const controllerMessages = {
       logoutSuccessful: "Successfully logged out",
     },
     register: {
-      userExists: "There was an error creating a new account.",
-      registerSuccessful: "Successfully created new account",
+      userExists: "There was an error creating a new user.",
+      registerSuccessful: "Successfully created new user",
     },
     resetpw: {
       passwordValidationFail: "Your password is not correct.",
@@ -34,6 +48,7 @@ export const controllerMessages = {
   },
   token: {
     newToken: {
+      noRefreshTokenFound: "You need to re-login to do this.",
       refreshTokenExpired: "You need to re-login to do this.",
     },
   },
