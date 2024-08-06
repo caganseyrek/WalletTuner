@@ -6,6 +6,9 @@ import mongoose from "mongoose";
 import morgan from "morgan";
 import "dotenv/config";
 
+import { accountRoutes } from "./src/routes/accountRoutes";
+import { tokenRoutes } from "./src/routes/tokenRoutes";
+import { transactionRoutes } from "./src/routes/transactionRoutes";
 import { userRoutes } from "./src/routes/userRoutes";
 
 // This project is NOT tested for production environments
@@ -65,7 +68,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // Routes
+app.use("/api/account", accountRoutes);
+app.use("/api/transaction", transactionRoutes);
 app.use("/api/user", userRoutes);
+app.use("/api/token", tokenRoutes);
 
 // Not found handler
 app.use((_req: Request, res: Response) => {
