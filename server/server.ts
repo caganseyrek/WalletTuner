@@ -8,7 +8,7 @@ import "dotenv/config";
 
 import { userRoutes } from "./src/routes/userRoutes";
 
-// This project is just an example and should not use in production
+// This project is NOT tested for production environments
 
 // Environment Variables
 const PORT: string = process.env.PORT!;
