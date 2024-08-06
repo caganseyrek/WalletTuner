@@ -1,9 +1,9 @@
-import express, { Request, Response } from "express";
-import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
-import morgan from "morgan";
+import cookieParser from "cookie-parser";
+import express, { Request, Response } from "express";
 import helmet, { HelmetOptions } from "helmet";
 import mongoose from "mongoose";
+import morgan from "morgan";
 import "dotenv/config";
 
 import { userRoutes } from "./src/routes/userRoutes";
