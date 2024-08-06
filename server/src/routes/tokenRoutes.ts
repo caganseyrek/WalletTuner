@@ -1,6 +1,6 @@
 import express, { Router } from "express";
 
-import newTokenController from "../controllers/token/newtokenController";
+import newTokenController from "../controllers/token/newTokenController";
 
 import auth from "../middleware/auth";
 

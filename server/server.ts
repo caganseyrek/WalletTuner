@@ -23,10 +23,10 @@ const FRONTENTD_URL: string = IS_DEV
 // Database Connection
 mongoose.connect(DATABASE_URI);
 mongoose.connection.on("error", (error) =>
-  console.log(`Something went wrong with the database connection: \n${error}`)
+  console.log(`Something went wrong with the database connection: \n${error}`),
 );
 mongoose.connection.once("open", () =>
-  console.log("Successfully connected to the database.")
+  console.log("Successfully connected to the database."),
 );
 
 // Express app
