@@ -6,6 +6,7 @@ const accountSchema: Schema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "userModel",
   },
+  name: { type: String },
   balance: { type: Number },
   monthlyIncome: { type: Number },
   monthlyExpense: { type: Number },
