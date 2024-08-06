@@ -1,0 +1,3 @@
+interface requestProps {}
+
+interface responseProps {}
