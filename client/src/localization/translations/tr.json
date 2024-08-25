@@ -1,0 +1,51 @@
+{
+  "greetingMessages": {
+    "morning": "Günaydın",
+    "afternoon": "Tünaydın",
+    "evening": "İyi akşamlar",
+    "night": "İyi geceler"
+  },
+  "requesterInstanceMessages": {
+    "error": "Bir hata oluştu, lütfen tekrar deneyin."
+  },
+  "hookMessages": {
+    "formatterError": "Format Hatası",
+    "error": "Bir hata oluştu, lütfen tekrar deneyin."
+  },
+  "publicForms": {
+    "messages": {
+      "passwordsNotMatch": "Girilen şifreler eşleşmiyor",
+      "formNotFilled": "Lütfen formu eksiksiz doldurunuz",
+      "error": "Bilinmeyen bir hata oluştu, lütfen tekrar deneyin.",
+      "invalidEmail": "Lütfen geçerli bir e-posta adresi giriniz."
+    },
+    "login": {
+      "emailPlaceholder": "E-Posta",
+      "passwordPlaceholder": "Şifre",
+      "loginButton": "Giriş Yap",
+      "registerText": "Hesabınız yok mu?",
+      "registerLink": "Hemen kaydolun!"
+    },
+    "register": {
+      "firstNamePlaceholder": "Adınız",
+      "lastNamePlaceholder": "Soyadınız",
+      "emailPlaceholder": "E-Posta",
+      "passwordPlaceholder": "Şifre",
+      "passwordAgainPlaceholder": "Şifre Tekrar",
+      "registerButton": "Kayıt Ol",
+      "loginText": "Zaten hesabınız var mı?",
+      "loginLink": "Hemen giriş yapın!"
+    }
+  },
+  "dashboard": {
+    "header": {
+      "settingsButton": "Ayarlar",
+      "logoutButton": "Çıkış Yap"
+    },
+    "overview": {
+      "balance": "Bakiye",
+      "monthlyIncome": "Aylık Gelir",
+      "monthlyExpense": "Aylık Gider"
+    }
+  }
+}
