@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
@@ -8,6 +8,7 @@ import Button from "@/components/Button";
 
 import { useRegisterMutation } from "./hooks/useRegisterMutation";
 import useAuthDetails from "@/hooks/useAuthDetails";
+import useOnMountEffect from "@/hooks/useOnMountEffect";
 
 import { errorMessage } from "@/localization/i18n";
 
@@ -22,11 +23,11 @@ const RegisterPage = () => {
   const { mutateAsync: registerMutateAsync, isSuccess: registerSuccess } = useRegisterMutation();
   const { data } = useAuthDetails();
 
-  useEffect(() => {
+  useOnMountEffect(() => {
     if (data?.accessToken) {
       navigate("/login");
     }
-  }, []);
+  });
 
   const RegisterFormSubmit = async (fd: FieldValues /* FormData */) => {
     if (!fd.name || !fd.surname || !fd.email || !fd.password1 || !fd.password2) {

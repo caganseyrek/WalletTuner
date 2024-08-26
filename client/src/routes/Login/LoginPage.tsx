@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
@@ -9,6 +9,7 @@ import Button from "@/components/Button";
 import { useLoginMutation } from "./hooks/useLoginMutation";
 import { useSettingsMutation } from "./hooks/useSettingsMutation";
 import useAuthDetails from "@/hooks/useAuthDetails";
+import useOnMountEffect from "@/hooks/useOnMountEffect";
 
 import { errorMessage } from "@/localization/i18n";
 
@@ -24,11 +25,11 @@ const LoginPage = () => {
   const { mutateAsync: settingsMutateAsync } = useSettingsMutation();
   const { mutateAsync: loginMutateAsync } = useLoginMutation();
 
-  useEffect(() => {
+  useOnMountEffect(() => {
     if (data?.accessToken) {
       navigate("/login");
     }
-  }, []);
+  });
 
   const LoginFormSubmit = async (formdata: FieldValues) => {
     if (!formdata.email || !formdata.password) {

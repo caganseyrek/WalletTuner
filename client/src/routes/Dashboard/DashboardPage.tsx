@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Header from "./components/Header";
@@ -7,6 +6,7 @@ import Overview from "./components/Overview";
 import Transactions from "./components/Transactions";
 
 import useAuthDetails from "@/hooks/useAuthDetails";
+import useOnMountEffect from "@/hooks/useOnMountEffect";
 
 import getGreeting from "@/utils/greeter";
 
@@ -15,11 +15,11 @@ import { ModalContextProvider } from "./context/ModalContext";
 const MainPage = () => {
   const { data: authDetails } = useAuthDetails();
   const navigate = useNavigate();
-  useEffect(() => {
+  useOnMountEffect(() => {
     if (!authDetails?.accessToken) {
       navigate("/login");
     }
-  }, []);
+  });
 
   const greeting = getGreeting(authDetails!.name!);
 
