@@ -1,0 +1,2 @@
+cd client && pnpm lint-staged && cd ..
+cd server && pnpm lint-staged && cd ..
