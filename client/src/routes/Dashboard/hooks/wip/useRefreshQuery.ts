@@ -7,7 +7,7 @@ import { controllers, methods, Requester, routes } from "@/utils/requester";
 
 import { errorMessage } from "@/localization/i18n";
 
-export const useRefreshQuery = () => {
+const useRefreshQuery = () => {
   const { data: authDetails } = useAuthDetails();
 
   const refresh = useQuery({
@@ -42,3 +42,5 @@ export const useRefreshQuery = () => {
 
   return refresh;
 };
+
+export default useRefreshQuery;

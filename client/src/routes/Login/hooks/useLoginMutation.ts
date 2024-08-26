@@ -5,7 +5,7 @@ import { controllers, methods, Requester, routes } from "@/utils/requester";
 
 import { errorMessage } from "@/localization/i18n";
 
-export const useLoginMutation = () => {
+const useLoginMutation = () => {
   const queryClient = useQueryClient();
 
   const login = useMutation({
@@ -39,3 +39,5 @@ export const useLoginMutation = () => {
 
   return login;
 };
+
+export default useLoginMutation;

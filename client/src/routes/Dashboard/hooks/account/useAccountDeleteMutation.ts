@@ -5,10 +5,8 @@ import { controllers, methods, Requester, routes } from "@/utils/requester";
 
 import { errorMessage } from "@/localization/i18n";
 
-import { useLogoutMutation } from "../useLogoutMutation";
-
-export const useAccountDeleteMutation = () => {
-  const queryClient= useQueryClient();
+const useAccountDeleteMutation = () => {
+  const queryClient = useQueryClient();
 
   const accountDelete = useMutation({
     mutationKey: ["accountMutation"],
@@ -28,18 +26,18 @@ export const useAccountDeleteMutation = () => {
         return response;
       } catch (error) {
         if (error instanceof Error) {
-          console.error(errorMessage(useLogoutMutation.name, error));
+          console.error(errorMessage(useAccountDeleteMutation.name, error));
           throw error;
         } else {
-          console.error(errorMessage(useLogoutMutation.name, error));
+          console.error(errorMessage(useAccountDeleteMutation.name, error));
           throw new Error(i18next.t("hookMessages.error"));
         }
       }
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries("");
-    }
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["accountQuery"] }),
   });
 
   return accountDelete;
 };
+
+export default useAccountDeleteMutation;

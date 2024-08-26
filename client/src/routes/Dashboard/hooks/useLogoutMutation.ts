@@ -5,7 +5,7 @@ import { Requester, methods, routes, controllers } from "@/utils/requester";
 
 import { errorMessage } from "@/localization/i18n";
 
-export const useLogoutMutation = () => {
+const useLogoutMutation = () => {
   const queryClient = useQueryClient();
 
   const logout = useMutation({
@@ -40,3 +40,5 @@ export const useLogoutMutation = () => {
 
   return logout;
 };
+
+export default useLogoutMutation;
