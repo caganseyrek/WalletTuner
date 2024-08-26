@@ -3,9 +3,28 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "dev": "nodemon server.ts",
     "start": "ts-node server.ts",
+    "dev": "nodemon --exec ts-node -r tsconfig-paths/register server.ts",
+    "lint": "eslint . --ext ts --report-unused-disable-directives --max-warnings 0",
     "create_secrets": "pnpm exec ts-node config/secrets.ts"
+  },
+  "lint-staged": {
+    "src/**/*.{ts,js}": [
+      "prettier --write",
+      "eslint . --ext ts --report-unused-disable-directives --max-warnings 0"
+    ],
+    "config/*.{ts,js}": [
+      "prettier --write",
+      "eslint . --ext ts --report-unused-disable-directives --max-warnings 0"
+    ],
+    "tests/**/*.{ts,js}": [
+      "prettier --write",
+      "eslint . --ext ts --report-unused-disable-directives --max-warnings 0"
+    ],
+    "server.ts": [
+      "prettier --write",
+      "eslint . --ext ts --report-unused-disable-directives --max-warnings 0"
+    ]
   },
   "repository": {
     "type": "git",
@@ -33,10 +52,10 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.5.2",
     "morgan": "^1.10.0",
-    "randombytes": "^2.1.0",
-    "tslib": "^2.6.3"
+    "randombytes": "^2.1.0"
   },
   "devDependencies": {
+    "@eslint/js": "^9.9.1",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "@types/bcrypt": "^5.0.2",
     "@types/body-parser": "^1.19.5",
@@ -48,11 +67,17 @@
     "@types/randombytes": "^2.0.3",
     "chai": "^5.1.1",
     "chai-http": "^5.0.0",
+    "eslint": "^9.9.1",
+    "globals": "^15.9.0",
+    "lint-staged": "^15.2.9",
     "mocha": "^10.7.3",
     "nodemon": "^3.1.4",
     "prettier": "3.3.3",
     "supertest": "^7.0.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.4"
+    "tsconfig-paths": "^4.2.0",
+    "tslib": "^2.6.3",
+    "typescript": "^5.5.4",
+    "typescript-eslint": "^8.2.0"
   }
 }
