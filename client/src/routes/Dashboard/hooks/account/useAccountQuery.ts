@@ -6,7 +6,7 @@ const useAccountQuery = (accountQueryData: AccountQueryRequestProps) => {
   const account = useQuery({
     queryKey: ["accountQuery", accountQueryData],
     queryFn: async () => {
-      const { accessToken, ...requestPayload } = accountQueryData;
+      const { accessToken, currentUser, accountId } = accountQueryData;
       const response = await new Requester({
         method: methods.get,
         endpoint: {
@@ -14,8 +14,8 @@ const useAccountQuery = (accountQueryData: AccountQueryRequestProps) => {
           controller: controllers.accountDetails,
         },
         accessToken: accessToken,
-        query: requestPayload.accountId,
-        payload: requestPayload,
+        query: accountId,
+        payload: { belongsToUser: currentUser },
       }).send<AccountQueryResponseProps[]>();
 
       return response;
