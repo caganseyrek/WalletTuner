@@ -7,7 +7,7 @@ interface ButtonProps {
   leftIcon?: ReactNode;
   rightIcon?: ReactNode;
   value?: string;
-  onClick?: (() => {}) | (() => void);
+  onClick?: (() => unknown) | (() => void);
 }
 
 const Button = ({ id, className, type, leftIcon, rightIcon, value, onClick }: ButtonProps) => {
