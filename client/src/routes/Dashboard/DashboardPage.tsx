@@ -29,7 +29,7 @@ const MainPage = () => {
         <Header />
         <h2 id="greeting">{greeting}</h2>
         <Overview />
-        <Modal />
+        <Modal type="settings" /> {/* TODO */}
         <Transactions />
       </ModalContextProvider>
     </>
