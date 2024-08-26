@@ -2,21 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { controllers, methods, Requester, routes } from "@/utils/requester";
 
-interface AccountQueryRequestProps extends EssentialRequestProps {
-  accountId?: string;
-}
-
-interface AccountQueryResponseProps {
-  _id: string;
-  belongsToUser: string;
-  name: string;
-  createdAt: string;
-  balance: number;
-  monthlyIncome: number;
-  monthlyExpense: number;
-}
-
-export const useAccountQuery = (accountQueryData: AccountQueryRequestProps) => {
+const useAccountQuery = (accountQueryData: AccountQueryRequestProps) => {
   const account = useQuery({
     queryKey: ["accountQuery", accountQueryData],
     queryFn: async () => {
@@ -38,3 +24,5 @@ export const useAccountQuery = (accountQueryData: AccountQueryRequestProps) => {
 
   return account;
 };
+
+export default useAccountQuery;
