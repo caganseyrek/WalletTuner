@@ -1,4 +1,4 @@
-interface AuthDetailsProps {
+declare interface AuthDetailsProps {
   accessToken: string | undefined;
   currentUser: string | undefined;
   currentEmail: string | undefined;
