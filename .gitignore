@@ -3,6 +3,4 @@ client/.env
 server/.env
 
 # Temporary
-Dockerfile
-.dockerignore
 desktop.ini
