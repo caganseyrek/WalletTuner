@@ -53,7 +53,7 @@ export class Requester {
     this.currentUser = currentUser;
     this.payload = payload;
     this.query = query;
-    this.baseURL = BACKEND_URL + (query && `?${this.query}`);
+    this.baseURL = BACKEND_URL + (query ? `?${this.query}` : "");
   }
 
   async send<TResponse>(): Promise<TResponse> {
