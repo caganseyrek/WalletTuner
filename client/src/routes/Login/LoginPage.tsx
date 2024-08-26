@@ -6,8 +6,8 @@ import { Link, useNavigate } from "react-router-dom";
 import Alert from "@/components/Alert";
 import Button from "@/components/Button";
 
-import { useLoginMutation } from "./hooks/useLoginMutation";
-import { useSettingsMutation } from "./hooks/useSettingsMutation";
+import useLoginMutation from "./hooks/useLoginMutation";
+import useSettingsMutation from "./hooks/useSettingsMutation";
 import useAuthDetails from "@/hooks/useAuthDetails";
 import useOnMountEffect from "@/hooks/useOnMountEffect";
 

@@ -7,7 +7,7 @@ import { LogOut, Settings } from "lucide-react";
 
 import Button from "@/components/Button";
 
-import { useLogoutMutation } from "../hooks/useLogoutMutation";
+import useLogoutMutation from "../hooks/useLogoutMutation";
 import useAuthDetails from "@/hooks/useAuthDetails";
 
 import { modalContext } from "../context/ModalContext";
@@ -20,14 +20,13 @@ const Header = () => {
   const { t /*, i18n*/ } = useTranslation();
 
   const { data: authDetails } = useAuthDetails();
-  const { mutateAsync: logoutMutate, isError: logoutError, data: logoutData } = useLogoutMutation();
+  const { mutateAsync: logoutMutate, isError: logoutError } = useLogoutMutation();
 
   const HandleLogout = () => {
     logoutMutate({
       currentUser: authDetails!.currentUser!,
       accessToken: authDetails!.accessToken!,
     });
-    alert(logoutData?.message);
     if (logoutError) return;
     return navigate("/login");
   };

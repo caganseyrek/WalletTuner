@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Alert from "@/components/Alert";
 import Button from "@/components/Button";
 
-import { useRegisterMutation } from "./hooks/useRegisterMutation";
+import useRegisterMutation from "./hooks/useRegisterMutation";
 import useAuthDetails from "@/hooks/useAuthDetails";
 import useOnMountEffect from "@/hooks/useOnMountEffect";
 
