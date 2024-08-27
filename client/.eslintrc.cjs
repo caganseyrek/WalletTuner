@@ -38,21 +38,15 @@ module.exports = {
   overrides: [
     {
       files: ["src/utils/requester.ts", "src/routes/Dashboard/context/ModalContext.tsx"],
-      rules: {
-        "no-unused-vars": "off",
-      },
+      rules: { "no-unused-vars": "off" },
     },
     {
       files: ["src/routes/Dashboard/context/ModalContext.tsx"],
-      rules: {
-        "react-refresh/only-export-components": "off",
-      },
+      rules: { "react-refresh/only-export-components": "off" },
     },
     {
       files: ["src/hooks/useOnMountEffect.ts"],
-      rules: {
-        "react-hooks/exhaustive-deps": "off",
-      },
+      rules: { "react-hooks/exhaustive-deps": "off" },
     },
   ],
 };
