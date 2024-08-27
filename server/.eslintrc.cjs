@@ -29,4 +29,10 @@ module.exports = {
     "no-multiple-empty-lines": ["error", { max: 2, maxEOF: 1 }],
     quotes: ["error", "double", { avoidEscape: true }],
   },
+  overrides: [
+    {
+      files: ["config/secrets.ts"],
+      rules: { "no-console": "off" },
+    },
+  ],
 };
