@@ -11,8 +11,10 @@ install_dependencies() {
   local path="$1"
   local description
 
-  if [ "$path" = "$CLIENT_PATH" ]; then
+  if [ "$path" = "$ROOT_PATH" ]; then
     description="client"
+  elif [ "$path" = "$CLIENT_PATH" ]; then
+    description="project_root"
   elif [ "$path" = "$SERVER_PATH" ]; then
     description="server"
   else
