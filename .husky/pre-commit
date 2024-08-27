@@ -1,2 +1,2 @@
-cd client && pnpm lint-staged && cd ..
-cd server && pnpm lint-staged && cd ..
+pnpm --filter client lint-staged
+pnpm --filter server lint-staged
