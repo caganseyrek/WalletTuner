@@ -1,32 +1,38 @@
 import { FRONTENTD_URL } from "../../../server";
 import { compare } from "bcrypt";
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { sign } from "jsonwebtoken";
 import mongoose from "mongoose";
 
-import tokenModel from "../../models/tokenModel";
-import userModel from "../../models/userModel";
+import tokenModel from "@/models/tokenModel";
+import userModel from "@/models/userModel";
 
-import { errorMessage, statusMessages, userMessages } from "../../localization/messages.en";
+import { errorMessage, statusMessages, userMessages } from "@/localization/messages.en";
 
-const loginController = async (req: Request, res: Response, _next: NextFunction) => {
+const loginController = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
-    if (!email || !password) return res.status(400).send(statusMessages.badrequest);
+    if (!email || !password) {
+      return res.status(400).send(statusMessages.badrequest);
+    }
 
     const userExists = await userModel.findOne({ email: email }).exec();
-    if (!userExists) return res.status(409).send(userMessages.login.wrongEmailOrPassword);
+    if (!userExists) {
+      return res.status(409).send(userMessages.login.wrongEmailOrPassword);
+    }
 
     const passwordMatch = await compare(password, userExists.password as string);
-    if (!passwordMatch) return res.status(401).send(userMessages.login.wrongEmailOrPassword);
+    if (!passwordMatch) {
+      return res.status(401).send(userMessages.login.wrongEmailOrPassword);
+    }
 
     const existingRefreshTokens = await tokenModel.find({ belongsTo: userExists._id }).exec();
     if (existingRefreshTokens.length >= 1) {
       existingRefreshTokens.forEach(async (token) => {
         try {
           await tokenModel.findByIdAndDelete(token._id).exec();
-        } catch (error) {
-          console.error(errorMessage(loginController.name, "line_29"));
+        } catch {
+          console.error(errorMessage(loginController.name, "line_35"));
         }
       });
     }
@@ -49,7 +55,7 @@ const loginController = async (req: Request, res: Response, _next: NextFunction)
     });
     const saved = await newToken.save();
     if (!saved) {
-      console.error(errorMessage(loginController.name, "line_52"));
+      console.error(errorMessage(loginController.name, "line_58"));
       return res.status(500).send(statusMessages.internalerror);
     }
 
@@ -69,7 +75,7 @@ const loginController = async (req: Request, res: Response, _next: NextFunction)
       name: userExists.name as string,
     });
   } catch (error) {
-    console.error(errorMessage(loginController.name, "line_73", error));
+    console.error(errorMessage(loginController.name, "line_78", error));
     return res.status(500).send(statusMessages.badrequest);
   }
 };

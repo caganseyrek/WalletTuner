@@ -1,10 +1,10 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 
 import userModel from "@/models/userModel";
 
 import { errorMessage, statusMessages } from "@/localization/messages.en";
 
-const userDetailsController = async (req: Request, res: Response, _next: NextFunction) => {
+const userDetailsController = async (req: Request, res: Response) => {
   try {
     const { currentUser } = req.body;
 

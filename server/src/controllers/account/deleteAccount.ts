@@ -1,11 +1,11 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 
 import accountModel from "@/models/accountModel";
 import transactionModel from "@/models/transactionModel";
 
 import { accountMessages, errorMessage, statusMessages } from "@/localization/messages.en";
 
-const deleteAccountController = async (req: Request, res: Response, _next: NextFunction) => {
+const deleteAccountController = async (req: Request, res: Response) => {
   try {
     const { currentUser, accountId } = req.body;
 

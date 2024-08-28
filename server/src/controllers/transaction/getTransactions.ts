@@ -1,20 +1,21 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 
 import transactionModel from "@/models/transactionModel";
 
 import { errorMessage, statusMessages, transactionMessages } from "@/localization/messages.en";
 
-const getTransactionsController = async (req: Request, res: Response, _next: NextFunction) => {
+const getTransactionsController = async (req: Request, res: Response) => {
   try {
     const { currentUser } = req.body;
 
     const transactions = await transactionModel.find({ belongsToUser: currentUser }).exec();
-    if (!transactions)
+    if (!transactions) {
       return res.status(404).send(transactionMessages.getTransactions.noTransactionsFound);
+    }
 
     return res.status(200).send(transactions);
   } catch (error) {
-    console.error(errorMessage(getTransactionsController.name, "line_17", error));
+    console.error(errorMessage(getTransactionsController.name, "line_18", error));
     return res.status(500).send(statusMessages.internalerror);
   }
 };

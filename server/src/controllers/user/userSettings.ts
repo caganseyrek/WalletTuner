@@ -1,10 +1,10 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 
 import userModel from "@/models/userModel";
 
 import { errorMessage, statusMessages } from "@/localization/messages.en";
 
-const userSettingsController = async (req: Request, res: Response, _next: NextFunction) => {
+const userSettingsController = async (req: Request, res: Response) => {
   try {
     const { currentUser } = req.body;
 
@@ -20,7 +20,7 @@ const userSettingsController = async (req: Request, res: Response, _next: NextFu
 
     return res.status(200).send(userSettings);
   } catch (error) {
-    console.error(errorMessage(userSettingsController.name, "line_20", error));
+    console.error(errorMessage(userSettingsController.name, "line_23", error));
     return res.status(500).send(statusMessages.internalerror);
   }
 };

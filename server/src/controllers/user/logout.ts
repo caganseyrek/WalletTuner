@@ -1,10 +1,10 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 
-import tokenModel from "../../models/tokenModel";
+import tokenModel from "@/models/tokenModel";
 
-import { errorMessage, statusMessages, userMessages } from "../../localization/messages.en";
+import { errorMessage, statusMessages, userMessages } from "@/localization/messages.en";
 
-const logoutController = async (req: Request, res: Response, _next: NextFunction) => {
+const logoutController = async (req: Request, res: Response) => {
   try {
     const { currentUser } = req.body;
 
@@ -13,7 +13,7 @@ const logoutController = async (req: Request, res: Response, _next: NextFunction
       refreshTokens.forEach(async (token) => {
         try {
           await tokenModel.findByIdAndDelete(token._id).exec();
-        } catch (error) {
+        } catch {
           console.error(errorMessage(logoutController.name, "line_17"));
         }
       });

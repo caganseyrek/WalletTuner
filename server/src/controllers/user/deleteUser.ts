@@ -1,11 +1,11 @@
 import { compare } from "bcrypt";
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 
 import userModel from "@/models/userModel";
 
 import { errorMessage, statusMessages, userMessages } from "@/localization/messages.en";
 
-const deleteUserController = async (req: Request, res: Response, _next: NextFunction) => {
+const deleteUserController = async (req: Request, res: Response) => {
   try {
     const { currentUser, password } = req.body;
 
@@ -16,9 +16,9 @@ const deleteUserController = async (req: Request, res: Response, _next: NextFunc
     }
 
     const validatePassword = await compare(password, userDetails.password as string);
-    if (!validatePassword)
+    if (!validatePassword) {
       return res.status(401).send(userMessages.deleteUser.passwordValidationFail);
-
+    }
     const userDeleted = await userModel.findByIdAndDelete(currentUser).exec();
     if (!userDeleted) {
       console.error(errorMessage(deleteUserController.name, "line_24"));
