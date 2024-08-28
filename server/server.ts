@@ -27,9 +27,9 @@ export const FRONTENTD_URL: string = IS_DEV
 // Database Connection
 mongoose.connect(DATABASE_URI_1 + DATABASE_URI_2);
 mongoose.connection.on("error", (error) =>
-  console.log(`Something went wrong with the database connection: \n${error}`),
+  console.error(`Something went wrong with the database connection: \n${error}`),
 );
-mongoose.connection.once("open", () => console.log("Successfully connected to the database."));
+mongoose.connection.once("open", () => console.info("Successfully connected to the database."));
 
 // Express app
 const app: express.Application = express();
@@ -85,5 +85,5 @@ app.use((error: Error, _req: Request, res: Response) => {
 
 // Start the express app
 app.listen(PORT, () => {
-  console.log(`Server started at port ${PORT}`);
+  console.info(`Server started at port ${PORT}`);
 });
