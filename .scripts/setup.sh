@@ -12,17 +12,13 @@ install_dependencies() {
   local description
 
   if [ "$path" = "$ROOT_PATH" ]; then
-    description="client"
-  elif [ "$path" = "$CLIENT_PATH" ]; then
     description="project_root"
-  elif [ "$path" = "$SERVER_PATH" ]; then
-    description="server"
   else
-    exit_with_error "Unknown path: $path"
+    exit_with_error "Invalid path: $path, only $ROOT_PATH is valid for this command."
   fi
 
   if [ -d "$path/node_modules" ]; then
-    echo -e "\nDeleting existing node_modules in project root"
+    echo -e "\nDeleting existing node_modules in $description"
     rm -rf "$path/node_modules" || { exit_with_error "Failed to delete node_modules in $description. Stopping..."; }
   fi
 
@@ -81,7 +77,7 @@ check_env_files() {
       fi
     done < "$env_file"
 
-    echo "$description's .env file passed content checks."
+    echo -e "$description's .env file passed content checks.\n"
   fi
 }
 
@@ -110,8 +106,6 @@ fi
 
 if [ "$1" != "skip_install" ] && [ "$1" != "help" ]; then
   install_dependencies "$ROOT_PATH"
-  install_dependencies "$CLIENT_PATH"
-  install_dependencies "$SERVER_PATH"
 elif [ "$1" = "help" ]; then
   show_usage
   exit 0
@@ -120,4 +114,4 @@ fi
 check_env_files "$CLIENT_PATH"
 check_env_files "$SERVER_PATH"
 
-echo -e "\nSetups are complete. Now you can run the project with './run.sh <dev | build | preview>'"
+echo "Setups are complete. Now you can run the project with './run.sh <dev | build | preview>'"
