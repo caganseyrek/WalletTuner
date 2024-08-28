@@ -11,7 +11,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
       const decoded = verify(tokenValue, process.env.JWT_ACCESS_SECRET as string);
       req.body.user = decoded;
       return next();
-    } catch (error) {
+    } catch {
       return res.status(401).send(statusMessages.custom.expiredToken);
     }
   }
