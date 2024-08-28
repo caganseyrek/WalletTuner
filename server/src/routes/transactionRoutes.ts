@@ -3,8 +3,7 @@ import express, { Router } from "express";
 import createTransactionController from "@/controllers/transaction/createTransaction";
 import deleteTransactionController from "@/controllers/transaction/deleteTransaction";
 import getTransactionsController from "@/controllers/transaction/getTransactions";
-import getTransactionsByAccController from "@/controllers/transaction/getTransactionsByAcc";
-import getTransactionsByIdController from "@/controllers/transaction/getTransactionsById";
+import getTransactionsByFilterController from "@/controllers/transaction/getTransactionsByFilter";
 import updateTransactionController from "@/controllers/transaction/updateTransaction";
 
 import auth from "@/middleware/auth";
@@ -14,18 +13,16 @@ import validateUser from "@/middleware/validation/validateUser";
 
 const router: Router = express.Router();
 
-const getValidation = [validateUser];
-const getByAccValidation = [validateUser, validateAccount];
-const getByIdValidation = [validateUser, validateTransaction];
+const getAllValidation = [validateUser];
+const getByFilterValidation = [validateUser, validateAccount];
 const createValidation = [validateUser, validateAccount];
 const updateValidation = [validateUser, validateAccount, validateTransaction];
 const deleteValidation = [validateUser, validateTransaction];
 
-router.get("/getAll", auth, getValidation, getTransactionsController);
-router.get("/getByAccount", auth, getByAccValidation, getTransactionsByAccController);
-router.get("/getById/:id", auth, getByIdValidation, getTransactionsByIdController);
+router.post("/details/all", auth, getAllValidation, getTransactionsController);
+router.post("/details", auth, getByFilterValidation, getTransactionsByFilterController);
 router.post("/create", auth, createValidation, createTransactionController);
-router.patch("/update/:id", auth, updateValidation, updateTransactionController);
-router.delete("/delete/:id", auth, deleteValidation, deleteTransactionController);
+router.patch("/update", auth, updateValidation, updateTransactionController);
+router.delete("/delete", auth, deleteValidation, deleteTransactionController);
 
 export const transactionRoutes: Router = router;
