@@ -20,8 +20,11 @@
     "^(?:[./@]*context)(/.*|$)",
     "^(?:[./@]*data)(/.*|$)",
     "^(?:[./@]*localization)(/.*|$)",
-    "^(?:[./@]*styles)(/.*|$)",
-    "^[./]"
+    "^[./]",
+    "^(?:[./@]*styles)(/.*|$)"
   ],
-  "importOrderSeparation": true
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true,
+  "importOrderGroupNamespaceSpecifiers": true,
+  "importOrderCaseInsensitive": true
 }
