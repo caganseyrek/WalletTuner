@@ -7,6 +7,7 @@ const accountSchema: Schema = new Schema({
     ref: "userModel",
   },
   name: { type: String },
+  type: { type: String },
   createdAt: { type: String },
   balance: { type: Number },
   monthlyIncome: { type: Number },
