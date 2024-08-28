@@ -1,10 +1,12 @@
-import { ReactNode, useState } from "react";
-import { FieldValues, useForm } from "react-hook-form";
+import { useState } from "react";
+import { Controller, FieldValues, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { Link, useNavigate } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 
-import Alert from "@/components/Alert";
-import Button from "@/components/Button";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Alert, Box, Button, CircularProgress, TextField } from "@mui/material";
+
+import FormHeader from "@/components/FormHeader";
 
 import useRegisterMutation from "./hooks/useRegisterMutation";
 import useAuthDetails from "@/hooks/useAuthDetails";
@@ -12,15 +14,27 @@ import useOnMountEffect from "@/hooks/useOnMountEffect";
 
 import { errorMessage } from "@/localization/i18n";
 
-import "@/styles/authforms.css";
+import { RegisterFormData, registerSchema } from "./registerSchema";
+
+import { formBodyStyles, formPageStyles } from "@/styles/formStyles";
 
 const RegisterPage = () => {
-  const [formFeedback, setFormFeedback] = useState<ReactNode>(undefined);
-  const { register, handleSubmit } = useForm();
+  const [status, setStatus] = useState<StatusProps>({
+    isLoading: false,
+    isError: false,
+    isSuccess: false,
+    message: "",
+  });
+
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<RegisterFormData>({ resolver: zodResolver(registerSchema) });
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  const { mutateAsync: registerMutateAsync, isSuccess: registerSuccess } = useRegisterMutation();
+  const { mutateAsync: registerMutateAsync } = useRegisterMutation();
   const { data } = useAuthDetails();
 
   useOnMountEffect(() => {
@@ -29,72 +43,153 @@ const RegisterPage = () => {
     }
   });
 
-  const RegisterFormSubmit = async (fd: FieldValues /* FormData */) => {
-    if (!fd.name || !fd.surname || !fd.email || !fd.password1 || !fd.password2) {
-      return setFormFeedback(
-        <Alert type="warning" text={t("publicForms.messages.formNotFilled")} />,
-      );
-    }
+  const RegisterFormSubmit = async (fd: FieldValues) => {
     if (fd.password1 !== fd.password2) {
-      return setFormFeedback(
-        <Alert type="error" text={t("publicForms.messages.passwordsNotMatch")} />,
-      );
+      return setStatus(() => ({
+        isLoading: false,
+        isError: false,
+        isSuccess: true,
+        message: t("publicForms.messages.passwordsNotMatch"),
+      }));
     }
     try {
+      setStatus((currentStatus) => ({
+        ...currentStatus,
+        isLoading: true,
+      }));
       const response = await registerMutateAsync({
         name: fd.name,
         surname: fd.surname,
         email: fd.email,
         password: fd.password1,
       });
-      return setFormFeedback(
-        <Alert type={registerSuccess ? "success" : "error"} text={response.message} />,
-      );
+      return setStatus(() => ({
+        isLoading: false,
+        isError: false,
+        isSuccess: true,
+        message: response.message,
+      }));
     } catch (error) {
       console.error(errorMessage(RegisterFormSubmit.name, error));
-      return setFormFeedback(<Alert type={"success"} text={t("publicForms.messages.error")} />);
+      return setStatus(() => ({
+        isLoading: false,
+        isError: true,
+        isSuccess: false,
+        message: t("publicForms.messages.error"),
+      }));
     }
   };
 
   return (
-    <main id="form-page">
-      <form onSubmit={handleSubmit(RegisterFormSubmit)}>
-        <h1>WalletTuner</h1>
-        {formFeedback}
-        <div className="form-row">
-          <input
-            {...register("firstname")}
-            type="text"
-            placeholder={t("publicForms.register.firstNamePlaceholder")}
-          />
-          <input
-            {...register("lastname")}
-            type="text"
-            placeholder={t("publicForms.register.lastNamePlaceholder")}
-          />
-        </div>
-        <input
-          {...register("email")}
-          type="email"
-          placeholder={t("publicForms.register.emailPlaceholder")}
+    <Box sx={formPageStyles}>
+      <form noValidate onSubmit={handleSubmit(RegisterFormSubmit)} style={formBodyStyles}>
+        <FormHeader title={t("publicForms.titles.registerTitle")}>
+          {status.isLoading && <CircularProgress />}
+          {(status.isError || status.isSuccess) && (
+            <Alert
+              variant="filled"
+              severity={status.isError ? "error" : "success"}
+              sx={{ width: "100%" }}>
+              {status.message}
+            </Alert>
+          )}
+        </FormHeader>
+        <Controller
+          name="name"
+          control={control}
+          render={({ field }) => {
+            return (
+              <TextField
+                {...field}
+                variant="outlined"
+                label={t("publicForms.placeholders.firstNamePlaceholder")}
+                error={!!errors.name}
+                helperText={(errors.name?.message as string) || ""}
+                size="small"
+                fullWidth
+              />
+            );
+          }}
         />
-        <input
-          {...register("password1")}
-          type="password"
-          placeholder={t("publicForms.register.passwordPlaceholder")}
+        <Controller
+          name="surname"
+          control={control}
+          render={({ field }) => {
+            return (
+              <TextField
+                {...field}
+                variant="outlined"
+                label={t("publicForms.placeholders.lastNamePlaceholder")}
+                error={!!errors.surname}
+                helperText={(errors.surname?.message as string) || ""}
+                size="small"
+                fullWidth
+              />
+            );
+          }}
         />
-        <input
-          {...register("password2")}
-          type="password"
-          placeholder={t("publicForms.register.passwordAgainPlaceholder")}
+        <Controller
+          name="email"
+          control={control}
+          render={({ field }) => {
+            return (
+              <TextField
+                {...field}
+                variant="outlined"
+                label={t("publicForms.placeholders.emailPlaceholder")}
+                error={!!errors.email}
+                helperText={(errors.email?.message as string) || ""}
+                size="small"
+                fullWidth
+              />
+            );
+          }}
         />
-        <Button id="submit-btn" type="submit" value={t("publicForms.register.registerButton")} />
-        <div className="form-row link">
-          {t("publicForms.register.loginText")}&nbsp;
-          <Link to={"/login"}>{t("publicForms.register.loginLink")}</Link>
-        </div>
+        <Controller
+          name="password1"
+          control={control}
+          render={({ field }) => {
+            return (
+              <TextField
+                {...field}
+                variant="outlined"
+                type="password"
+                label={t("publicForms.placeholders.passwordPlaceholder")}
+                error={!!errors.password1}
+                helperText={(errors.password1?.message as string) || ""}
+                size="small"
+                fullWidth
+              />
+            );
+          }}
+        />
+        <Controller
+          name="password2"
+          control={control}
+          render={({ field }) => {
+            return (
+              <TextField
+                {...field}
+                variant="outlined"
+                type="password"
+                label={t("publicForms.placeholders.passwordAgainPlaceholder")}
+                error={!!errors.password2}
+                helperText={(errors.password2?.message as string) || ""}
+                size="small"
+                fullWidth
+              />
+            );
+          }}
+        />
+        <Button variant="contained" type="submit" fullWidth sx={{ height: "40px" }}>
+          {t("publicForms.placeholders.registerButton")}
+        </Button>
+        <Box textAlign={"center"}>
+          {t("publicForms.placeholders.loginText")}&nbsp;
+          <RouterLink to={"/login"}>{t("publicForms.placeholders.loginLink")}</RouterLink>
+        </Box>
       </form>
-    </main>
+    </Box>
   );
 };
 

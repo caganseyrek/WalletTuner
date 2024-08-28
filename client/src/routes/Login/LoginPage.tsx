@@ -1,10 +1,12 @@
-import { ReactNode, useState } from "react";
-import { FieldValues, useForm } from "react-hook-form";
+import { useState } from "react";
+import { Controller, FieldValues, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 
-import Alert from "@/components/Alert";
-import Button from "@/components/Button";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Alert, Box, Button, CircularProgress, TextField } from "@mui/material";
+
+import FormHeader from "@/components/FormHeader";
 
 import useLoginMutation from "./hooks/useLoginMutation";
 import useSettingsMutation from "./hooks/useSettingsMutation";
@@ -13,17 +15,29 @@ import useOnMountEffect from "@/hooks/useOnMountEffect";
 
 import { errorMessage } from "@/localization/i18n";
 
-import "@/styles/authforms.css";
+import { LoginFormData, loginSchema } from "./loginSchema";
+
+import { formBodyStyles, formPageStyles } from "@/styles/formStyles";
 
 const LoginPage = () => {
-  const [formFeedback, setFormFeedback] = useState<ReactNode>(undefined);
-  const { register, handleSubmit } = useForm();
+  const [status, setStatus] = useState<StatusProps>({
+    isLoading: false,
+    isError: false,
+    isSuccess: false,
+    message: "",
+  });
+
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<LoginFormData>({ resolver: zodResolver(loginSchema) });
   const navigate = useNavigate();
-  const { data } = useAuthDetails();
   const { t } = useTranslation();
 
   const { mutateAsync: settingsMutateAsync } = useSettingsMutation();
   const { mutateAsync: loginMutateAsync } = useLoginMutation();
+  const { data } = useAuthDetails();
 
   useOnMountEffect(() => {
     if (data?.accessToken) {
@@ -32,10 +46,11 @@ const LoginPage = () => {
   });
 
   const LoginFormSubmit = async (formdata: FieldValues) => {
-    if (!formdata.email || !formdata.password) {
-      return setFormFeedback(<Alert type="error" text={t("publicForms.messages.formNotFilled")} />);
-    }
     try {
+      setStatus((currentStatus) => ({
+        ...currentStatus,
+        isLoading: true,
+      }));
       const response = await loginMutateAsync({
         email: formdata.email,
         password: formdata.password,
@@ -45,41 +60,92 @@ const LoginPage = () => {
           currentUser: response.currentUser,
           accessToken: response.accessToken,
         });
-        setFormFeedback(<Alert type="success" text={response.message} />);
+        setStatus(() => ({
+          isLoading: false,
+          isError: false,
+          isSuccess: true,
+          message: response.message,
+        }));
         return setTimeout(() => {
           navigate("/");
         }, 2000);
       } else {
-        return setFormFeedback(<Alert type="error" text={t("publicForms.messages.error")} />);
+        return setStatus(() => ({
+          isLoading: false,
+          isError: true,
+          isSuccess: false,
+          message: t("publicForms.messages.error"),
+        }));
       }
     } catch (error) {
       console.error(errorMessage(LoginFormSubmit.name, error));
-      return setFormFeedback(<Alert type="error" text={t("publicForms.messages.error")} />);
+      return setStatus(() => ({
+        isLoading: false,
+        isError: true,
+        isSuccess: false,
+        message: t("publicForms.messages.error"),
+      }));
     }
   };
 
   return (
-    <main id="form-page">
-      <form onSubmit={handleSubmit(LoginFormSubmit)}>
-        <h1>WalletTuner</h1>
-        {formFeedback}
-        <input
-          {...register("email")}
-          type="email"
-          placeholder={t("publicForms.login.emailPlaceholder")}
+    <Box sx={formPageStyles}>
+      <form noValidate onSubmit={handleSubmit(LoginFormSubmit)} style={formBodyStyles}>
+        <FormHeader title={t("publicForms.titles.loginTitle")}>
+          {status.isLoading && <CircularProgress />}
+          {(status.isError || status.isSuccess) && (
+            <Alert
+              variant="filled"
+              severity={status.isError ? "error" : "success"}
+              sx={{ width: "100%" }}>
+              {status.message}
+            </Alert>
+          )}
+        </FormHeader>
+        <Controller
+          name="email"
+          control={control}
+          render={({ field }) => {
+            return (
+              <TextField
+                {...field}
+                variant="outlined"
+                label={t("publicForms.placeholders.emailPlaceholder")}
+                error={!!errors.email}
+                helperText={(errors.email?.message as string) || ""}
+                size="small"
+                fullWidth
+              />
+            );
+          }}
         />
-        <input
-          {...register("password")}
-          type="password"
-          placeholder={t("publicForms.login.passwordPlaceholder")}
+        <Controller
+          name="password"
+          control={control}
+          render={({ field }) => {
+            return (
+              <TextField
+                {...field}
+                variant="outlined"
+                type="password"
+                label={t("publicForms.placeholders.passwordPlaceholder")}
+                error={!!errors.password}
+                helperText={(errors.password?.message as string) || ""}
+                size="small"
+                fullWidth
+              />
+            );
+          }}
         />
-        <Button id="submit-btn" type="submit" value={t("publicForms.login.loginButton")} />
-        <div className="form-row link">
-          {t("publicForms.login.registerText")}&nbsp;
-          <Link to={"/register"}>{t("publicForms.login.registerLink")}</Link>
-        </div>
+        <Button variant="contained" type="submit" fullWidth sx={{ height: "40px" }}>
+          {t("publicForms.placeholders.loginButton")}
+        </Button>
+        <Box textAlign={"center"}>
+          {t("publicForms.placeholders.registerText")}&nbsp;
+          <Link to={"/register"}>{t("publicForms.placeholders.registerLink")}</Link>
+        </Box>
       </form>
-    </main>
+    </Box>
   );
 };
 
