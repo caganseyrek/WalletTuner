@@ -6,16 +6,15 @@ const useAccountQuery = (accountQueryData: AccountQueryRequestProps) => {
   const account = useQuery({
     queryKey: ["accountQuery", accountQueryData],
     queryFn: async () => {
-      const { accessToken, currentUser, accountId } = accountQueryData;
+      const { accessToken, ...requestData } = accountQueryData;
       const response = await new Requester({
-        method: methods.get,
+        method: methods.post,
         endpoint: {
           route: routes.account,
-          controller: controllers.accountDetails,
+          controller: controllers.accountDetailsAll,
         },
         accessToken: accessToken,
-        query: accountId,
-        payload: { belongsToUser: currentUser },
+        payload: requestData,
       }).send<AccountQueryResponseProps[]>();
 
       return response;

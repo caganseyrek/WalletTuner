@@ -1,66 +1,62 @@
-import { useContext } from "react";
-// import ReactCountryFlag from "react-country-flag";
+import { useState } from "react";
+import ReactCountryFlag from "react-country-flag";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
 
-import { LogOut, Settings } from "lucide-react";
+import { AccountBalance, Settings, Translate } from "@mui/icons-material";
+import { AppBar, Box, Button, ButtonGroup, MenuItem, Popover, Typography } from "@mui/material";
 
-import Button from "@/components/Button";
+interface HeaderProps {
+  openAccountsModal: () => void;
+  openSettingsModal: () => void;
+}
 
-import useLogoutMutation from "../hooks/useLogoutMutation";
-import useAuthDetails from "@/hooks/useAuthDetails";
-
-import { modalContext } from "../context/ModalContext";
-
-import "@/styles/header.css";
-
-const Header = () => {
-  const { modalState, setModalState } = useContext(modalContext);
-  const navigate = useNavigate();
-  const { t /*, i18n*/ } = useTranslation();
-
-  const { data: authDetails } = useAuthDetails();
-  const { mutateAsync: logoutMutate, isError: logoutError } = useLogoutMutation();
-
-  const HandleLogout = () => {
-    logoutMutate({
-      currentUser: authDetails!.currentUser!,
-      accessToken: authDetails!.accessToken!,
-    });
-    if (logoutError) return;
-    return navigate("/login");
-  };
+const Header = ({ openAccountsModal, openSettingsModal }: HeaderProps) => {
+  const [anchor, setAnchor] = useState<HTMLButtonElement | null>(null);
+  const { t, i18n } = useTranslation();
 
   return (
-    <header>
-      <div id="header-wrapper">
-        <section id="header-left">
-          <h1>WalletTuner</h1>
-        </section>
-        <section id="header-right">
-          {/*<Button
-            onClick={() => i18n.changeLanguage(i18n.language === "en" ? "tr" : "en")}
-            leftIcon={
-              i18n.language === "en" ? (
-                <ReactCountryFlag countryCode="us" />
-              ) : (
-                <ReactCountryFlag countryCode="tr" />
-              )
-            }
-          />*/}
-          <Button
-            onClick={() => setModalState(!modalState)}
-            leftIcon={<Settings size={18} />}
-            value={t("dashboard.header.settingsButton")}
-          />
-          <Button
-            onClick={HandleLogout}
-            leftIcon={<LogOut size={18} />}
-            value={t("dashboard.header.logoutButton")}
-          />
-        </section>
-      </div>
-    </header>
+    <AppBar position="static" sx={{ marginBottom: "30px" }}>
+      <Box
+        sx={{
+          padding: "15px 0px",
+          boxSizing: "border-box",
+          width: "996px",
+          margin: "auto",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}>
+        <Typography variant="h1" fontWeight={"600"}>
+          WalletTuner
+        </Typography>
+        <ButtonGroup variant="contained" color="inherit" disableElevation>
+          <Button startIcon={<AccountBalance />} onClick={openAccountsModal}>
+            {t("dashboard.header.accountsButton")}
+          </Button>
+          <Button startIcon={<Settings />} onClick={openSettingsModal}>
+            {t("dashboard.header.settingsButton")}
+          </Button>
+          <Button onClick={(event) => setAnchor(event.currentTarget)}>
+            <Translate sx={{ width: "20px", height: "20px" }} />
+          </Button>
+        </ButtonGroup>
+        <Popover
+          open={Boolean(anchor)}
+          anchorEl={anchor}
+          onClose={() => setAnchor(null)}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left",
+          }}>
+          <MenuItem onClick={() => i18n.changeLanguage("en")}>
+            <ReactCountryFlag countryCode="gb" />
+          </MenuItem>
+          <MenuItem onClick={() => i18n.changeLanguage("tr")}>
+            <ReactCountryFlag countryCode="tr" />
+          </MenuItem>
+        </Popover>
+      </Box>
+    </AppBar>
   );
 };
 

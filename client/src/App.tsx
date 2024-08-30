@@ -8,8 +8,7 @@ import MainPage from "./routes/Dashboard/DashboardPage";
 import LoginPage from "./routes/Login/LoginPage";
 import RegisterPage from "./routes/Register/RegisterPage";
 
-import FormErrorElement from "./components/error/FormErrorElement";
-import MainPageErrorElement from "./components/error/MainPageErrorElement";
+import ErrorElement from "./components/ErrorElement";
 
 const App = () => {
   const IS_DEV = Boolean(import.meta.env.VITE_APP_IS_DEV);
@@ -17,17 +16,17 @@ const App = () => {
     {
       path: "/login",
       element: <LoginPage />,
-      errorElement: <FormErrorElement />,
+      errorElement: <ErrorElement />,
     },
     {
       path: "/register",
       element: <RegisterPage />,
-      errorElement: <FormErrorElement />,
+      errorElement: <ErrorElement />,
     },
     {
       path: "/",
       element: <MainPage />,
-      errorElement: <MainPageErrorElement />,
+      errorElement: <ErrorElement />,
     },
   ]);
 
@@ -37,6 +36,18 @@ const App = () => {
     },
   });
 
+  const typography = {
+    fontFamily: "Inter",
+    fontSize: 14,
+    htmlFontSize: 16,
+    h1: { fontSize: "2.3em" },
+    h2: { fontSize: "2rem" },
+    h3: { fontSize: "1.6rem" },
+    h4: { fontSize: "1.3rem" },
+    h5: { fontSize: "1rem" },
+    h6: { fontSize: "1rem" },
+  };
+
   const lightTheme: Theme = createTheme({
     palette: {
       mode: "light",
@@ -44,22 +55,17 @@ const App = () => {
       secondary: { main: "#ee6c4d" },
       background: { default: "#eeeeee" },
     },
-    typography: {
-      fontFamily: "Inter",
-      fontSize: 14,
-      htmlFontSize: 16,
-      h1: { fontSize: "2.5em" },
-      h2: { fontSize: "2.25rem" },
-      h3: { fontSize: "2rem" },
-      h4: { fontSize: "1.75rem" },
-      h5: { fontSize: "1.5rem" },
-      h6: { fontSize: "1.25rem" },
-    },
+    typography,
   });
 
   /*
   const darkTheme = createTheme({
-    palette: { mode: "dark", primary: { main: "#807ce8" }, secondary: { main: "#da6a4e" } },
+    palette: {
+      mode: "dark",
+      primary: { main: "#807ce8" },
+      secondary: { main: "#da6a4e" },
+    },
+    typography,
   });
   */
 

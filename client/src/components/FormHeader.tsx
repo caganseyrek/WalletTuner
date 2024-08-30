@@ -2,16 +2,38 @@ import { FC } from "react";
 
 import { Box, Typography } from "@mui/material";
 
-import { formHeaderStyles, formTitleStyles, logoStyles } from "@/styles/formStyles";
-
-const FormHeader: FC<FormHeaderProps> = ({ children, title }) => {
+const FormHeader: FC<FormHeaderProps> = ({ title }) => {
   return (
-    <Box sx={formHeaderStyles}>
-      <img src="../../assets/logo.png" style={logoStyles} />
-      <Typography variant="h3" style={formTitleStyles}>
+    <Box
+      sx={{
+        paddingTop: "30px",
+        paddingBottom: "15px",
+        boxSizing: "border-box",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flexDirection: "column",
+        rowGap: "10px",
+      }}>
+      <img
+        src="../../assets/logo.png"
+        style={{
+          width: "80px",
+          height: "80px",
+          borderRadius: "100%",
+          border: "solid 5px #413d80",
+          boxSizing: "border-box",
+        }}
+      />
+      <Typography
+        variant="h3"
+        sx={{
+          textAlign: "center",
+          fontWeight: "600",
+          padding: "0px 20px",
+        }}>
         {title}
       </Typography>
-      {children}
     </Box>
   );
 };

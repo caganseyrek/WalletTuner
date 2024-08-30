@@ -6,13 +6,11 @@ import { accountMessages, errorMessage, statusMessages } from "@/localization/me
 
 const getAccountsByFilterController = async (req: Request, res: Response) => {
   try {
-    const { currentUser } = req.body;
-    const { accountId, accountType } = req.params;
+    const { currentUser, accountId } = req.body;
 
     const filters = {
       _id: accountId,
       belongsToUser: currentUser,
-      accountType: accountType,
     };
 
     const accounts = await accountModel.find(filters).exec();
@@ -22,7 +20,7 @@ const getAccountsByFilterController = async (req: Request, res: Response) => {
 
     return res.status(200).send(accounts);
   } catch (error) {
-    console.error(errorMessage(getAccountsByFilterController.name, "line_25", error));
+    console.error(errorMessage(getAccountsByFilterController.name, "line_23", error));
     return res.status(500).send(statusMessages.internalerror);
   }
 };

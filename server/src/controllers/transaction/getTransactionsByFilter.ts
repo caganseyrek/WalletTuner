@@ -6,8 +6,7 @@ import { errorMessage, statusMessages, transactionMessages } from "@/localizatio
 
 const getTransactionsByFilterController = async (req: Request, res: Response) => {
   try {
-    const { currentUser, accountId } = req.body;
-    const { transactionId } = req.params;
+    const { currentUser, accountId, transactionId } = req.body;
 
     const filters = {
       _id: transactionId,
@@ -21,7 +20,7 @@ const getTransactionsByFilterController = async (req: Request, res: Response) =>
 
     return res.status(200).send(transactions);
   } catch (error) {
-    console.error(errorMessage(getTransactionsByFilterController.name, "line_24", error));
+    console.error(errorMessage(getTransactionsByFilterController.name, "line_23", error));
     return res.status(500).send(statusMessages.internalerror);
   }
 };

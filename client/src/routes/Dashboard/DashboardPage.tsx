@@ -1,38 +1,61 @@
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
+import { Typography } from "@mui/material";
+
+import Accounts from "./components/Accounts";
 import Header from "./components/Header";
 import Modal from "./components/Modal";
 import Overview from "./components/Overview";
+import Settings from "./components/Settings";
 import Transactions from "./components/Transactions";
+import AuthCheckProvider from "@/components/AuthCheckProvider";
 
 import useAuthDetails from "@/hooks/useAuthDetails";
-import useOnMountEffect from "@/hooks/useOnMountEffect";
 
 import getGreeting from "@/utils/greeter";
 
-import { ModalContextProvider } from "./context/ModalContext";
-
 const MainPage = () => {
+  const [accountsModalState, setAccountsModalState] = useState<boolean>(false);
+  const [settingsModalState, setSettingsModalState] = useState<boolean>(false);
+  const { t } = useTranslation();
+
   const { data: authDetails } = useAuthDetails();
-  const navigate = useNavigate();
-  useOnMountEffect(() => {
-    if (!authDetails?.accessToken) {
-      navigate("/login");
-    }
-  });
 
   const greeting = getGreeting(authDetails!.name!);
 
   return (
-    <>
-      <ModalContextProvider>
-        <Header />
-        <h2 id="greeting">{greeting}</h2>
-        <Overview />
-        <Modal type="settings" /> {/* TODO */}
-        <Transactions />
-      </ModalContextProvider>
-    </>
+    <AuthCheckProvider isPagePublic={false}>
+      <Header
+        openAccountsModal={() => setAccountsModalState(true)}
+        openSettingsModal={() => setSettingsModalState(true)}
+      />
+      <Modal
+        open={accountsModalState}
+        onClose={() => setAccountsModalState(false)}
+        title={t("dashboard.accounts.modalTitle")}>
+        <Accounts />
+      </Modal>
+      <Modal
+        open={settingsModalState}
+        onClose={() => setSettingsModalState(false)}
+        title={t("dashboard.settings.modalTitle")}>
+        <Settings />
+      </Modal>
+      <Typography
+        variant="h3"
+        sx={{
+          padding: "15px 0px",
+          boxSizing: "border-box",
+          fontWeight: "600",
+          width: "996px",
+          margin: "auto ",
+        }}>
+        {greeting}
+      </Typography>
+      <Overview />
+      <Transactions />
+    </AuthCheckProvider>
   );
 };
 

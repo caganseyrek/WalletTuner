@@ -31,23 +31,47 @@
       "emailPlaceholder": "E-Mail",
       "passwordPlaceholder": "Password",
       "passwordAgainPlaceholder": "Password Again",
-      "registerButton": "Register",
-      "loginButton": "Login",
       "registerText": "Don't have an account?",
       "registerLink": "Register Now!",
       "loginText": "Already have an account?",
       "loginLink": "Login now!"
+    },
+    "errorPage": {
+      "title": "An error occurred",
+      "description": "We are unable to load the page and are really sorry about it.",
+      "reload": "Reload"
+    },
+    "buttons": {
+      "registerButton": "Register",
+      "loginButton": "Login",
+      "loginIsLoadingText": "Logging In...",
+      "loginIsSuccessText": "Logged In!",
+      "loginIsErrorText": "An error occurred."
     }
   },
   "dashboard": {
     "header": {
-      "settingsButton": "Settings",
-      "logoutButton": "Log Out"
+      "accountsButton": "Accounts",
+      "settingsButton": "Settings"
     },
     "overview": {
       "balance": "Balance",
       "monthlyIncome": "Monthly Income",
-      "monthlyExpense": "Monthly Expense"
+      "monthlyExpense": "Monthly Expense",
+      "balancePerAccount": "Balance Per Account"
+    },
+    "accounts": {
+      "columns": {
+        "no": "No",
+        "accountName": "Account Name",
+        "balance": "Balance",
+        "createdAt": "Created At",
+        "uniqueId": "Account ID",
+        "actions": "Actions"
+      },
+      "modalTitle": "Accounts",
+      "newAccountNamePlaceholder": "New Account",
+      "addNewAccountButton": "Add New Account"
     }
   }
 }

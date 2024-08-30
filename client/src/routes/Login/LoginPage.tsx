@@ -4,14 +4,16 @@ import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Alert, Box, Button, CircularProgress, TextField } from "@mui/material";
+import { Box, TextField } from "@mui/material";
 
+import AuthCheckProvider from "@/components/AuthCheckProvider";
 import FormHeader from "@/components/FormHeader";
+import FormTranslate from "@/components/FormTranslate";
+import Snackbar from "@/components/Snackbar";
+import SubmitButton from "@/components/SubmitButton";
 
 import useLoginMutation from "./hooks/useLoginMutation";
 import useSettingsMutation from "./hooks/useSettingsMutation";
-import useAuthDetails from "@/hooks/useAuthDetails";
-import useOnMountEffect from "@/hooks/useOnMountEffect";
 
 import { errorMessage } from "@/localization/i18n";
 
@@ -20,37 +22,36 @@ import { LoginFormData, loginSchema } from "./loginSchema";
 import { formBodyStyles, formPageStyles } from "@/styles/formStyles";
 
 const LoginPage = () => {
+  const [snackbarState, setSnackbarState] = useState<SnackbarStateProps>({
+    isOpen: false,
+    message: "",
+  });
   const [status, setStatus] = useState<StatusProps>({
     isLoading: false,
     isError: false,
     isSuccess: false,
-    message: "",
   });
 
   const {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<LoginFormData>({ resolver: zodResolver(loginSchema) });
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
   const navigate = useNavigate();
   const { t } = useTranslation();
 
   const { mutateAsync: settingsMutateAsync } = useSettingsMutation();
   const { mutateAsync: loginMutateAsync } = useLoginMutation();
-  const { data } = useAuthDetails();
-
-  useOnMountEffect(() => {
-    if (data?.accessToken) {
-      navigate("/login");
-    }
-  });
 
   const LoginFormSubmit = async (formdata: FieldValues) => {
     try {
-      setStatus((currentStatus) => ({
-        ...currentStatus,
-        isLoading: true,
-      }));
+      setStatus((currentStatus) => ({ ...currentStatus, isLoading: true }));
       const response = await loginMutateAsync({
         email: formdata.email,
         password: formdata.password,
@@ -64,88 +65,81 @@ const LoginPage = () => {
           isLoading: false,
           isError: false,
           isSuccess: true,
-          message: response.message,
         }));
         return setTimeout(() => {
           navigate("/");
-        }, 2000);
+        }, 1500);
       } else {
-        return setStatus(() => ({
-          isLoading: false,
-          isError: true,
-          isSuccess: false,
-          message: t("publicForms.messages.error"),
-        }));
+        setStatus(() => ({ isLoading: false, isError: true, isSuccess: false }));
+        return setSnackbarState({ isOpen: true, message: t("publicForms.messages.error") });
       }
     } catch (error) {
       console.error(errorMessage(LoginFormSubmit.name, error));
-      return setStatus(() => ({
+      setStatus(() => ({
         isLoading: false,
         isError: true,
         isSuccess: false,
-        message: t("publicForms.messages.error"),
       }));
+      return setSnackbarState({ isOpen: true, message: t("publicForms.messages.error") });
     }
   };
 
   return (
-    <Box sx={formPageStyles}>
-      <form noValidate onSubmit={handleSubmit(LoginFormSubmit)} style={formBodyStyles}>
-        <FormHeader title={t("publicForms.titles.loginTitle")}>
-          {status.isLoading && <CircularProgress />}
-          {(status.isError || status.isSuccess) && (
-            <Alert
-              variant="filled"
-              severity={status.isError ? "error" : "success"}
-              sx={{ width: "100%" }}>
-              {status.message}
-            </Alert>
+    <AuthCheckProvider isPagePublic={true}>
+      <Box sx={formPageStyles}>
+        <form noValidate onSubmit={handleSubmit(LoginFormSubmit)} style={formBodyStyles}>
+          <FormHeader title={t("publicForms.titles.loginTitle")} />
+          <Controller
+            name="email"
+            control={control}
+            render={({ field }) => {
+              return (
+                <TextField
+                  {...field}
+                  variant="outlined"
+                  label={t("publicForms.placeholders.emailPlaceholder")}
+                  error={!!errors.email}
+                  helperText={(errors.email?.message as string) || ""}
+                  size="small"
+                  fullWidth
+                />
+              );
+            }}
+          />
+          <Controller
+            name="password"
+            control={control}
+            render={({ field }) => {
+              return (
+                <TextField
+                  {...field}
+                  variant="outlined"
+                  type="password"
+                  label={t("publicForms.placeholders.passwordPlaceholder")}
+                  error={!!errors.password}
+                  helperText={(errors.password?.message as string) || ""}
+                  size="small"
+                  fullWidth
+                />
+              );
+            }}
+          />
+          <SubmitButton status={status} />
+          <Box textAlign={"center"}>
+            {t("publicForms.placeholders.registerText")}&nbsp;
+            <Link to={"/register"}>{t("publicForms.placeholders.registerLink")}</Link>
+          </Box>
+          {snackbarState.isOpen && (
+            <Snackbar
+              snackbarState={snackbarState}
+              setSnackbarState={setSnackbarState}
+              severity={"error"}
+            />
           )}
-        </FormHeader>
-        <Controller
-          name="email"
-          control={control}
-          render={({ field }) => {
-            return (
-              <TextField
-                {...field}
-                variant="outlined"
-                label={t("publicForms.placeholders.emailPlaceholder")}
-                error={!!errors.email}
-                helperText={(errors.email?.message as string) || ""}
-                size="small"
-                fullWidth
-              />
-            );
-          }}
-        />
-        <Controller
-          name="password"
-          control={control}
-          render={({ field }) => {
-            return (
-              <TextField
-                {...field}
-                variant="outlined"
-                type="password"
-                label={t("publicForms.placeholders.passwordPlaceholder")}
-                error={!!errors.password}
-                helperText={(errors.password?.message as string) || ""}
-                size="small"
-                fullWidth
-              />
-            );
-          }}
-        />
-        <Button variant="contained" type="submit" fullWidth sx={{ height: "40px" }}>
-          {t("publicForms.placeholders.loginButton")}
-        </Button>
-        <Box textAlign={"center"}>
-          {t("publicForms.placeholders.registerText")}&nbsp;
-          <Link to={"/register"}>{t("publicForms.placeholders.registerLink")}</Link>
-        </Box>
-      </form>
-    </Box>
+          <FormTranslate />
+        </form>
+      </Box>
+    </AuthCheckProvider>
   );
 };
 

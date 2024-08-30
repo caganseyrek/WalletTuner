@@ -12,11 +12,11 @@ const updateTransactionController = async (req: Request, res: Response) => {
       belongsToUser,
       belongsToAccount,
       transactionType,
-      description,
-      datetime,
-      value,
+      transactionDescription,
+      transactionDatetime,
+      transactionValue,
     } = req.body;
-    if (belongsToUser || datetime) {
+    if (belongsToUser) {
       return res.status(400).send(statusMessages.badrequest);
     }
 
@@ -25,9 +25,9 @@ const updateTransactionController = async (req: Request, res: Response) => {
         belongsToAccount: belongsToAccount,
         belongsToUser: currentUser,
         transactionType: transactionType,
-        description: description ?? "",
-        datetime: new Date().toISOString(),
-        value: value,
+        transactionDescription: transactionDescription ?? "",
+        transactionDatetime: transactionDatetime,
+        transactionValue: transactionValue,
       })
       .exec();
     if (!update) {

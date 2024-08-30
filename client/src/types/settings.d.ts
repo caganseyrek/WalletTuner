@@ -1,4 +1,4 @@
-interface SettingsResponseProps {
+declare interface SettingsResponseProps {
   preferredCurrency: string | undefined;
   preferredCurrencyDisplayType: string | undefined;
   preferredCurrencyDisplayPosition: string | undefined;

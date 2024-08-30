@@ -31,23 +31,47 @@
       "emailPlaceholder": "E-Posta",
       "passwordPlaceholder": "Şifre",
       "passwordAgainPlaceholder": "Şifre Tekrar",
-      "registerButton": "Kayıt Ol",
-      "loginButton": "Giriş Yap",
       "registerText": "Hesabınız yok mu?",
       "registerLink": "Hemen kaydolun!",
       "loginText": "Zaten hesabınız var mı?",
       "loginLink": "Hemen giriş yapın!"
+    },
+    "errorPage": {
+      "title": "Bir hata oluştu",
+      "description": "Sayfayı yükleyemedik ve bu konuda çok üzgünüz.",
+      "reload": "Önbelleği Temizle ve Yeniden Yükle"
+    },
+    "buttons": {
+      "registerButton": "Kayıt Ol",
+      "loginButton": "Giriş Yap",
+      "loginIsLoadingText": "Giriş Yapılıyor...",
+      "loginIsSuccessText": "Giriş Yapıldı!",
+      "loginIsErrorText": "Bir hata oluştu."
     }
   },
   "dashboard": {
     "header": {
-      "settingsButton": "Ayarlar",
-      "logoutButton": "Çıkış Yap"
+      "accountsButton": "Hesaplar",
+      "settingsButton": "Ayarlar"
     },
     "overview": {
       "balance": "Bakiye",
       "monthlyIncome": "Aylık Gelir",
-      "monthlyExpense": "Aylık Gider"
+      "monthlyExpense": "Aylık Gider",
+      "balancePerAccount": "Hesap Bakiyeleri"
+    },
+    "accounts": {
+      "columns": {
+        "no": "No",
+        "accountName": "Hesap İsmi",
+        "balance": "Bakiye",
+        "createdAt": "Oluşturulma Zamanı",
+        "uniqueId": "Hesap ID",
+        "actions": "İşlemler"
+      },
+      "modalTitle": "Hesaplar",
+      "newAccountNamePlaceholder": "Yeni Hesap",
+      "addNewAccountButton": "Yeni Hesap Ekle"
     }
   }
 }

@@ -7,7 +7,7 @@ import { accountMessages, errorMessage, statusMessages } from "@/localization/me
 
 const createAccountController = async (req: Request, res: Response) => {
   try {
-    const { currentUser, accountName, accountType } = req.body;
+    const { currentUser, accountName } = req.body;
     if (!accountName) {
       return res.status(400).send(statusMessages.badrequest);
     }
@@ -15,8 +15,7 @@ const createAccountController = async (req: Request, res: Response) => {
     const newAccount = new accountModel({
       _id: new mongoose.Types.ObjectId(),
       belongsToUser: currentUser,
-      name: accountName,
-      type: accountType,
+      accountName: accountName,
       createdAt: new Date().toISOString(),
       balance: 0,
       monthlyIncome: 0,

@@ -15,7 +15,7 @@ interface RequesterConfig {
   headers?: RawAxiosRequestHeaders;
   accessToken?: string;
   currentUser?: string;
-  query?: string;
+  query?: Record<string, string>;
   payload: object;
 }
 
@@ -23,14 +23,14 @@ const BACKEND_URL = import.meta.env.VITE_APP_BACKEND_URL;
 const TOKEN_ENDPOINT = import.meta.env.VITE_APP_TOKEN_ENDPOINT;
 
 export class Requester {
-  private baseURL: string;
+  private baseURL: string = BACKEND_URL;
   private tokenEndpoint: string = TOKEN_ENDPOINT;
   private endpoint: { route: string; controller: string };
   private method: string;
   private headers?: RawAxiosRequestHeaders;
   private accessToken?: string;
   private currentUser?: string;
-  private query?: string;
+  private query?: Record<string, string>;
   private payload: object;
 
   constructor({
@@ -53,11 +53,14 @@ export class Requester {
     this.currentUser = currentUser;
     this.payload = payload;
     this.query = query;
-    this.baseURL = BACKEND_URL + (query ? `?${this.query}` : "");
   }
 
   async send<TResponse>(): Promise<TResponse> {
-    const requestUrl = this.baseURL + this.endpoint.route + "/" + this.endpoint.controller;
+    let requestUrl = `${this.baseURL}${this.endpoint.route}/${this.endpoint.controller}`;
+    if (this.query) {
+      const queryString = new URLSearchParams(this.query).toString();
+      requestUrl += `?${queryString}`;
+    }
     const axiosConfig: AxiosRequestConfig = {
       url: requestUrl,
       method: this.method,
@@ -105,7 +108,6 @@ export class Requester {
 }
 
 export enum methods {
-  get = "GET",
   post = "POST",
   patch = "PATCH",
   delete = "DELETE",
@@ -122,7 +124,8 @@ export enum controllers {
   logout = "logout",
   register = "register",
   settings = "settings",
-  accountDetails = "details",
+  accountDetailsAll = "details/all",
+  accountDetailsByFilter = "details",
   createAccount = "create",
   updateAccount = "update",
   deleteAccount = "delete",

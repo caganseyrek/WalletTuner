@@ -13,9 +13,9 @@ const transactionSchema: Schema = new Schema({
     required: true,
   },
   transactionType: { type: String },
-  description: { type: String },
-  datetime: { type: String },
-  value: { type: Number },
+  transactionDescription: { type: String },
+  transactionDatetime: { type: String },
+  transactionValue: { type: Number },
 });
 
 export default mongoose.model("transactionModel", transactionSchema);

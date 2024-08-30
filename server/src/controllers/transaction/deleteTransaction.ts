@@ -6,8 +6,7 @@ import { errorMessage, statusMessages, transactionMessages } from "@/localizatio
 
 const deleteTransactionController = async (req: Request, res: Response) => {
   try {
-    const { transactionId } = req.params;
-    const { currentUser } = req.body;
+    const { currentUser, transactionId } = req.body;
 
     const deleteTransaction = await transactionModel
       .findOneAndDelete({ _id: transactionId, belongsToUser: currentUser })
@@ -18,7 +17,7 @@ const deleteTransactionController = async (req: Request, res: Response) => {
 
     return res.status(200).send(transactionMessages.deleteTransaction.deletionSuccessful);
   } catch (error) {
-    console.error(errorMessage(deleteTransactionController.name, "line_21", error));
+    console.error(errorMessage(deleteTransactionController.name, "line_20", error));
     return res.status(500).send(statusMessages.internalerror);
   }
 };
