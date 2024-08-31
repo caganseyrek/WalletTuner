@@ -13,7 +13,7 @@ const updateTransactionController = async (req: Request, res: Response) => {
       belongsToAccount,
       transactionType,
       transactionDescription,
-      transactionDatetime,
+      transactionDateTime,
       transactionValue,
     } = req.body;
     if (belongsToUser) {
@@ -26,7 +26,7 @@ const updateTransactionController = async (req: Request, res: Response) => {
         belongsToUser: currentUser,
         transactionType: transactionType,
         transactionDescription: transactionDescription ?? "",
-        transactionDatetime: transactionDatetime,
+        transactionDateTime: transactionDateTime,
         transactionValue: transactionValue,
       })
       .exec();

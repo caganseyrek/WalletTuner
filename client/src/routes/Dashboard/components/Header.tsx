@@ -15,10 +15,10 @@ const Header = ({ openAccountsModal, openSettingsModal }: HeaderProps) => {
   const { t, i18n } = useTranslation();
 
   return (
-    <AppBar position="static" sx={{ marginBottom: "30px" }}>
+    <AppBar position="static">
       <Box
         sx={{
-          padding: "15px 0px",
+          padding: "20px 0px",
           boxSizing: "border-box",
           width: "996px",
           margin: "auto",
@@ -26,7 +26,7 @@ const Header = ({ openAccountsModal, openSettingsModal }: HeaderProps) => {
           alignItems: "center",
           justifyContent: "space-between",
         }}>
-        <Typography variant="h1" fontWeight={"600"}>
+        <Typography variant="h1" fontWeight={"600"} fontFamily={"Odor Mean Chey"} lineHeight={0}>
           WalletTuner
         </Typography>
         <ButtonGroup variant="contained" color="inherit" disableElevation>

@@ -7,9 +7,21 @@ import { errorMessage, statusMessages, transactionMessages } from "@/localizatio
 
 const createTransactionController = async (req: Request, res: Response) => {
   try {
-    const { currentUser, accountId, transactionType, transactionDescription, transactionValue } =
-      req.body;
-    if (!accountId || !transactionType || !transactionValue) {
+    const {
+      currentUser,
+      accountId,
+      transactionType,
+      transactionDescription,
+      transactionDateTime,
+      transactionValue,
+    } = req.body;
+    if (
+      !accountId ||
+      !transactionType ||
+      !transactionValue ||
+      !transactionDateTime ||
+      !transactionDescription
+    ) {
       return res.status(400).send(statusMessages.badrequest);
     }
 
@@ -18,20 +30,20 @@ const createTransactionController = async (req: Request, res: Response) => {
       belongsToAccount: accountId,
       belongsToUser: currentUser,
       transactionType: transactionType,
-      transactionDescription: transactionDescription ?? "",
-      transactionDatetime: new Date().toISOString(),
+      transactionDescription: transactionDescription,
+      transactionDatetime: transactionDateTime,
       transactionValue: transactionValue,
     });
 
     const saveNewTransaction = await newTransaction.save();
     if (!saveNewTransaction) {
-      console.error(errorMessage(createTransactionController.name, "line_28"));
+      console.error(errorMessage(createTransactionController.name, "line_40"));
       return res.status(500).send(statusMessages.internalerror);
     }
 
     return res.status(201).send(transactionMessages.createTransaction.creationSuccessfull);
   } catch (error) {
-    console.error(errorMessage(createTransactionController.name, "line_33", error));
+    console.error(errorMessage(createTransactionController.name, "line_46", error));
     return res.status(500).send(statusMessages.internalerror);
   }
 };

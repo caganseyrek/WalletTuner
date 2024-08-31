@@ -33,11 +33,12 @@ interface DataGridProps<TNew, TUpdate, TDelete> {
   columnsProp: GridColDef[];
   paginationModel: GridPaginationModel;
   dataCategory: string;
+  newDataIdentifier: string;
   newDataFunction: UseMutateAsyncFunction<MessageResponseProps, Error, TNew, unknown>;
   updateDataFunction: UseMutateAsyncFunction<MessageResponseProps, Error, TUpdate, unknown>;
   deleteDataFunction: UseMutateAsyncFunction<MessageResponseProps, Error, TDelete, unknown>;
   isNewDataError: boolean;
-  isUpdateDateError: boolean;
+  isUpdateDataError: boolean;
   isDeleteDataError: boolean;
 }
 
@@ -46,11 +47,12 @@ const DataGrid = <TNew, TUpdate, TDelete>({
   columnsProp,
   paginationModel,
   dataCategory,
+  newDataIdentifier,
   newDataFunction,
   updateDataFunction,
   deleteDataFunction,
   isNewDataError,
-  isUpdateDateError,
+  isUpdateDataError,
   isDeleteDataError,
 }: DataGridProps<TNew, TUpdate, TDelete>) => {
   const { t } = useTranslation(["main", "datagrid"]);
@@ -65,12 +67,14 @@ const DataGrid = <TNew, TUpdate, TDelete>({
   const { data: authData } = useAuthDetails();
 
   const formattedDataCategory = dataCategory.charAt(0).toUpperCase() + dataCategory.slice(1);
+  const formattedNewDataIdentifier =
+    newDataIdentifier.charAt(0).toUpperCase() + newDataIdentifier.slice(1);
 
   const CustomToolbar = () => {
     const handleAddNewClick = async () => {
       setIsWaiting(true);
       const newData = {
-        [`${dataCategory}Name`]: `${t(`main:dashboard.${dataCategory}s.new${formattedDataCategory}NamePlaceholder`)}`,
+        [`${dataCategory}${formattedNewDataIdentifier}`]: `${t(`main:dashboard.${dataCategory}s.new${formattedDataCategory}NamePlaceholder`)}`,
       };
       const response = await newDataFunction({
         accessToken: authData?.accessToken,
@@ -181,7 +185,7 @@ const DataGrid = <TNew, TUpdate, TDelete>({
         <Snackbar
           snackbarState={snackbarState}
           setSnackbarState={setSnackbarState}
-          severity={isNewDataError || isUpdateDateError || isDeleteDataError ? "error" : "success"}
+          severity={isNewDataError || isUpdateDataError || isDeleteDataError ? "error" : "success"}
         />
       )}
       <DataGridComponent

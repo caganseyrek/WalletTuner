@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import i18next from "i18next";
 
-import { Requester, methods, routes, controllers } from "@/utils/requester";
+import { controllers, methods, Requester, routes } from "@/utils/requester";
 
 import { errorMessage } from "@/localization/i18n";
 

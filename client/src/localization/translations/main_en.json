@@ -72,6 +72,21 @@
       "modalTitle": "Accounts",
       "newAccountNamePlaceholder": "New Account",
       "addNewAccountButton": "Add New Account"
+    },
+    "transactions": {
+      "columns": {
+        "no": "No",
+        "uniqueId": "Transaction ID",
+        "belongsToAccount": "Belongs To Account",
+        "type": "Type",
+        "description": "Description",
+        "dateTime": "DateTime",
+        "value": "Value",
+        "actions": "Actions"
+      },
+      "paperTitle": "Transactions",
+      "newTransactionNamePlaceholder": "New Transaction",
+      "addNewTransactionButton": "Add New Transaction"
     }
   }
 }

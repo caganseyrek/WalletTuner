@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { Typography } from "@mui/material";
+import { Grid2 as Grid, Paper, Typography } from "@mui/material";
 
 import Accounts from "./components/Accounts";
 import Header from "./components/Header";
@@ -11,25 +11,14 @@ import Settings from "./components/Settings";
 import Transactions from "./components/Transactions";
 import AuthCheckProvider from "@/components/AuthCheckProvider";
 
-import useAuthDetails from "@/hooks/useAuthDetails";
-
-import getGreeting from "@/utils/greeter";
-
 const MainPage = () => {
-  const [accountsModalState, setAccountsModalState] = useState<boolean>(false);
-  const [settingsModalState, setSettingsModalState] = useState<boolean>(false);
   const { t } = useTranslation();
 
-  const { data: authDetails } = useAuthDetails();
-
-  const greeting = getGreeting(authDetails!.name!);
+  const [accountsModalState, setAccountsModalState] = useState<boolean>(false);
+  const [settingsModalState, setSettingsModalState] = useState<boolean>(false);
 
   return (
     <AuthCheckProvider isPagePublic={false}>
-      <Header
-        openAccountsModal={() => setAccountsModalState(true)}
-        openSettingsModal={() => setSettingsModalState(true)}
-      />
       <Modal
         open={accountsModalState}
         onClose={() => setAccountsModalState(false)}
@@ -42,19 +31,28 @@ const MainPage = () => {
         title={t("dashboard.settings.modalTitle")}>
         <Settings />
       </Modal>
-      <Typography
-        variant="h3"
-        sx={{
-          padding: "15px 0px",
-          boxSizing: "border-box",
-          fontWeight: "600",
-          width: "996px",
-          margin: "auto ",
-        }}>
-        {greeting}
-      </Typography>
-      <Overview />
-      <Transactions />
+      <Grid container spacing={4} sx={{ margin: "auto" }}>
+        <Header
+          openAccountsModal={() => setAccountsModalState(true)}
+          openSettingsModal={() => setSettingsModalState(true)}
+        />
+        <Grid container spacing={2} sx={{ width: "996px", margin: "auto" }}>
+          <Overview />
+          <Paper
+            sx={{
+              width: "996px",
+              margin: "auto",
+              padding: "15px",
+              boxSizing: "border-box",
+              display: "flex",
+              flexDirection: "column",
+              rowGap: "10px",
+            }}>
+            <Typography variant="button">{t("dashboard.transactions.paperTitle")}</Typography>
+            <Transactions />
+          </Paper>
+        </Grid>
+      </Grid>
     </AuthCheckProvider>
   );
 };

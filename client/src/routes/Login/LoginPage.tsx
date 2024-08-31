@@ -22,6 +22,13 @@ import { LoginFormData, loginSchema } from "./loginSchema";
 import { formBodyStyles, formPageStyles } from "@/styles/formStyles";
 
 const LoginPage = () => {
+  const navigate = useNavigate();
+
+  const { t } = useTranslation();
+
+  const { mutateAsync: settingsMutateAsync } = useSettingsMutation();
+  const { mutateAsync: loginMutateAsync } = useLoginMutation();
+
   const [snackbarState, setSnackbarState] = useState<SnackbarStateProps>({
     isOpen: false,
     message: "",
@@ -43,11 +50,6 @@ const LoginPage = () => {
       password: "",
     },
   });
-  const navigate = useNavigate();
-  const { t } = useTranslation();
-
-  const { mutateAsync: settingsMutateAsync } = useSettingsMutation();
-  const { mutateAsync: loginMutateAsync } = useLoginMutation();
 
   const LoginFormSubmit = async (formdata: FieldValues) => {
     try {

@@ -14,7 +14,7 @@ const transactionSchema: Schema = new Schema({
   },
   transactionType: { type: String },
   transactionDescription: { type: String },
-  transactionDatetime: { type: String },
+  transactionDateTime: { type: String },
   transactionValue: { type: Number },
 });
 

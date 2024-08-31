@@ -20,7 +20,7 @@ interface accountDataRowProps {
 }
 
 const Accounts = () => {
-  const { data: authData } = useAuthDetails();
+  const { data: authDetails } = useAuthDetails();
   const { t } = useTranslation();
 
   const { mutateAsync: accounteCreateMutate, isError: accountCreateError } =
@@ -29,52 +29,57 @@ const Accounts = () => {
     useAccountUpdateMutation();
   const { mutateAsync: accounteDeleteMutate, isError: accountDeleteError } =
     useAccountDeleteMutation();
-  const { data: accounts } = useAccountQuery({
-    accessToken: authData!.accessToken,
-    currentUser: authData!.currentUser,
+  const { data: accounts = [] } = useAccountQuery({
+    accessToken: authDetails!.accessToken,
+    currentUser: authDetails!.currentUser,
   });
 
   const columns: GridColDef[] = [
     {
       field: "id",
       headerName: t("dashboard.accounts.columns.no"),
-      width: 70,
+      width: 100,
       editable: false,
+      headerAlign: "left",
       align: "left",
     },
     {
       field: "accountName",
       type: "string",
       headerName: t("dashboard.accounts.columns.accountName"),
-      width: 175,
+      flex: 1,
       editable: true,
+      headerAlign: "left",
       align: "left",
     },
     {
       field: "balance",
       type: "number",
       headerName: t("dashboard.accounts.columns.balance"),
-      width: 100,
+      flex: 1,
       editable: false,
+      headerAlign: "left",
       align: "left",
     },
     {
       field: "createdAt",
       headerName: t("dashboard.accounts.columns.createdAt"),
-      width: 200,
+      flex: 1,
       editable: false,
+      headerAlign: "left",
       align: "left",
     },
     {
       field: "uniqueId",
       headerName: t("dashboard.accounts.columns.uniqueId"),
-      width: 150,
+      flex: 1,
       editable: false,
+      headerAlign: "left",
       align: "left",
     },
   ];
 
-  const accountRowData: accountDataRowProps[] = accounts!.map((accountData, index) => ({
+  const accountDataRow: accountDataRowProps[] = accounts!.map((accountData, index) => ({
     id: index + 1,
     uniqueId: accountData._id,
     accountName: accountData.accountName,
@@ -85,14 +90,15 @@ const Accounts = () => {
   return (
     <DataGrid<AccountCreateRequestProps, AccountUpdateRequestProps, AccountDeleteRequestProps>
       key={accounts?.length} /* for reloading the data grid */
-      rowsProp={accountRowData}
+      rowsProp={accountDataRow}
       columnsProp={columns}
       dataCategory="account"
+      newDataIdentifier="name"
       newDataFunction={accounteCreateMutate}
       updateDataFunction={accounteUpdateMutate}
       deleteDataFunction={accounteDeleteMutate}
       isNewDataError={accountCreateError}
-      isUpdateDateError={accountUpdateError}
+      isUpdateDataError={accountUpdateError}
       isDeleteDataError={accountDeleteError}
       paginationModel={{
         page: 0,

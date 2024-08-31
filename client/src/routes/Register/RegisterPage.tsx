@@ -21,6 +21,10 @@ import { RegisterFormData, registerSchema } from "./registerSchema";
 import { formBodyStyles, formPageStyles } from "@/styles/formStyles";
 
 const RegisterPage = () => {
+  const { t } = useTranslation();
+
+  const { mutateAsync: registerMutateAsync } = useRegisterMutation();
+
   const [snackbarState, setSnackbarState] = useState<SnackbarStateProps>({
     isOpen: false,
     message: "",
@@ -36,9 +40,6 @@ const RegisterPage = () => {
     control,
     formState: { errors },
   } = useForm<RegisterFormData>({ resolver: zodResolver(registerSchema) });
-  const { t } = useTranslation();
-
-  const { mutateAsync: registerMutateAsync } = useRegisterMutation();
 
   const RegisterFormSubmit = async (fd: FieldValues) => {
     if (fd.password1 !== fd.password2) {

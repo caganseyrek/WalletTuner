@@ -72,6 +72,20 @@
       "modalTitle": "Hesaplar",
       "newAccountNamePlaceholder": "Yeni Hesap",
       "addNewAccountButton": "Yeni Hesap Ekle"
+    },
+    "transactions": {
+      "columns": {
+        "no": "No",
+        "uniqueId": "İşlem ID",
+        "belongsToAccount": "Ait Olduğu Hesap",
+        "type": "Tür",
+        "description": "Açıklama",
+        "dateTime": "Zaman",
+        "value": "Değeri",
+        "actions": "İşlemler"
+      },
+      "newTransactionNamePlaceholder": "Yeni İşlem",
+      "addNewTransactionButton": "Yeni İşlem Ekle"
     }
   }
 }

@@ -1,15 +1,17 @@
+import { useTranslation } from "react-i18next";
+
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import i18next from "i18next";
 
 import { controllers, methods, Requester, routes } from "@/utils/requester";
 
 import { errorMessage } from "@/localization/i18n";
 
 const useAccountUpdateMutation = () => {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
 
   const accountUpdate = useMutation({
-    mutationKey: ["accountMutation"],
+    mutationKey: ["updateAccountMutation"],
     mutationFn: async (accountUpdateData: AccountUpdateRequestProps) => {
       const { accessToken, ...requestData } = accountUpdateData;
       try {
@@ -17,7 +19,7 @@ const useAccountUpdateMutation = () => {
           method: methods.patch,
           endpoint: {
             route: routes.account,
-            controller: controllers.updateAccount,
+            controller: controllers.update,
           },
           accessToken: accessToken,
           payload: requestData,
@@ -30,7 +32,7 @@ const useAccountUpdateMutation = () => {
           throw error;
         } else {
           console.error(errorMessage(useAccountUpdateMutation.name, error));
-          throw new Error(i18next.t("hookMessages.error"));
+          throw new Error(t("hookMessages.error"));
         }
       }
     },

@@ -1,15 +1,17 @@
+import { useTranslation } from "react-i18next";
+
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import i18next from "i18next";
 
 import { controllers, methods, Requester, routes } from "@/utils/requester";
 
 import { errorMessage } from "@/localization/i18n";
 
 const useAccountDeleteMutation = () => {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
 
   const accountDelete = useMutation({
-    mutationKey: ["accountMutation"],
+    mutationKey: ["deleteAccountMutation"],
     mutationFn: async (accountDeleteData: AccountDeleteRequestProps) => {
       const { accessToken, ...requestData } = accountDeleteData;
       try {
@@ -17,7 +19,7 @@ const useAccountDeleteMutation = () => {
           method: methods.delete,
           endpoint: {
             route: routes.account,
-            controller: controllers.deleteAccount,
+            controller: controllers.delete,
           },
           accessToken: accessToken,
           payload: requestData,
@@ -30,7 +32,7 @@ const useAccountDeleteMutation = () => {
           throw error;
         } else {
           console.error(errorMessage(useAccountDeleteMutation.name, error));
-          throw new Error(i18next.t("hookMessages.error"));
+          throw new Error(t("hookMessages.error"));
         }
       }
     },
