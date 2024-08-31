@@ -1,10 +1,20 @@
 import { useTranslation } from "react-i18next";
 
 import { Replay } from "@mui/icons-material";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, SxProps, Typography } from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
 
-import { formPageStyles } from "@/styles/formStyles";
+import { FormPageStyles as ErrorPageStyles } from "@/shared/styles";
+
+const ErrorPageContainerStyles: SxProps = {
+  width: "fit-content",
+  height: "fit-content",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  flexDirection: "column",
+  rowGap: "5px",
+};
 
 const ErrorElement = () => {
   const { t } = useTranslation();
@@ -16,17 +26,8 @@ const ErrorElement = () => {
   };
 
   return (
-    <Box sx={formPageStyles}>
-      <Box
-        sx={{
-          width: "fit-content",
-          height: "fit-content",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          flexDirection: "column",
-          rowGap: "5px",
-        }}>
+    <Box sx={ErrorPageStyles}>
+      <Box sx={ErrorPageContainerStyles}>
         <Typography variant="h2" fontWeight={"500"}>
           {t("publicForms.errorPage.title")}
         </Typography>

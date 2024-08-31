@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { Grid2 as Grid, Paper, Typography } from "@mui/material";
+import { Grid2 as Grid, Paper, SxProps, Typography } from "@mui/material";
 
 import Accounts from "./components/Accounts";
 import Header from "./components/Header";
@@ -11,6 +11,16 @@ import Settings from "./components/Settings";
 import Transactions from "./components/Transactions";
 import AuthCheckProvider from "@/components/AuthCheckProvider";
 
+const TransactionsPaperStyles: SxProps = {
+  width: "996px",
+  margin: "auto",
+  padding: "15px",
+  boxSizing: "border-box",
+  display: "flex",
+  flexDirection: "column",
+  rowGap: "10px",
+};
+
 const MainPage = () => {
   const { t } = useTranslation();
 
@@ -18,7 +28,7 @@ const MainPage = () => {
   const [settingsModalState, setSettingsModalState] = useState<boolean>(false);
 
   return (
-    <AuthCheckProvider isPagePublic={false}>
+    <AuthCheckProvider>
       <Modal
         open={accountsModalState}
         onClose={() => setAccountsModalState(false)}
@@ -38,16 +48,7 @@ const MainPage = () => {
         />
         <Grid container spacing={2} sx={{ width: "996px", margin: "auto" }}>
           <Overview />
-          <Paper
-            sx={{
-              width: "996px",
-              margin: "auto",
-              padding: "15px",
-              boxSizing: "border-box",
-              display: "flex",
-              flexDirection: "column",
-              rowGap: "10px",
-            }}>
+          <Paper sx={TransactionsPaperStyles}>
             <Typography variant="button">{t("dashboard.transactions.paperTitle")}</Typography>
             <Transactions />
           </Paper>

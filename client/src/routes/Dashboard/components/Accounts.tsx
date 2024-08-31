@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 
-import { GridColDef } from "@mui/x-data-grid";
+import { GridColDef, GridPreProcessEditCellProps } from "@mui/x-data-grid";
 import dayjs from "dayjs";
 
 import DataGrid from "@/components/DataGrid";
@@ -51,6 +51,10 @@ const Accounts = () => {
       editable: true,
       headerAlign: "left",
       align: "left",
+      preProcessEditCellProps: (params: GridPreProcessEditCellProps) => {
+        const hasError = params.props.value.length === 0;
+        return { ...params.props, error: hasError };
+      },
     },
     {
       field: "balance",
@@ -79,6 +83,13 @@ const Accounts = () => {
     },
   ];
 
+  const accountsNewDataObject: Omit<accountDataRowProps, "id"> = {
+    uniqueId: "",
+    accountName: "",
+    balance: 0,
+    createdAt: "",
+  };
+
   const accountDataRow: accountDataRowProps[] = accounts!.map((accountData, index) => ({
     id: index + 1,
     uniqueId: accountData._id,
@@ -94,6 +105,7 @@ const Accounts = () => {
       columnsProp={columns}
       dataCategory="account"
       newDataIdentifier="name"
+      newDataObject={accountsNewDataObject}
       newDataFunction={accounteCreateMutate}
       updateDataFunction={accounteUpdateMutate}
       deleteDataFunction={accounteDeleteMutate}

@@ -1,11 +1,11 @@
-interface currencyProps {
-  key: number,
-  currencyName: string,
-  currencyAbbr: string,
-  currencySymbol: string,
+interface CurrencyProps {
+  key: number;
+  currencyName: string;
+  currencyAbbr: string;
+  currencySymbol: string;
 }
 
-export const currencies: currencyProps[] = [
+export const currencies: CurrencyProps[] = [
   {
     key: 1,
     currencyName: "United States Dollar",

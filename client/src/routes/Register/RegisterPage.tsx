@@ -4,9 +4,8 @@ import { useTranslation } from "react-i18next";
 import { Link as RouterLink } from "react-router-dom";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Box, TextField } from "@mui/material";
+import { Box, Paper, TextField } from "@mui/material";
 
-import AuthCheckProvider from "@/components/AuthCheckProvider";
 import FormHeader from "@/components/FormHeader";
 import FormTranslate from "@/components/FormTranslate";
 import Snackbar from "@/components/Snackbar";
@@ -14,11 +13,11 @@ import SubmitButton from "@/components/SubmitButton";
 
 import useRegisterMutation from "./hooks/useRegisterMutation";
 
+import { FormBodyStyles, FormPageStyles, PaperStyles } from "@/shared/styles";
+
 import { errorMessage } from "@/localization/i18n";
 
 import { RegisterFormData, registerSchema } from "./registerSchema";
-
-import { formBodyStyles, formPageStyles } from "@/styles/formStyles";
 
 const RegisterPage = () => {
   const { t } = useTranslation();
@@ -70,9 +69,9 @@ const RegisterPage = () => {
   };
 
   return (
-    <AuthCheckProvider isPagePublic={true}>
-      <Box sx={formPageStyles}>
-        <form noValidate onSubmit={handleSubmit(RegisterFormSubmit)} style={formBodyStyles}>
+    <Box sx={FormPageStyles}>
+      <Paper sx={PaperStyles}>
+        <form noValidate onSubmit={handleSubmit(RegisterFormSubmit)} style={FormBodyStyles}>
           <FormHeader title={t("publicForms.titles.registerTitle")} />
           <Controller
             name="name"
@@ -175,8 +174,8 @@ const RegisterPage = () => {
           )}
           <FormTranslate />
         </form>
-      </Box>
-    </AuthCheckProvider>
+      </Paper>
+    </Box>
   );
 };
 

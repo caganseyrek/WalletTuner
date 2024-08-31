@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 
-import { GridColDef } from "@mui/x-data-grid";
+import { GridColDef, GridPreProcessEditCellProps } from "@mui/x-data-grid";
 
 import DataGrid from "@/components/DataGrid";
 
@@ -15,7 +15,6 @@ interface transactionDataRowProps {
   id: number;
   uniqueId: string;
   belongsToAccount: string;
-  belongsToUser: string;
   transactionType: string;
   transactionDescription: string;
   transactionDatetime: string;
@@ -65,6 +64,10 @@ const Transactions = () => {
       editable: true,
       headerAlign: "left",
       align: "left",
+      preProcessEditCellProps: (params: GridPreProcessEditCellProps) => {
+        const hasError = params.props.value.length === 0;
+        return { ...params.props, error: hasError };
+      },
     },
     {
       field: "transactionType",
@@ -74,6 +77,10 @@ const Transactions = () => {
       editable: true,
       headerAlign: "left",
       align: "left",
+      preProcessEditCellProps: (params: GridPreProcessEditCellProps) => {
+        const hasError = params.props.value.length === 0;
+        return { ...params.props, error: hasError };
+      },
     },
     {
       field: "transactionDescription",
@@ -83,6 +90,10 @@ const Transactions = () => {
       editable: true,
       headerAlign: "left",
       align: "left",
+      preProcessEditCellProps: (params: GridPreProcessEditCellProps) => {
+        const hasError = params.props.value.length === 0;
+        return { ...params.props, error: hasError };
+      },
     },
     {
       field: "transactionDatetime",
@@ -92,6 +103,10 @@ const Transactions = () => {
       editable: true,
       headerAlign: "left",
       align: "left",
+      preProcessEditCellProps: (params: GridPreProcessEditCellProps) => {
+        const hasError = params.props.value.length === 0;
+        return { ...params.props, error: hasError };
+      },
     },
     {
       field: "transactionValue",
@@ -101,8 +116,21 @@ const Transactions = () => {
       editable: true,
       headerAlign: "left",
       align: "left",
+      preProcessEditCellProps: (params: GridPreProcessEditCellProps) => {
+        const hasError = params.props.value.length === 0;
+        return { ...params.props, error: hasError };
+      },
     },
   ];
+
+  const transactionsNewDataObject: Omit<transactionDataRowProps, "id"> = {
+    uniqueId: "",
+    belongsToAccount: "",
+    transactionType: "",
+    transactionDescription: "",
+    transactionDatetime: "",
+    transactionValue: "",
+  };
 
   const transactionDataRow: transactionDataRowProps[] = transactions!.map(
     (transactionData, index) => ({
@@ -111,7 +139,6 @@ const Transactions = () => {
       belongsToAccount: accounts.find(
         (accountData) => accountData._id === transactionData.belongsToAccount,
       )!.accountName,
-      belongsToUser: transactionData.belongsToUser,
       transactionType: transactionData.transactionType,
       transactionDescription: transactionData.transactionDescription,
       transactionDatetime: transactionData.transactionDatetime,
@@ -130,6 +157,7 @@ const Transactions = () => {
       columnsProp={columns}
       dataCategory="transaction"
       newDataIdentifier="description"
+      newDataObject={transactionsNewDataObject}
       newDataFunction={transactionCreateMutate}
       updateDataFunction={transactionUpdateMutate}
       deleteDataFunction={transactionDeleteMutate}

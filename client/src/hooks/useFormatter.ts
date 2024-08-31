@@ -2,7 +2,7 @@ import { useMemo } from "react";
 
 import i18next from "i18next";
 
-import { currencies } from "@/data/currencies";
+import { currencies } from "@/shared/currencies";
 
 import { errorMessage } from "@/localization/i18n";
 

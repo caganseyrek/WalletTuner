@@ -4,9 +4,8 @@ import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Box, TextField } from "@mui/material";
+import { Box, Paper, TextField } from "@mui/material";
 
-import AuthCheckProvider from "@/components/AuthCheckProvider";
 import FormHeader from "@/components/FormHeader";
 import FormTranslate from "@/components/FormTranslate";
 import Snackbar from "@/components/Snackbar";
@@ -15,11 +14,11 @@ import SubmitButton from "@/components/SubmitButton";
 import useLoginMutation from "./hooks/useLoginMutation";
 import useSettingsMutation from "./hooks/useSettingsMutation";
 
+import { FormBodyStyles, FormPageStyles, PaperStyles } from "@/shared/styles";
+
 import { errorMessage } from "@/localization/i18n";
 
 import { LoginFormData, loginSchema } from "./loginSchema";
-
-import { formBodyStyles, formPageStyles } from "@/styles/formStyles";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -87,9 +86,9 @@ const LoginPage = () => {
   };
 
   return (
-    <AuthCheckProvider isPagePublic={true}>
-      <Box sx={formPageStyles}>
-        <form noValidate onSubmit={handleSubmit(LoginFormSubmit)} style={formBodyStyles}>
+    <Box sx={FormPageStyles}>
+      <Paper sx={PaperStyles}>
+        <form noValidate onSubmit={handleSubmit(LoginFormSubmit)} style={FormBodyStyles}>
           <FormHeader title={t("publicForms.titles.loginTitle")} />
           <Controller
             name="email"
@@ -140,8 +139,8 @@ const LoginPage = () => {
           )}
           <FormTranslate />
         </form>
-      </Box>
-    </AuthCheckProvider>
+      </Paper>
+    </Box>
   );
 };
 

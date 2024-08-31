@@ -26,6 +26,8 @@ import { UseMutateAsyncFunction } from "@tanstack/react-query";
 
 import useAuthDetails from "@/hooks/useAuthDetails";
 
+import gridLocaleText from "@/localization/gridLocaleText";
+
 import Snackbar from "./Snackbar";
 
 interface DataGridProps<TNew, TUpdate, TDelete> {
@@ -34,6 +36,7 @@ interface DataGridProps<TNew, TUpdate, TDelete> {
   paginationModel: GridPaginationModel;
   dataCategory: string;
   newDataIdentifier: string;
+  newDataObject: object;
   newDataFunction: UseMutateAsyncFunction<MessageResponseProps, Error, TNew, unknown>;
   updateDataFunction: UseMutateAsyncFunction<MessageResponseProps, Error, TUpdate, unknown>;
   deleteDataFunction: UseMutateAsyncFunction<MessageResponseProps, Error, TDelete, unknown>;
@@ -48,6 +51,7 @@ const DataGrid = <TNew, TUpdate, TDelete>({
   paginationModel,
   dataCategory,
   newDataIdentifier,
+  newDataObject,
   newDataFunction,
   updateDataFunction,
   deleteDataFunction,
@@ -72,20 +76,11 @@ const DataGrid = <TNew, TUpdate, TDelete>({
 
   const CustomToolbar = () => {
     const handleAddNewClick = async () => {
-      setIsWaiting(true);
-      const newData = {
-        [`${dataCategory}${formattedNewDataIdentifier}`]: `${t(`main:dashboard.${dataCategory}s.new${formattedDataCategory}NamePlaceholder`)}`,
-      };
-      const response = await newDataFunction({
-        accessToken: authData?.accessToken,
-        currentUser: authData?.currentUser,
-        ...newData,
-      } as TNew);
-      setIsWaiting(false);
-      setSnackbarState({
-        isOpen: true,
-        message: response.message,
-      });
+      setRows((rows) => [...rows, { id: rows.length + 1, ...newDataObject, isNew: true }]);
+      setRowModesModel((currentModel) => ({
+        ...currentModel,
+        [rows.length + 1]: { mode: GridRowModes.Edit },
+      }));
     };
 
     return (
@@ -116,16 +111,21 @@ const DataGrid = <TNew, TUpdate, TDelete>({
 
   const processRowUpdate = async (updatedRow: GridRowModel, originalRow: GridRowModel) => {
     const updatedValues: Record<string, string | number>[] = [];
-    const keys = new Set([...Object.keys(originalRow), ...Object.keys(updatedRow)]);
-    keys.forEach((key) => {
-      if (key === "uniqueId") {
-        updatedValues.push({ [`${dataCategory}Id`]: updatedRow[key] });
-      }
-      if (updatedRow[key] !== originalRow[key]) {
-        updatedValues.push({ [key]: updatedRow[key] });
-      }
-    });
-    const requestValues = updatedValues.reduce((acc, record) => ({ ...acc, ...record }));
+    if (!updatedRow.isNew) {
+      const keys = new Set([...Object.keys(originalRow), ...Object.keys(updatedRow)]);
+      keys.forEach((key) => {
+        if (key === "uniqueId") {
+          updatedValues.push({ [`${dataCategory}Id`]: updatedRow[key] });
+        }
+        if (updatedRow[key] !== originalRow[key]) {
+          updatedValues.push({ [key]: updatedRow[key] });
+        }
+      });
+    }
+    const requestValues = updatedRow.isNew
+      ? updatedValues.reduce((acc, record) => ({ ...acc, ...record }))
+      : updatedRow;
+
     setIsWaiting(true);
     const response = await updateDataFunction({
       accessToken: authData?.accessToken,
@@ -144,12 +144,41 @@ const DataGrid = <TNew, TUpdate, TDelete>({
     setRowModesModel(newRowModesModel);
   };
 
-  const handleEditClick = async (id: GridRowId) => {
+  const handleEditClick = (id: GridRowId) => {
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
   };
 
-  const handleSaveClick = (id: GridRowId) => {
+  const handleSaveClick = async (id: GridRowId) => {
+    const savedRow = rows.filter((row) => row.id === id)[0];
+    const validateRow = Object.values(savedRow).every((value) => {
+      if (typeof value === "string") {
+        return value.trim() !== "";
+      } else {
+        return value !== null && value !== undefined;
+      }
+    });
+    if (!validateRow) {
+      return setSnackbarState({
+        isOpen: true,
+        message: t("datagrid:validationFail"),
+      });
+    }
+
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
+    setIsWaiting(true);
+    const newData = {
+      [`${dataCategory}${formattedNewDataIdentifier}`]: `${t(`main:dashboard.${dataCategory}s.new${formattedDataCategory}NamePlaceholder`)}`,
+    };
+    const response = await newDataFunction({
+      accessToken: authData?.accessToken,
+      currentUser: authData?.currentUser,
+      ...newData,
+    } as TNew);
+    setIsWaiting(false);
+    setSnackbarState({
+      isOpen: true,
+      message: response.message,
+    });
   };
 
   const handleDeleteClick = async (id: GridRowId) => {
@@ -181,13 +210,11 @@ const DataGrid = <TNew, TUpdate, TDelete>({
 
   return (
     <>
-      {snackbarState.isOpen && (
-        <Snackbar
-          snackbarState={snackbarState}
-          setSnackbarState={setSnackbarState}
-          severity={isNewDataError || isUpdateDataError || isDeleteDataError ? "error" : "success"}
-        />
-      )}
+      <Snackbar
+        snackbarState={snackbarState}
+        setSnackbarState={setSnackbarState}
+        severity={isNewDataError || isUpdateDataError || isDeleteDataError ? "error" : "success"}
+      />
       <DataGridComponent
         loading={isWaiting ? true : false}
         rows={rows}
@@ -240,131 +267,7 @@ const DataGrid = <TNew, TUpdate, TDelete>({
           pagination: { paginationModel },
         }}
         slots={{ toolbar: CustomToolbar as GridSlots["toolbar"] }}
-        localeText={{
-          noRowsLabel: t("datagrid:noRowsLabel"),
-          noResultsOverlayLabel: t("datagrid:noResultsOverlayLabel"),
-          toolbarDensity: t("datagrid:toolbarDensity"),
-          toolbarDensityLabel: t("datagrid:toolbarDensityLabel"),
-          toolbarDensityCompact: t("datagrid:toolbarDensityCompact"),
-          toolbarDensityStandard: t("datagrid:toolbarDensityStandard"),
-          toolbarDensityComfortable: t("datagrid:toolbarDensityComfortable"),
-          toolbarColumns: t("datagrid:toolbarColumns"),
-          toolbarColumnsLabel: t("datagrid:toolbarColumnsLabel"),
-          toolbarFilters: t("datagrid:toolbarFilters"),
-          toolbarFiltersLabel: t("datagrid:toolbarFiltersLabel"),
-          toolbarFiltersTooltipHide: t("datagrid:toolbarFiltersTooltipHide"),
-          toolbarFiltersTooltipShow: t("datagrid:toolbarFiltersTooltipShow"),
-          toolbarFiltersTooltipActive: (count) =>
-            count !== 1
-              ? `${count} ${t("datagrid:toolbarFiltersTooltipMultipleActive")}`
-              : `${count} ${t("datagrid:toolbarFiltersTooltipOneActive")}`,
-          toolbarQuickFilterPlaceholder: t("datagrid:toolbarQuickFilterPlaceholder"),
-          toolbarQuickFilterLabel: t("datagrid:toolbarQuickFilterLabel"),
-          toolbarQuickFilterDeleteIconLabel: t("datagrid:toolbarQuickFilterDeleteIconLabel"),
-          toolbarExport: t("datagrid:toolbarExport"),
-          toolbarExportLabel: t("datagrid:toolbarExportLabel"),
-          toolbarExportCSV: t("datagrid:toolbarExportCSV"),
-          toolbarExportPrint: t("datagrid:toolbarExportPrint"),
-          toolbarExportExcel: t("datagrid:toolbarExportExcel"),
-          columnsManagementSearchTitle: t("datagrid:columnsManagementSearchTitle"),
-          columnsManagementNoColumns: t("datagrid:columnsManagementNoColumns"),
-          columnsManagementShowHideAllText: t("datagrid:columnsManagementShowHideAllText"),
-          columnsManagementReset: t("datagrid:columnsManagementReset"),
-          filterPanelAddFilter: t("datagrid:filterPanelAddFilter"),
-          filterPanelRemoveAll: t("datagrid:filterPanelRemoveAll"),
-          filterPanelDeleteIconLabel: t("datagrid:filterPanelDeleteIconLabel"),
-          filterPanelLogicOperator: t("datagrid:filterPanelLogicOperator"),
-          filterPanelOperator: t("datagrid:filterPanelOperator"),
-          filterPanelOperatorAnd: t("datagrid:filterPanelOperatorAnd"),
-          filterPanelOperatorOr: t("datagrid:filterPanelOperatorOr"),
-          filterPanelColumns: t("datagrid:filterPanelColumns"),
-          filterPanelInputLabel: t("datagrid:filterPanelInputLabel"),
-          filterPanelInputPlaceholder: t("datagrid:filterPanelInputPlaceholder"),
-          filterOperatorContains: t("datagrid:filterOperatorContains"),
-          filterOperatorEquals: t("datagrid:filterOperatorEquals"),
-          filterOperatorStartsWith: t("datagrid:filterOperatorStartsWith"),
-          filterOperatorEndsWith: t("datagrid:filterOperatorEndsWith"),
-          filterOperatorIs: t("datagrid:filterOperatorIs"),
-          filterOperatorNot: t("datagrid:filterOperatorNot"),
-          filterOperatorAfter: t("datagrid:filterOperatorAfter"),
-          filterOperatorOnOrAfter: t("datagrid:filterOperatorOnOrAfter"),
-          filterOperatorBefore: t("datagrid:filterOperatorBefore"),
-          filterOperatorOnOrBefore: t("datagrid:filterOperatorOnOrBefore"),
-          filterOperatorIsEmpty: t("datagrid:filterOperatorIsEmpty"),
-          filterOperatorIsNotEmpty: t("datagrid:filterOperatorIsNotEmpty"),
-          filterOperatorIsAnyOf: t("datagrid:filterOperatorIsAnyOf"),
-          headerFilterOperatorContains: t("datagrid:headerFilterOperatorContains"),
-          headerFilterOperatorEquals: t("datagrid:headerFilterOperatorEquals"),
-          headerFilterOperatorStartsWith: t("datagrid:headerFilterOperatorStartsWith"),
-          headerFilterOperatorEndsWith: t("datagrid:headerFilterOperatorEndsWith"),
-          headerFilterOperatorIs: t("datagrid:headerFilterOperatorIs"),
-          headerFilterOperatorNot: t("datagrid:headerFilterOperatorNot"),
-          headerFilterOperatorAfter: t("datagrid:headerFilterOperatorAfter"),
-          headerFilterOperatorOnOrAfter: t("datagrid:headerFilterOperatorOnOrAfter"),
-          headerFilterOperatorBefore: t("datagrid:headerFilterOperatorBefore"),
-          headerFilterOperatorOnOrBefore: t("datagrid:headerFilterOperatorOnOrBefore"),
-          headerFilterOperatorIsEmpty: t("datagrid:headerFilterOperatorIsEmpty"),
-          headerFilterOperatorIsNotEmpty: t("datagrid:headerFilterOperatorIsNotEmpty"),
-          headerFilterOperatorIsAnyOf: t("datagrid:headerFilterOperatorIsAnyOf"),
-          "headerFilterOperator=": t("datagrid:headerFilterOperator="),
-          "headerFilterOperator!=": t("datagrid:headerFilterOperator!="),
-          "headerFilterOperator>": t("datagrid:headerFilterOperator>"),
-          "headerFilterOperator>=": t("datagrid:headerFilterOperator>="),
-          "headerFilterOperator<": t("datagrid:headerFilterOperator<"),
-          "headerFilterOperator<=": t("datagrid:headerFilterOperator<="),
-          filterValueAny: t("datagrid:filterValueAny"),
-          filterValueTrue: t("datagrid:filterValueTrue"),
-          filterValueFalse: t("datagrid:filterValueFalse"),
-          columnMenuLabel: t("datagrid:columnMenuLabel"),
-          columnMenuShowColumns: t("datagrid:columnMenuShowColumns"),
-          columnMenuManageColumns: t("datagrid:columnMenuManageColumns"),
-          columnMenuFilter: t("datagrid:columnMenuFilter"),
-          columnMenuHideColumn: t("datagrid:columnMenuHideColumn"),
-          columnMenuUnsort: t("datagrid:columnMenuUnsort"),
-          columnMenuSortAsc: t("datagrid:columnMenuSortAsc"),
-          columnMenuSortDesc: t("datagrid:columnMenuSortDesc"),
-          columnHeaderFiltersTooltipActive: (count) =>
-            count !== 1
-              ? `${count} ${t("datagrid:columnHeaderFiltersTooltipMultipleActive")}`
-              : `${count} ${t("datagrid:columnHeaderFiltersTooltipOneActive")}`,
-          columnHeaderFiltersLabel: t("datagrid:columnHeaderFiltersLabel"),
-          columnHeaderSortIconLabel: t("datagrid:columnHeaderSortIconLabel"),
-          footerRowSelected: (count) =>
-            count !== 1
-              ? `${count.toLocaleString()} ${t("datagrid:footerRowMultipleSelected")}`
-              : `${count.toLocaleString()} ${t("datagrid:footerRowOneSelected")}`,
-
-          footerTotalRows: t("datagrid:footerTotalRows"),
-          footerTotalVisibleRows: (visibleCount, totalCount) =>
-            `${visibleCount.toLocaleString()} ${t("datagrid:checkboxSelectionHeaderNameSeperator")} ${totalCount.toLocaleString()}`,
-          checkboxSelectionHeaderName: t("datagrid:checkboxSelectionHeaderName"),
-          checkboxSelectionSelectAllRows: t("datagrid:checkboxSelectionSelectAllRows"),
-          checkboxSelectionUnselectAllRows: t("datagrid:checkboxSelectionUnselectAllRows"),
-          checkboxSelectionSelectRow: t("datagrid:checkboxSelectionSelectRow"),
-          checkboxSelectionUnselectRow: t("datagrid:checkboxSelectionUnselectRow"),
-          booleanCellTrueLabel: t("datagrid:booleanCellTrueLabel"),
-          booleanCellFalseLabel: t("datagrid:booleanCellFalseLabel"),
-          actionsCellMore: t("datagrid:actionsCellMore"),
-          pinToLeft: t("datagrid:pinToLeft"),
-          pinToRight: t("datagrid:pinToRight"),
-          unpin: t("datagrid:unpin"),
-          treeDataGroupingHeaderName: t("datagrid:treeDataGroupingHeaderName"),
-          treeDataExpand: t("datagrid:treeDataExpand"),
-          treeDataCollapse: t("datagrid:treeDataCollapse"),
-          groupingColumnHeaderName: t("datagrid:groupingColumnHeaderName"),
-          groupColumn: (name) => `${t("datagrid:groupColumn")} ${name}`,
-          unGroupColumn: (name) => `${t("datagrid:unGroupColumn")} ${name}`,
-          detailPanelToggle: t("datagrid:detailPanelToggle"),
-          expandDetailPanel: t("datagrid:expandDetailPanel"),
-          collapseDetailPanel: t("datagrid:collapseDetailPanel"),
-          rowReorderingHeaderName: t("datagrid:rowReorderingHeaderName"),
-          aggregationMenuItemHeader: t("datagrid:aggregationMenuItemHeader"),
-          aggregationFunctionLabelSum: t("datagrid:aggregationFunctionLabelSum"),
-          aggregationFunctionLabelAvg: t("datagrid:aggregationFunctionLabelAvg"),
-          aggregationFunctionLabelMin: t("datagrid:aggregationFunctionLabelMin"),
-          aggregationFunctionLabelMax: t("datagrid:aggregationFunctionLabelMax"),
-          aggregationFunctionLabelSize: t("datagrid:aggregationFunctionLabelSize"),
-        }}
+        localeText={gridLocaleText}
       />
     </>
   );

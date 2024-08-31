@@ -1,4 +1,3 @@
-import { CSSProperties } from "react";
 import { useTranslation } from "react-i18next";
 
 import { Grid2 as Grid, Paper, Typography } from "@mui/material";
@@ -8,13 +7,7 @@ import useAccountQuery from "../hooks/account/useAccountQuery";
 import useAuthDetails from "@/hooks/useAuthDetails";
 import useFormatter from "@/hooks/useFormatter";
 
-const paperStyles: CSSProperties = {
-  padding: "15px",
-  boxSizing: "border-box",
-  display: "flex",
-  flexDirection: "column",
-  rowGap: "10px",
-};
+import { PaperStyles } from "@/shared/styles";
 
 const Overview = () => {
   const { t } = useTranslation();
@@ -35,17 +28,17 @@ const Overview = () => {
   return (
     <Grid container spacing={1} sx={{ width: "996px", margin: "auto" }}>
       <Grid container direction="column" rowSpacing={1} sx={{ width: "320px" }}>
-        <Paper sx={paperStyles}>
+        <Paper sx={PaperStyles}>
           <Typography variant="button">{t("dashboard.overview.balance")}</Typography>
           <Typography variant="h3">{formatter("23674.35")}</Typography>
         </Paper>
-        <Paper sx={paperStyles}>
+        <Paper sx={PaperStyles}>
           <Typography variant="button">{t("dashboard.overview.monthlyIncome")}</Typography>
           <Typography variant="h3" color="success">
             +{formatter("7021.01")}
           </Typography>
         </Paper>
-        <Paper sx={paperStyles}>
+        <Paper sx={PaperStyles}>
           <Typography variant="button">{t("dashboard.overview.monthlyExpense")}</Typography>
           <Typography variant="h3" color="error">
             -{formatter("1423.26")}
@@ -54,7 +47,7 @@ const Overview = () => {
       </Grid>
       <Paper
         sx={{
-          ...paperStyles,
+          ...PaperStyles,
           width: "676px",
           display: "flex",
           flex: "1",
