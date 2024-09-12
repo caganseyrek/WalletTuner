@@ -5,7 +5,6 @@ import PrivateLayout from "./routes/layouts/PrivateLayout";
 import PublicLayout from "./routes/layouts/PublicLayout";
 import ErrorPage from "./routes/others/ErrorPage";
 import NotFoundPage from "./routes/others/NotFoundPage";
-import UnauthorizedPage from "./routes/others/UnauthorizedPage";
 import AccountsPage from "./routes/private/AccountsPage";
 import TransactionsPage from "./routes/private/TransactionsPage";
 import LoginPage from "./routes/public/LoginPage";
@@ -25,7 +24,6 @@ const Routes = () => {
           <Route path="/login" element={<LoginPage />} errorElement={<ErrorPage />} />
           <Route path="/register" element={<RegisterPage />} errorElement={<ErrorPage />} />
         </Route>
-        <Route path="/401" element={<UnauthorizedPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </BrowserRoutes>
     </BrowserRouter>
