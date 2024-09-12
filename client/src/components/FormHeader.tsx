@@ -1,6 +1,6 @@
-import { CSSProperties, FC } from "react";
+import { FC } from "react";
 
-import { Box, SxProps, Typography } from "@mui/material";
+import { Box, Paper, SxProps, Typography } from "@mui/material";
 
 const FormHeaderStyles: SxProps = {
   paddingTop: "10px",
@@ -13,11 +13,13 @@ const FormHeaderStyles: SxProps = {
   rowGap: "10px",
 };
 
-const LogoStyles: CSSProperties = {
+const LogoStyles: SxProps = {
+  backgroundImage: "url('../../assets/wallettuner_logo.jpeg')",
+  backgroundSize: "cover",
+  backgroundPosition: "center center",
   width: "80px",
   height: "80px",
-  borderRadius: "100%",
-  border: "solid 5px #413d80",
+  borderRadius: 2,
   boxSizing: "border-box",
 };
 
@@ -30,7 +32,7 @@ const TitleStyles: SxProps = {
 const FormHeader: FC<FormHeaderProps> = ({ title }) => {
   return (
     <Box sx={FormHeaderStyles}>
-      <img src="../../assets/logo.png" style={LogoStyles} />
+      <Paper sx={LogoStyles} />
       <Typography variant="h3" sx={TitleStyles}>
         {title}
       </Typography>

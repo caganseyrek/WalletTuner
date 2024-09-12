@@ -18,13 +18,13 @@ const SubmitButtonText = ({ status }: SubmitButtonProps) => {
   const { t } = useTranslation();
 
   if (status.isLoading) {
-    return t("publicForms.buttons.loginIsLoadingText");
+    return t("forms.buttons.loginIsLoadingText");
   } else if (status.isSuccess) {
-    return t("publicForms.buttons.loginIsSuccessText");
+    return t("forms.buttons.loginIsSuccessText");
   } else if (status.isError) {
-    return t("publicForms.buttons.loginIsErrorText");
+    return t("forms.buttons.loginIsErrorText");
   }
-  return t("publicForms.buttons.loginButton");
+  return t("forms.buttons.loginButton");
 };
 
 const submitButtonColor = ({ status }: SubmitButtonProps) => {

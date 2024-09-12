@@ -9,7 +9,9 @@ const AuthCheckProvider = ({ children }: AuthCheckProps) => {
 
   useOnMountEffect(() => {
     if (!authDetails?.accessToken) {
-      return navigate("/login");
+      return navigate("/401");
+    } else {
+      return navigate("/accounts");
     }
   });
 

@@ -1,91 +1,70 @@
 {
   "greetingMessages": {
-    "morning": "Günaydın",
-    "afternoon": "Tünaydın",
-    "evening": "İyi akşamlar",
-    "night": "İyi geceler"
+    "morning": "Good Morning",
+    "afternoon": "Good Afternoon",
+    "evening": "Good Evening",
+    "night": "Good Night"
   },
-  "requesterInstanceMessages": {
-    "error": "Bir hata oluştu, lütfen tekrar deneyin"
+  "requesterMessages": {
+    "error": "An error ocurred, please try again"
   },
   "hookMessages": {
-    "formatterError": "Format Hatası",
-    "error": "Bir hata oluştu, lütfen tekrar deneyin"
+    "formatterError": "Formatting Error",
+    "error": "An error ocurred, please try again"
   },
-  "publicForms": {
-    "titles": {
-      "loginTitle": "WalletTuner'a giriş yapın",
-      "registerTitle": "Yeni hesap oluşturun"
+  "layouts": {
+    "sidebar": {
+      "dashboardsTitle": "Dashboards",
+      "accounts": "Accounts",
+      "transactions": "Transactions",
+      "graphs": "Graphs",
+      "summaries": "Summaries",
+      "generalTitle": "General",
+      "settings": "Settings",
+      "shortcuts": "Shortcuts",
+      "docs": "Docs"
     },
-    "schemas": {
-      "required": "Bu alan zorunludur",
-      "invalidEmail": "Lütfen geçerli bir e-posta adresi giriniz"
+    "appbar": {
+      "translateTooltip": "Change Language",
+      "toggleDarkTooltip": "Toggle Dark Mode",
+      "logoutTooltip": "Logout"
+    }
+  },
+  "forms": {
+    "titles": {
+      "loginTitle": "Sign in to WalletTuner",
+      "registerTitle": "Create a new Account"
     },
     "messages": {
-      "passwordsNotMatch": "Girilen şifreler eşleşmiyor",
-      "error": "Bilinmeyen bir hata oluştu, lütfen tekrar deneyin"
+      "passwordsNotMatch": "Passwords do not match",
+      "error": "An unknown error occurred, please try again later"
     },
     "placeholders": {
-      "firstNamePlaceholder": "Adınız",
-      "lastNamePlaceholder": "Soyadınız",
-      "emailPlaceholder": "E-Posta",
-      "passwordPlaceholder": "Şifre",
-      "passwordAgainPlaceholder": "Şifre Tekrar",
-      "registerText": "Hesabınız yok mu?",
-      "registerLink": "Hemen kaydolun!",
-      "loginText": "Zaten hesabınız var mı?",
-      "loginLink": "Hemen giriş yapın!"
-    },
-    "errorPage": {
-      "title": "Bir hata oluştu",
-      "description": "Sayfayı yükleyemedik ve bu konuda çok üzgünüz.",
-      "reload": "Önbelleği Temizle ve Yeniden Yükle"
+      "firstNamePlaceholder": "First Name",
+      "lastNamePlaceholder": "Last Name",
+      "emailPlaceholder": "E-Mail",
+      "passwordPlaceholder": "Password",
+      "passwordAgainPlaceholder": "Password Again",
+      "registerText": "Don't have an account?",
+      "registerLink": "Register Now!",
+      "loginText": "Already have an account?",
+      "loginLink": "Login now!"
     },
     "buttons": {
-      "registerButton": "Kayıt Ol",
-      "loginButton": "Giriş Yap",
-      "loginIsLoadingText": "Giriş Yapılıyor...",
-      "loginIsSuccessText": "Giriş Yapıldı!",
-      "loginIsErrorText": "Bir hata oluştu."
+      "registerButton": "Register",
+      "loginButton": "Login",
+      "loginIsLoadingText": "Logging In...",
+      "loginIsSuccessText": "Logged In!",
+      "loginIsErrorText": "An error occurred."
+    },
+    "schemas": {
+      "required": "This field is required",
+      "invalidEmail": "Please enter a valid e-mail address"
     }
   },
-  "dashboard": {
-    "header": {
-      "accountsButton": "Hesaplar",
-      "settingsButton": "Ayarlar"
-    },
-    "overview": {
-      "balance": "Bakiye",
-      "monthlyIncome": "Aylık Gelir",
-      "monthlyExpense": "Aylık Gider",
-      "balancePerAccount": "Hesap Bakiyeleri"
-    },
-    "accounts": {
-      "columns": {
-        "no": "No",
-        "accountName": "Hesap İsmi",
-        "balance": "Bakiye",
-        "createdAt": "Oluşturulma Zamanı",
-        "uniqueId": "Hesap ID",
-        "actions": "İşlemler"
-      },
-      "modalTitle": "Hesaplar",
-      "newAccountNamePlaceholder": "Yeni Hesap",
-      "addNewAccountButton": "Yeni Hesap Ekle"
-    },
-    "transactions": {
-      "columns": {
-        "no": "No",
-        "uniqueId": "İşlem ID",
-        "belongsToAccount": "Ait Olduğu Hesap",
-        "type": "Tür",
-        "description": "Açıklama",
-        "dateTime": "Zaman",
-        "value": "Değeri",
-        "actions": "İşlemler"
-      },
-      "newTransactionNamePlaceholder": "Yeni İşlem",
-      "addNewTransactionButton": "Yeni İşlem Ekle"
-    }
+  "errorPage": {
+    "title": "An error occurred",
+    "description": "We are unable to load the page and are really sorry about it.",
+    "reload": "Reload"
   }
 }

@@ -26,6 +26,8 @@ import { UseMutateAsyncFunction } from "@tanstack/react-query";
 
 import useAuthDetails from "@/hooks/useAuthDetails";
 
+import { mediumColor } from "@/shared/globals.style";
+
 import gridLocaleText from "@/localization/gridLocaleText";
 
 import Snackbar from "./Snackbar";
@@ -33,7 +35,7 @@ import Snackbar from "./Snackbar";
 interface DataGridProps<TNew, TUpdate, TDelete> {
   rowsProp: GridRowsProp;
   columnsProp: GridColDef[];
-  paginationModel: GridPaginationModel;
+  paginationModel?: GridPaginationModel;
   dataCategory: string;
   newDataIdentifier: string;
   newDataObject: object;
@@ -64,6 +66,7 @@ const DataGrid = <TNew, TUpdate, TDelete>({
   const [isWaiting, setIsWaiting] = useState<boolean>(false);
   const [snackbarState, setSnackbarState] = useState<SnackbarStateProps>({
     isOpen: false,
+    isError: false,
     message: "",
   });
   const [rows, setRows] = useState<GridRowsProp>(rowsProp);
@@ -135,6 +138,7 @@ const DataGrid = <TNew, TUpdate, TDelete>({
     setIsWaiting(false);
     setSnackbarState({
       isOpen: true,
+      isError: isUpdateDataError,
       message: response.message,
     });
     return updatedRow;
@@ -160,6 +164,7 @@ const DataGrid = <TNew, TUpdate, TDelete>({
     if (!validateRow) {
       return setSnackbarState({
         isOpen: true,
+        isError: true,
         message: t("datagrid:validationFail"),
       });
     }
@@ -177,6 +182,7 @@ const DataGrid = <TNew, TUpdate, TDelete>({
     setIsWaiting(false);
     setSnackbarState({
       isOpen: true,
+      isError: true,
       message: response.message,
     });
   };
@@ -192,6 +198,7 @@ const DataGrid = <TNew, TUpdate, TDelete>({
     setIsWaiting(false);
     setSnackbarState({
       isOpen: true,
+      isError: true, // FIXME: fix isError props on every setSnackbarState call
       message: response.message,
     });
   };
@@ -208,6 +215,8 @@ const DataGrid = <TNew, TUpdate, TDelete>({
     }
   };
 
+  // TODO: add simpler filters
+
   return (
     <>
       <Snackbar
@@ -217,6 +226,7 @@ const DataGrid = <TNew, TUpdate, TDelete>({
       />
       <DataGridComponent
         loading={isWaiting ? true : false}
+        sx={{ borderRadius: 0, border: `solid 1px ${mediumColor}` }}
         rows={rows}
         columns={[
           ...columnsProp,

@@ -2,20 +2,20 @@ import { initReactI18next } from "react-i18next";
 
 import i18n from "i18next";
 
-import dataGridTranslationsEn from "./translations/datagrid_en.json";
-import dataGridTranslationsTr from "./translations/datagrid_tr.json";
-import mainTranslationsEn from "./translations/main_en.json";
-import mainTranslationsTr from "./translations/main_tr.json";
+import data_grid_en from "./translations/data_grid_en.json";
+import data_grid_tr from "./translations/data_grid_tr.json";
+import main_en from "./translations/main_en.json";
+import main_tr from "./translations/main_tr.json";
 
 i18n.use(initReactI18next).init({
   resources: {
     en: {
-      main: mainTranslationsEn,
-      datagrid: dataGridTranslationsEn,
+      main: main_en,
+      data_grid: data_grid_en,
     },
     tr: {
-      main: mainTranslationsTr,
-      datagrid: dataGridTranslationsTr,
+      main: main_tr,
+      data_grid: data_grid_tr,
     },
   },
   lng: "en",

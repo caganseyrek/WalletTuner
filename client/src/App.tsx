@@ -1,34 +1,14 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-
 import { createTheme, CssBaseline, Theme, ThemeProvider } from "@mui/material";
+import { TypographyOptions } from "@mui/material/styles/createTypography";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
-import MainPage from "./routes/Dashboard/DashboardPage";
-import LoginPage from "./routes/Login/LoginPage";
-import RegisterPage from "./routes/Register/RegisterPage";
+import { darkColor, lightColor } from "./shared/globals.style";
 
-import ErrorElement from "./components/ErrorElement";
+import Routes from "./Routes";
 
 const App = () => {
   const IS_DEV = Boolean(import.meta.env.VITE_APP_IS_DEV);
-  const router = createBrowserRouter([
-    {
-      path: "/login",
-      element: <LoginPage />,
-      errorElement: <ErrorElement />,
-    },
-    {
-      path: "/register",
-      element: <RegisterPage />,
-      errorElement: <ErrorElement />,
-    },
-    {
-      path: "/",
-      element: <MainPage />,
-      errorElement: <ErrorElement />,
-    },
-  ]);
 
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -36,7 +16,7 @@ const App = () => {
     },
   });
 
-  const typography = {
+  const typography: TypographyOptions = {
     fontFamily: "Inter",
     fontSize: 14,
     htmlFontSize: 16,
@@ -51,9 +31,9 @@ const App = () => {
   const lightTheme: Theme = createTheme({
     palette: {
       mode: "light",
-      primary: { main: "#413d80" },
+      primary: { main: darkColor },
       secondary: { main: "#ee6c4d" },
-      background: { default: "#eeeeee" },
+      background: { default: lightColor },
     },
     typography,
   });
@@ -73,7 +53,7 @@ const App = () => {
     <ThemeProvider theme={lightTheme}>
       <CssBaseline />
       <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
+        <Routes />
         {IS_DEV && <ReactQueryDevtools initialIsOpen={false} />}
       </QueryClientProvider>
     </ThemeProvider>

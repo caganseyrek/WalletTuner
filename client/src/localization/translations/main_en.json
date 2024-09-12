@@ -5,21 +5,35 @@
     "evening": "Good Evening",
     "night": "Good Night"
   },
-  "requesterInstanceMessages": {
+  "requesterMessages": {
     "error": "An error ocurred, please try again"
   },
   "hookMessages": {
     "formatterError": "Formatting Error",
     "error": "An error ocurred, please try again"
   },
-  "publicForms": {
+  "layouts": {
+    "sidebar": {
+      "dashboardsTitle": "Dashboards",
+      "accounts": "Accounts",
+      "transactions": "Transactions",
+      "graphs": "Graphs",
+      "summaries": "Summaries",
+      "generalTitle": "General",
+      "settings": "Settings",
+      "shortcuts": "Shortcuts",
+      "docs": "Docs"
+    },
+    "appbar": {
+      "translateTooltip": "Change Language",
+      "toggleDarkTooltip": "Toggle Dark Mode",
+      "logoutTooltip": "Logout"
+    }
+  },
+  "forms": {
     "titles": {
       "loginTitle": "Sign in to WalletTuner",
       "registerTitle": "Create a new Account"
-    },
-    "schemas": {
-      "required": "This field is required",
-      "invalidEmail": "Please enter a valid e-mail address"
     },
     "messages": {
       "passwordsNotMatch": "Passwords do not match",
@@ -36,57 +50,21 @@
       "loginText": "Already have an account?",
       "loginLink": "Login now!"
     },
-    "errorPage": {
-      "title": "An error occurred",
-      "description": "We are unable to load the page and are really sorry about it.",
-      "reload": "Reload"
-    },
     "buttons": {
       "registerButton": "Register",
       "loginButton": "Login",
       "loginIsLoadingText": "Logging In...",
       "loginIsSuccessText": "Logged In!",
       "loginIsErrorText": "An error occurred."
+    },
+    "schemas": {
+      "required": "This field is required",
+      "invalidEmail": "Please enter a valid e-mail address"
     }
   },
-  "dashboard": {
-    "header": {
-      "accountsButton": "Accounts",
-      "settingsButton": "Settings"
-    },
-    "overview": {
-      "balance": "Balance",
-      "monthlyIncome": "Monthly Income",
-      "monthlyExpense": "Monthly Expense",
-      "balancePerAccount": "Balance Per Account"
-    },
-    "accounts": {
-      "columns": {
-        "no": "No",
-        "accountName": "Account Name",
-        "balance": "Balance",
-        "createdAt": "Created At",
-        "uniqueId": "Account ID",
-        "actions": "Actions"
-      },
-      "modalTitle": "Accounts",
-      "newAccountNamePlaceholder": "New Account",
-      "addNewAccountButton": "Add New Account"
-    },
-    "transactions": {
-      "columns": {
-        "no": "No",
-        "uniqueId": "Transaction ID",
-        "belongsToAccount": "Belongs To Account",
-        "type": "Type",
-        "description": "Description",
-        "dateTime": "DateTime",
-        "value": "Value",
-        "actions": "Actions"
-      },
-      "paperTitle": "Transactions",
-      "newTransactionNamePlaceholder": "New Transaction",
-      "addNewTransactionButton": "Add New Transaction"
-    }
+  "errorPage": {
+    "title": "An error occurred",
+    "description": "We are unable to load the page and are really sorry about it.",
+    "reload": "Reload"
   }
 }
