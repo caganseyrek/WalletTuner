@@ -14,22 +14,17 @@ import {
   Settings,
   Translate,
 } from "@mui/icons-material";
-import {
-  ButtonGroup,
-  Grid2 as Grid,
-  IconButton,
-  ListItemIcon,
-  ListItemText,
-  MenuItem,
-  MenuList,
-  Popover,
-  Tooltip,
-  Typography,
-} from "@mui/material";
+import { ButtonGroup, Grid2 as Grid, MenuList, Typography } from "@mui/material";
 
+import AppBarButton from "@/components/AppBarButton";
 import AuthCheckProvider from "@/components/AuthCheckProvider";
+import MenuItem from "@/components/MenuItem";
+import SidebarLogo from "@/components/SidebarLogo";
+import SidebarTitle from "@/components/SidebarTitle";
+import TranslatePopover from "@/components/TranslatePopover";
 
 import useAuthDetails from "@/hooks/useAuthDetails";
+import useLogoutMutation from "@/hooks/user/useLogoutMutation";
 
 import getGreeting from "@/shared/utils/greeter";
 
@@ -39,86 +34,78 @@ import {
   contentStyles,
   darkColorStyles,
   lightColorStyles,
-  logoStyles,
   mainStyles,
-  menuItemStyles,
-  menuTitleStyles,
   sidebarStyles,
-} from "./privateLayout.style";
+} from "./styles/privateLayout.style";
 
 const DashboardPage = () => {
   const navigate = useNavigate();
   const [anchor, setAnchor] = useState<HTMLButtonElement | null>(null);
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   const { data: authDetails } = useAuthDetails();
 
-  const greeting = getGreeting(authDetails?.name!);
+  const { mutateAsync: logoutMutate, error: logoutError } = useLogoutMutation();
+
+  const HandleLogout = async () => {
+    await logoutMutate({
+      currentUser: authDetails?.currentUser,
+      accessToken: authDetails?.accessToken,
+    });
+    if (logoutError) return;
+    return navigate("/login");
+  };
+
+  const greeting = getGreeting(authDetails?.name || "");
 
   return (
     <AuthCheckProvider>
       <main style={mainStyles}>
         <Grid sx={sidebarStyles}>
-          <Typography variant="h1" fontFamily={"Lobster Two"} fontWeight={"600"} sx={logoStyles}>
-            WalletTuner
-          </Typography>
+          <SidebarLogo />
           <Grid>
-            <Typography variant="subtitle1" sx={menuTitleStyles}>
-              {t("layouts.sidebar.dashboardsTitle")}
-            </Typography>
+            <SidebarTitle text={t("layouts.sidebar.dashboardsTitle")} />
             <MenuList sx={lightColorStyles}>
-              <MenuItem sx={menuItemStyles} onClick={() => navigate("/accounts")}>
-                <ListItemIcon>
-                  <AccountBalance sx={lightColorStyles} />
-                </ListItemIcon>
-                <ListItemText>{t("layouts.sidebar.accounts")}</ListItemText>
-              </MenuItem>
-              <MenuItem sx={menuItemStyles} onClick={() => navigate("/transactions")}>
-                <ListItemIcon>
-                  <ReceiptLong sx={lightColorStyles} />
-                </ListItemIcon>
-                <ListItemText>{t("layouts.sidebar.transactions")}</ListItemText>
-              </MenuItem>
-              <MenuItem sx={menuItemStyles} onClick={() => navigate("/graphs")}>
-                <ListItemIcon>
-                  <BarChart sx={lightColorStyles} />
-                </ListItemIcon>
-                <ListItemText>{t("layouts.sidebar.graphs")}</ListItemText>
-              </MenuItem>
-              <MenuItem sx={menuItemStyles} onClick={() => navigate("/summeries")}>
-                <ListItemIcon>
-                  <ListAlt sx={lightColorStyles} />
-                </ListItemIcon>
-                <ListItemText>{t("layouts.sidebar.summaries")}</ListItemText>
-              </MenuItem>
+              <MenuItem
+                icon={<AccountBalance sx={lightColorStyles} />}
+                text={t("layouts.sidebar.accounts")}
+                onClick={() => navigate("/accounts")}
+              />
+              <MenuItem
+                icon={<ReceiptLong sx={lightColorStyles} />}
+                text={t("layouts.sidebar.transactions")}
+                onClick={() => navigate("/transactions")}
+              />
+              <MenuItem
+                icon={<BarChart sx={lightColorStyles} />}
+                text={t("layouts.sidebar.graphs")}
+                onClick={() => navigate("/graphs")}
+              />
+              <MenuItem
+                icon={<ListAlt sx={lightColorStyles} />}
+                text={t("layouts.sidebar.summaries")}
+                onClick={() => navigate("/summeries")}
+              />
             </MenuList>
           </Grid>
           <Grid>
-            <Typography variant="subtitle1" sx={menuTitleStyles}>
-              {t("layouts.sidebar.generalTitle")}
-            </Typography>
+            <SidebarTitle text={t("layouts.sidebar.generalTitle")} />
             <MenuList sx={lightColorStyles}>
-              <MenuItem sx={menuItemStyles}>
-                {/* TODO: add modal for settings */}
-                <ListItemIcon>
-                  <Settings sx={lightColorStyles} />
-                </ListItemIcon>
-                <ListItemText>{t("layouts.sidebar.settings")}</ListItemText>
-              </MenuItem>
-              <MenuItem sx={menuItemStyles}>
-                {/* TODO: add modal for shortcuts */}
-                <ListItemIcon>
-                  <KeyboardCommandKey sx={lightColorStyles} />
-                </ListItemIcon>
-                <ListItemText>{t("layouts.sidebar.shortcuts")}</ListItemText>
-              </MenuItem>
-              <MenuItem sx={menuItemStyles}>
-                {/* TODO: add docs */}
-                <ListItemIcon>
-                  <FindInPage sx={lightColorStyles} />
-                </ListItemIcon>
-                <ListItemText>{t("layouts.sidebar.docs")}</ListItemText>
-              </MenuItem>
+              <MenuItem
+                icon={<Settings sx={lightColorStyles} />}
+                text={t("layouts.sidebar.settings")}
+                /* TODO: add modal for settings */
+              />
+              <MenuItem
+                icon={<KeyboardCommandKey sx={lightColorStyles} />}
+                text={t("layouts.sidebar.shortcuts")}
+                /* TODO: add modal for shortcuts */
+              />
+              <MenuItem
+                icon={<FindInPage sx={lightColorStyles} />}
+                text={t("layouts.sidebar.docs")}
+                /* TODO: add docs */
+              />
             </MenuList>
           </Grid>
         </Grid>
@@ -126,48 +113,21 @@ const DashboardPage = () => {
           <Grid container sx={appBarStyles}>
             <Typography sx={darkColorStyles}>{greeting}</Typography>
             <ButtonGroup>
-              <Tooltip title={t("layouts.appbar.translateTooltip")}>
-                <IconButton onClick={(event) => setAnchor(event.currentTarget)}>
-                  <Translate sx={darkColorStyles} />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title={t("layouts.appbar.toggleDarkTooltip")}>
-                <IconButton>
-                  <DarkMode sx={darkColorStyles} />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title={t("layouts.appbar.logoutTooltip")}>
-                <IconButton>
-                  <Logout sx={darkColorStyles} />
-                </IconButton>
-              </Tooltip>
-              <Popover
-                open={Boolean(anchor)}
-                anchorEl={anchor}
-                onClose={() => setAnchor(null)}
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "left",
-                }}>
-                <MenuList>
-                  <MenuItem
-                    selected={i18n.language === "en" ? true : false}
-                    onClick={() => {
-                      i18n.changeLanguage("en");
-                      setAnchor(null);
-                    }}>
-                    English
-                  </MenuItem>
-                  <MenuItem
-                    selected={i18n.language === "tr" ? true : false}
-                    onClick={() => {
-                      i18n.changeLanguage("tr");
-                      setAnchor(null);
-                    }}>
-                    Türkçe
-                  </MenuItem>
-                </MenuList>
-              </Popover>
+              <AppBarButton
+                tooltip={t("layouts.appbar.translateTooltip")}
+                icon={<Translate sx={darkColorStyles} />}
+                onClick={(event) => setAnchor(event.currentTarget)}
+              />
+              <AppBarButton
+                tooltip={t("layouts.appbar.toggleDarkTooltip")}
+                icon={<DarkMode sx={darkColorStyles} />}
+              />
+              <AppBarButton
+                tooltip={t("layouts.appbar.logoutTooltip")}
+                icon={<Logout sx={darkColorStyles} />}
+                onClick={() => HandleLogout()}
+              />
+              <TranslatePopover anchor={anchor} setAnchor={setAnchor} />
             </ButtonGroup>
           </Grid>
           <Grid container sx={contentStyles}>

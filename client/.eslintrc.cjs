@@ -37,12 +37,8 @@ module.exports = {
   },
   overrides: [
     {
-      files: ["src/utils/requester.ts", "src/routes/Dashboard/context/ModalContext.tsx"],
+      files: ["src/shared/utils/requester.ts"],
       rules: { "no-unused-vars": "off" },
-    },
-    {
-      files: ["src/routes/Dashboard/context/ModalContext.tsx"],
-      rules: { "react-refresh/only-export-components": "off" },
     },
     {
       files: ["src/hooks/useOnMountEffect.ts"],

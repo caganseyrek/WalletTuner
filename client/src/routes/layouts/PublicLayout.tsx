@@ -1,15 +1,16 @@
 import { Outlet } from "react-router-dom";
 
-import { Paper } from "@mui/material";
+import { Grid2 as Grid, Paper } from "@mui/material";
+
+import { ContainerStyles, PageStyles } from "./styles/publicLayout.style";
 
 const PublicLayout = () => {
   return (
-    <Paper
-      sx={{
-        bgcolor: "white",
-      }}>
-      <Outlet />
-    </Paper>
+    <Grid container sx={PageStyles}>
+      <Paper sx={ContainerStyles}>
+        <Outlet />
+      </Paper>
+    </Grid>
   );
 };
 

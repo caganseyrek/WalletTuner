@@ -10,30 +10,21 @@ export const darkColor: string = "#232C33";
 
 export const mediumColor: string = "#C2CDD6";
 
-export const FormPageStyles: SxProps = {
-  width: "100vw",
-  height: "100vh",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  flexDirection: "column",
-  paddingBottom: "120px",
-  boxSizing: "border-box",
-};
-
-export const FormBodyStyles: CSSProperties = {
-  width: 340,
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  flexDirection: "column",
-  rowGap: "15px",
-};
-
 export const PaperStyles: SxProps = {
-  padding: "15px",
+  padding: 4,
+  borderRadius: 2,
   boxSizing: "border-box",
   display: "flex",
   flexDirection: "column",
-  rowGap: "10px",
+  rowGap: 2,
+};
+
+export const DividerStyles: SxProps = {
+  marginTop: 1,
+};
+
+export const LinkStyles: CSSProperties = {
+  textDecoration: "none",
+  color: darkColor,
+  textAlign: "center",
 };

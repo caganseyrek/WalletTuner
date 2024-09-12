@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { Controller, FieldValues, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { Link, useNavigate } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 
+import { LoginFormData, loginSchema } from "@/schemas/loginSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Box, TextField } from "@mui/material";
+import { Divider, TextField } from "@mui/material";
 
 import FormHeader from "@/components/FormHeader";
 import Snackbar from "@/components/Snackbar";
@@ -13,11 +14,11 @@ import SubmitButton from "@/components/SubmitButton";
 import useLoginMutation from "@/hooks/user/useLoginMutation";
 import useSettingsMutation from "@/hooks/user/useSettingsMutation";
 
-import { FormBodyStyles, FormPageStyles } from "@/shared/globals.style";
+import { DividerStyles, LinkStyles } from "@/shared/globals.style";
 
 import { errorMessage } from "@/localization/i18n";
 
-import { LoginFormData, loginSchema } from "../../schemas/loginSchema";
+import { FormBodyStyles } from "../layouts/styles/publicLayout.style";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -94,9 +95,9 @@ const LoginPage = () => {
   };
 
   return (
-    <Box sx={FormPageStyles}>
+    <>
+      <FormHeader title={t("forms.header.loginTitle")} subtitle={t("forms.header.loginSubtitle")} />
       <form noValidate onSubmit={handleSubmit(LoginFormSubmit)} style={FormBodyStyles}>
-        <FormHeader title={t("forms.titles.loginTitle")} />
         <Controller
           name="email"
           control={control}
@@ -109,16 +110,6 @@ const LoginPage = () => {
                 error={!!errors.email}
                 helperText={(errors.email?.message as string) || ""}
                 size="small"
-                sx={{
-                  "& .MuiFilledInput-root": {
-                    overflow: "hidden",
-                    borderRadius: 4,
-                    border: "1px solid",
-                    backgroundColor: "#F3F6F9",
-                    borderColor: "#E0E3E7",
-                    "&:hover": { backgroundColor: "transparent" },
-                  },
-                }}
                 fullWidth
               />
             );
@@ -143,19 +134,19 @@ const LoginPage = () => {
           }}
         />
         <SubmitButton status={status} />
-        <Box textAlign={"center"}>
-          {t("forms.placeholders.registerText")}&nbsp;
-          <Link to={"/register"}>{t("forms.placeholders.registerLink")}</Link>
-        </Box>
-        {snackbarState.isOpen && (
-          <Snackbar
-            snackbarState={snackbarState}
-            setSnackbarState={setSnackbarState}
-            severity={"error"}
-          />
-        )}
       </form>
-    </Box>
+      <Divider sx={DividerStyles} orientation="horizontal" flexItem />
+      <RouterLink to={"/register"} style={LinkStyles}>
+        {t("forms.placeholders.registerLink")}
+      </RouterLink>
+      {snackbarState.isOpen && (
+        <Snackbar
+          snackbarState={snackbarState}
+          setSnackbarState={setSnackbarState}
+          severity={"error"}
+        />
+      )}
+    </>
   );
 };
 

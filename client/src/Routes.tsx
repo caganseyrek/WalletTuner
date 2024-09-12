@@ -3,9 +3,9 @@ import { BrowserRouter, Routes as BrowserRoutes, Route } from "react-router-dom"
 import DashboardPage from "./routes/layouts/PrivateLayout";
 import PrivateLayout from "./routes/layouts/PrivateLayout";
 import PublicLayout from "./routes/layouts/PublicLayout";
-import ErrorPage from "./routes/pages/ErrorPage";
-import NotFoundPage from "./routes/pages/NotFoundPage";
-import UnauthorizedPage from "./routes/pages/UnauthorizedPage";
+import ErrorPage from "./routes/others/ErrorPage";
+import NotFoundPage from "./routes/others/NotFoundPage";
+import UnauthorizedPage from "./routes/others/UnauthorizedPage";
 import AccountsPage from "./routes/private/AccountsPage";
 import TransactionsPage from "./routes/private/TransactionsPage";
 import LoginPage from "./routes/public/LoginPage";
@@ -15,7 +15,7 @@ const Routes = () => {
   return (
     <BrowserRouter>
       <BrowserRoutes>
-        <Route element={<PrivateLayout />}>
+        <Route path="/" element={<PrivateLayout />}>
           <Route path="/accounts" element={<AccountsPage />} errorElement={<ErrorPage />} />
           <Route path="/transactions" element={<TransactionsPage />} errorElement={<ErrorPage />} />
           <Route path="/graphs" element={<DashboardPage />} errorElement={<ErrorPage />} />

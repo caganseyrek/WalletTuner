@@ -3,6 +3,10 @@ import { useTranslation } from "react-i18next";
 import { CheckCircleOutline, ErrorOutline } from "@mui/icons-material";
 import { Button, CircularProgress } from "@mui/material";
 
+interface SubmitButtonProps {
+  status: StatusProps;
+}
+
 const SubmitButtonIcon = ({ status }: SubmitButtonProps) => {
   if (status.isLoading) {
     return <CircularProgress size={20} />;

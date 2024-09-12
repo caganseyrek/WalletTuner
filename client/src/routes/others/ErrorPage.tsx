@@ -1,20 +1,10 @@
 import { useTranslation } from "react-i18next";
 
 import { Replay } from "@mui/icons-material";
-import { Box, Button, SxProps, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
 
-import { FormPageStyles as ErrorPageStyles } from "@/shared/globals.style";
-
-const ErrorPageContainerStyles: SxProps = {
-  width: "fit-content",
-  height: "fit-content",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  flexDirection: "column",
-  rowGap: "5px",
-};
+import { ContainerStyles, ErrorPageStyles } from "./styles/errorPage.style";
 
 const ErrorPage = () => {
   const { t } = useTranslation();
@@ -27,7 +17,7 @@ const ErrorPage = () => {
 
   return (
     <Box sx={ErrorPageStyles}>
-      <Box sx={ErrorPageContainerStyles}>
+      <Box sx={ContainerStyles}>
         <Typography variant="h2" fontWeight={"500"}>
           {t("errorPage.title")}
         </Typography>

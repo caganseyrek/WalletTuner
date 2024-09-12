@@ -3,8 +3,9 @@ import { Controller, FieldValues, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link as RouterLink } from "react-router-dom";
 
+import { RegisterFormData, registerSchema } from "@/schemas/registerSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Box, TextField } from "@mui/material";
+import { Divider, TextField } from "@mui/material";
 
 import FormHeader from "@/components/FormHeader";
 import Snackbar from "@/components/Snackbar";
@@ -12,11 +13,11 @@ import SubmitButton from "@/components/SubmitButton";
 
 import useRegisterMutation from "@/hooks/user/useRegisterMutation";
 
-import { FormBodyStyles, FormPageStyles } from "@/shared/globals.style";
+import { DividerStyles, LinkStyles } from "@/shared/globals.style";
 
 import { errorMessage } from "@/localization/i18n";
 
-import { RegisterFormData, registerSchema } from "../../schemas/registerSchema";
+import { FormBodyStyles } from "../layouts/styles/publicLayout.style";
 
 const RegisterPage = () => {
   const { t } = useTranslation();
@@ -70,9 +71,12 @@ const RegisterPage = () => {
   };
 
   return (
-    <Box sx={FormPageStyles}>
+    <>
+      <FormHeader
+        title={t("forms.header.registerTitle")}
+        subtitle={t("forms.header.registerSubtitle")}
+      />
       <form noValidate onSubmit={handleSubmit(RegisterFormSubmit)} style={FormBodyStyles}>
-        <FormHeader title={t("forms.titles.registerTitle")} />
         <Controller
           name="name"
           control={control}
@@ -161,19 +165,19 @@ const RegisterPage = () => {
           }}
         />
         <SubmitButton status={status} />
-        <Box textAlign={"center"}>
-          {t("forms.placeholders.loginText")}&nbsp;
-          <RouterLink to={"/login"}>{t("forms.placeholders.loginLink")}</RouterLink>
-        </Box>
-        {snackbarState.isOpen && (
-          <Snackbar
-            snackbarState={snackbarState}
-            setSnackbarState={setSnackbarState}
-            severity={"error"}
-          />
-        )}
       </form>
-    </Box>
+      <Divider sx={DividerStyles} orientation="horizontal" flexItem />
+      <RouterLink to={"/login"} style={LinkStyles}>
+        {t("forms.placeholders.loginLink")}
+      </RouterLink>
+      {snackbarState.isOpen && (
+        <Snackbar
+          snackbarState={snackbarState}
+          setSnackbarState={setSnackbarState}
+          severity={"error"}
+        />
+      )}
+    </>
   );
 };
 

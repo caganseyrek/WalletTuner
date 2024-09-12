@@ -31,9 +31,11 @@
     }
   },
   "forms": {
-    "titles": {
-      "loginTitle": "Sign in to WalletTuner",
-      "registerTitle": "Create a new Account"
+    "header": {
+      "loginTitle": "Welcome Back!",
+      "loginSubtitle": "Sign in to continue",
+      "registerTitle": "Welcome to WalletTuner!",
+      "registerSubtitle": "Create your new account"
     },
     "messages": {
       "passwordsNotMatch": "Passwords do not match",
@@ -45,10 +47,8 @@
       "emailPlaceholder": "E-Mail",
       "passwordPlaceholder": "Password",
       "passwordAgainPlaceholder": "Password Again",
-      "registerText": "Don't have an account?",
-      "registerLink": "Register Now!",
-      "loginText": "Already have an account?",
-      "loginLink": "Login now!"
+      "registerLink": "Create a new account",
+      "loginLink": "Login to your account"
     },
     "buttons": {
       "registerButton": "Register",

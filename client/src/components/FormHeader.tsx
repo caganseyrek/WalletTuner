@@ -1,6 +1,11 @@
 import { FC } from "react";
 
-import { Box, Paper, SxProps, Typography } from "@mui/material";
+import { Box, SxProps, Typography } from "@mui/material";
+
+interface FormHeaderProps {
+  title: string;
+  subtitle: string;
+}
 
 const FormHeaderStyles: SxProps = {
   paddingTop: "10px",
@@ -13,29 +18,11 @@ const FormHeaderStyles: SxProps = {
   rowGap: "10px",
 };
 
-const LogoStyles: SxProps = {
-  backgroundImage: "url('../../assets/wallettuner_logo.jpeg')",
-  backgroundSize: "cover",
-  backgroundPosition: "center center",
-  width: "80px",
-  height: "80px",
-  borderRadius: 2,
-  boxSizing: "border-box",
-};
-
-const TitleStyles: SxProps = {
-  textAlign: "center",
-  fontWeight: "600",
-  padding: "0px 20px",
-};
-
-const FormHeader: FC<FormHeaderProps> = ({ title }) => {
+const FormHeader: FC<FormHeaderProps> = ({ title, subtitle }) => {
   return (
     <Box sx={FormHeaderStyles}>
-      <Paper sx={LogoStyles} />
-      <Typography variant="h3" sx={TitleStyles}>
-        {title}
-      </Typography>
+      <Typography variant="h3">{title}</Typography>
+      <Typography variant="subtitle1">{subtitle}</Typography>
     </Box>
   );
 };
