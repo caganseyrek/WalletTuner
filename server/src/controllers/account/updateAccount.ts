@@ -1,3 +1,4 @@
+import statusCodes from "@/shared/statusCodes";
 import { Request, Response } from "express";
 
 import accountModel from "@/models/accountModel";
@@ -8,13 +9,21 @@ const updateAccountController = async (req: Request, res: Response) => {
   try {
     const { currentUser, accountName, accountId } = req.body;
     if (!accountName) {
-      return res.status(400).send(statusMessages.badrequest);
+      return res.status(statusCodes.badRequest).json({
+        isSuccess: false,
+        message: statusMessages.badrequest,
+        data: null,
+      });
     }
 
     const currentAccountDetails = await accountModel.findById(accountId).exec();
     if (!currentAccountDetails) {
-      console.error(errorMessage(updateAccountController.name, "line_16"));
-      return res.status(500).send(statusMessages.internalerror);
+      console.error(errorMessage(updateAccountController.name, "line_21"));
+      return res.status(statusCodes.internalServerError).json({
+        isSuccess: false,
+        message: statusMessages.internalerror,
+        data: null,
+      });
     }
 
     const update = await accountModel
@@ -28,14 +37,26 @@ const updateAccountController = async (req: Request, res: Response) => {
       })
       .exec();
     if (!update) {
-      console.error(errorMessage(updateAccountController.name, "line_31"));
-      return res.status(500).send(statusMessages.internalerror);
+      console.error(errorMessage(updateAccountController.name, "line_40"));
+      return res.status(statusCodes.internalServerError).json({
+        isSuccess: false,
+        message: statusMessages.internalerror,
+        data: null,
+      });
     }
 
-    return res.status(200).send(accountMessages.updateAccount.updateSuccessful);
+    return res.status(statusCodes.success).json({
+      isSuccess: true,
+      message: accountMessages.updateAccount.updateSuccessful,
+      data: null,
+    });
   } catch (error) {
-    console.error(errorMessage(updateAccountController.name, "line_37", error));
-    return res.status(500).send(statusMessages.internalerror);
+    console.error(errorMessage(updateAccountController.name, "line_54", error));
+    return res.status(statusCodes.internalServerError).json({
+      isSuccess: false,
+      message: statusMessages.internalerror,
+      data: null,
+    });
   }
 };
 

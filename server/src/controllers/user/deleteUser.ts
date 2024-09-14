@@ -1,3 +1,4 @@
+import statusCodes from "@/shared/statusCodes";
 import { compare } from "bcrypt";
 import { Request, Response } from "express";
 
@@ -11,24 +12,44 @@ const deleteUserController = async (req: Request, res: Response) => {
 
     const userDetails = await userModel.findById(currentUser).exec();
     if (!userDetails) {
-      console.error(errorMessage(deleteUserController.name, "line_14"));
-      return res.status(500).send(statusMessages.internalerror);
+      console.error(errorMessage(deleteUserController.name, "line_15"));
+      return res.status(statusCodes.internalServerError).json({
+        isSuccess: false,
+        message: statusMessages.internalerror,
+        data: null,
+      });
     }
 
     const validatePassword = await compare(password, userDetails.password as string);
     if (!validatePassword) {
-      return res.status(401).send(userMessages.deleteUser.passwordValidationFail);
+      return res.status(statusCodes.unauthorized).json({
+        isSuccess: false,
+        message: userMessages.deleteUser.passwordValidationFail,
+        data: null,
+      });
     }
     const userDeleted = await userModel.findByIdAndDelete(currentUser).exec();
     if (!userDeleted) {
-      console.error(errorMessage(deleteUserController.name, "line_24"));
-      return res.status(500).send(statusMessages.internalerror);
+      console.error(errorMessage(deleteUserController.name, "line_33"));
+      return res.status(statusCodes.internalServerError).json({
+        isSuccess: false,
+        message: statusMessages.internalerror,
+        data: null,
+      });
     }
 
-    return res.status(200).send(userMessages.deleteUser.deleteSuccessful);
+    return res.status(statusCodes.success).json({
+      isSuccess: true,
+      message: userMessages.deleteUser.deleteSuccessful,
+      data: null,
+    });
   } catch (error) {
-    console.error(errorMessage(deleteUserController.name, "line_30", error));
-    return res.status(500).send(statusMessages.internalerror);
+    console.error(errorMessage(deleteUserController.name, "line_47", error));
+    return res.status(statusCodes.internalServerError).json({
+      isSuccess: false,
+      message: statusMessages.internalerror,
+      data: null,
+    });
   }
 };
 

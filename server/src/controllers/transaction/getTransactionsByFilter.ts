@@ -1,3 +1,4 @@
+import statusCodes from "@/shared/statusCodes";
 import { Request, Response } from "express";
 
 import transactionModel from "@/models/transactionModel";
@@ -15,13 +16,26 @@ const getTransactionsByFilterController = async (req: Request, res: Response) =>
     };
 
     const transactions = await transactionModel.find(filters).exec();
-    if (!transactions)
-      return res.status(404).send(transactionMessages.getTransactionsById.noTransactionsFound);
+    if (!transactions) {
+      return res.status(statusCodes.notFound).json({
+        isSuccess: false,
+        message: transactionMessages.getTransactionsById.noTransactionsFound,
+        data: null,
+      });
+    }
 
-    return res.status(200).send(transactions);
+    return res.status(statusCodes.success).json({
+      isSuccess: true,
+      message: "",
+      data: transactions,
+    });
   } catch (error) {
-    console.error(errorMessage(getTransactionsByFilterController.name, "line_23", error));
-    return res.status(500).send(statusMessages.internalerror);
+    console.error(errorMessage(getTransactionsByFilterController.name, "line_33", error));
+    return res.status(statusCodes.internalServerError).json({
+      isSuccess: false,
+      message: statusMessages.internalerror,
+      data: null,
+    });
   }
 };
 

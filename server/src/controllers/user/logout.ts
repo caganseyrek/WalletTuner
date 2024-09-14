@@ -1,3 +1,4 @@
+import statusCodes from "@/shared/statusCodes";
 import { Request, Response } from "express";
 
 import tokenModel from "@/models/tokenModel";
@@ -14,7 +15,7 @@ const logoutController = async (req: Request, res: Response) => {
         try {
           await tokenModel.findByIdAndDelete(token._id).exec();
         } catch {
-          console.error(errorMessage(logoutController.name, "line_17"));
+          console.error(errorMessage(logoutController.name, "line_18"));
         }
       });
     }
@@ -25,10 +26,18 @@ const logoutController = async (req: Request, res: Response) => {
       // sameSite: "strict",
     });
 
-    return res.status(200).send(userMessages.logout.logoutSuccessful);
+    return res.status(statusCodes.success).json({
+      isSuccess: true,
+      message: userMessages.logout.logoutSuccessful,
+      data: null,
+    });
   } catch (error) {
-    console.error(errorMessage(logoutController.name, "line_30", error));
-    return res.status(500).send(statusMessages.internalerror);
+    console.error(errorMessage(logoutController.name, "line_35", error));
+    return res.status(statusCodes.internalServerError).json({
+      isSuccess: false,
+      message: statusMessages.internalerror,
+      data: null,
+    });
   }
 };
 

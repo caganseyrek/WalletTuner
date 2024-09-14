@@ -15,8 +15,6 @@ import useRegisterMutation from "@/hooks/user/useRegisterMutation";
 
 import { DividerStyles, LinkStyles } from "@/shared/globals.style";
 
-import { errorMessage } from "@/localization/i18n";
-
 import { FormBodyStyles } from "../layouts/styles/publicLayout.style";
 
 const RegisterPage = () => {
@@ -29,11 +27,7 @@ const RegisterPage = () => {
     isError: false,
     message: "",
   });
-  const [status, setStatus] = useState<StatusProps>({
-    isLoading: false,
-    isError: false,
-    isSuccess: false,
-  });
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const {
     handleSubmit,
@@ -41,33 +35,27 @@ const RegisterPage = () => {
     formState: { errors },
   } = useForm<RegisterFormData>({ resolver: zodResolver(registerSchema) });
 
-  const RegisterFormSubmit = async (fd: FieldValues) => {
-    if (fd.password1 !== fd.password2) {
-      setStatus(() => ({ isLoading: false, isError: false, isSuccess: true }));
+  const RegisterFormSubmit = async (formdata: FieldValues) => {
+    if (formdata.password1 !== formdata.password2) {
       return setSnackbarState({
         isOpen: true,
         isError: false,
         message: t("forms.messages.passwordsNotMatch"),
       });
     }
-    try {
-      setStatus((currentStatus) => ({ ...currentStatus, isLoading: true }));
-      await registerMutateAsync({
-        name: fd.name,
-        surname: fd.surname,
-        email: fd.email,
-        password: fd.password1,
-      });
-      return setStatus(() => ({ isLoading: false, isError: false, isSuccess: true }));
-    } catch (error) {
-      console.error(errorMessage(RegisterFormSubmit.name, error));
-      setStatus(() => ({
-        isLoading: false,
-        isError: true,
-        isSuccess: false,
-      }));
-      return setSnackbarState({ isOpen: true, isError: false, message: t("forms.messages.error") });
-    }
+    setIsLoading(true);
+    const response = await registerMutateAsync({
+      name: formdata.name,
+      surname: formdata.surname,
+      email: formdata.email,
+      password: formdata.password1,
+    });
+    setIsLoading(false);
+    return setSnackbarState(() => ({
+      isOpen: true,
+      isError: response.isSuccess ? false : true,
+      message: response.message,
+    }));
   };
 
   return (
@@ -164,7 +152,7 @@ const RegisterPage = () => {
             );
           }}
         />
-        <SubmitButton status={status} />
+        <SubmitButton isLoading={isLoading} />
       </form>
       <Divider sx={DividerStyles} orientation="horizontal" flexItem />
       <RouterLink to={"/login"} style={LinkStyles}>
@@ -174,7 +162,7 @@ const RegisterPage = () => {
         <Snackbar
           snackbarState={snackbarState}
           setSnackbarState={setSnackbarState}
-          severity={"error"}
+          severity={snackbarState.isError ? "error" : "success"}
         />
       )}
     </>

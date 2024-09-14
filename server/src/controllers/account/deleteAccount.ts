@@ -1,3 +1,4 @@
+import statusCodes from "@/shared/statusCodes";
 import { Request, Response } from "express";
 
 import accountModel from "@/models/accountModel";
@@ -16,8 +17,12 @@ const deleteAccountController = async (req: Request, res: Response) => {
 
     const deleteAccount = await accountModel.findOneAndDelete(filters).exec();
     if (!deleteAccount) {
-      console.error(errorMessage(deleteAccountController.name, "line_19"));
-      return res.status(500).send(statusMessages.internalerror);
+      console.error(errorMessage(deleteAccountController.name, "line_20"));
+      return res.status(statusCodes.internalServerError).json({
+        isSuccess: false,
+        message: statusMessages.internalerror,
+        data: null,
+      });
     }
 
     const relatedTransactions = await transactionModel.find({ belongsToAccount: accountId }).exec();
@@ -26,15 +31,23 @@ const deleteAccountController = async (req: Request, res: Response) => {
         try {
           await transactionModel.findByIdAndDelete(transaction._id).exec();
         } catch (error) {
-          console.error(errorMessage(deleteAccountController.name, "line_29", error));
+          console.error(errorMessage(deleteAccountController.name, "line_36", error));
         }
       });
     }
 
-    return res.status(200).send(accountMessages.deleteAccount.deletionSuccessful);
+    return res.status(statusCodes.success).json({
+      isSuccess: true,
+      message: accountMessages.deleteAccount.deletionSuccessful,
+      data: null,
+    });
   } catch (error) {
-    console.error(errorMessage(deleteAccountController.name, "line_36", error));
-    return res.status(500).send(statusMessages.internalerror);
+    console.error(errorMessage(deleteAccountController.name, "line_47", error));
+    return res.status(statusCodes.internalServerError).json({
+      isSuccess: false,
+      message: statusMessages.internalerror,
+      data: null,
+    });
   }
 };
 

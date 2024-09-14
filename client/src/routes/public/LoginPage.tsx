@@ -16,8 +16,6 @@ import useSettingsMutation from "@/hooks/user/useSettingsMutation";
 
 import { DividerStyles, LinkStyles } from "@/shared/globals.style";
 
-import { errorMessage } from "@/localization/i18n";
-
 import { FormBodyStyles } from "../layouts/styles/publicLayout.style";
 
 const LoginPage = () => {
@@ -33,11 +31,7 @@ const LoginPage = () => {
     isError: false,
     message: "",
   });
-  const [status, setStatus] = useState<StatusProps>({
-    isLoading: false,
-    isError: false,
-    isSuccess: false,
-  });
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const {
     handleSubmit,
@@ -52,45 +46,27 @@ const LoginPage = () => {
   });
 
   const LoginFormSubmit = async (formdata: FieldValues) => {
-    try {
-      setStatus((currentStatus) => ({ ...currentStatus, isLoading: true }));
-      const response = await loginMutateAsync({
-        email: formdata.email,
-        password: formdata.password,
+    setIsLoading(true);
+    const response = await loginMutateAsync({
+      email: formdata.email,
+      password: formdata.password,
+    });
+    if (response.isSuccess) {
+      await settingsMutateAsync({
+        currentUser: response.data!.currentUser,
+        accessToken: response.data!.accessToken,
       });
-      if (response.message) {
-        await settingsMutateAsync({
-          currentUser: response.currentUser,
-          accessToken: response.accessToken,
-        });
-        setStatus(() => ({
-          isLoading: false,
-          isError: false,
-          isSuccess: true,
-        }));
-        return setTimeout(() => {
-          navigate("/");
-        }, 1500);
-      } else {
-        setStatus(() => ({ isLoading: false, isError: true, isSuccess: false }));
-        return setSnackbarState({
-          isOpen: true,
-          isError: true,
-          message: t("forms.messages.error"),
-        });
-      }
-    } catch (error) {
-      console.error(errorMessage(LoginFormSubmit.name, error));
-      setStatus(() => ({
-        isLoading: false,
-        isError: true,
-        isSuccess: false,
-      }));
-      return setSnackbarState({
-        isOpen: true,
-        isError: true,
-        message: t("forms.messages.error"),
-      });
+    }
+    setIsLoading(false);
+    setSnackbarState(() => ({
+      isOpen: true,
+      isError: response.isSuccess ? false : true,
+      message: response.message,
+    }));
+    if (response.isSuccess) {
+      return setTimeout(() => {
+        navigate("/");
+      }, 1500);
     }
   };
 
@@ -133,7 +109,7 @@ const LoginPage = () => {
             );
           }}
         />
-        <SubmitButton status={status} />
+        <SubmitButton isLoading={isLoading} />
       </form>
       <Divider sx={DividerStyles} orientation="horizontal" flexItem />
       <RouterLink to={"/register"} style={LinkStyles}>
@@ -143,7 +119,7 @@ const LoginPage = () => {
         <Snackbar
           snackbarState={snackbarState}
           setSnackbarState={setSnackbarState}
-          severity={"error"}
+          severity={snackbarState.isError ? "error" : "success"}
         />
       )}
     </>

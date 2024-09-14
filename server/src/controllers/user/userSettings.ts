@@ -1,3 +1,4 @@
+import statusCodes from "@/shared/statusCodes";
 import { Request, Response } from "express";
 
 import userModel from "@/models/userModel";
@@ -12,16 +13,24 @@ const userSettingsController = async (req: Request, res: Response) => {
     const userSettings = {
       preferredCurrency: currentUserSettings!.preferredCurrency,
       preferredCurrencyDisplayType: currentUserSettings!.preferredCurrencyDisplayType,
-      preferredCurrencyDisplayPosition: currentUserSettings!.prefferedCurrencyDisplayPosition,
-      preferredCurrencyDisplaySpacing: currentUserSettings!.prefferedCurrencyDisplaySpacing,
-      preferredCurrencyThousandSeperator: currentUserSettings!.prefferedCurrencyThousandSeperator,
-      preferredCurrencyDecimalSeperator: currentUserSettings!.prefferedCurrencyDecimalSeperator,
+      preferredCurrencyDisplayPosition: currentUserSettings!.preferredCurrencyDisplayPosition,
+      preferredCurrencyDisplaySpacing: currentUserSettings!.preferredCurrencyDisplaySpacing,
+      preferredCurrencyThousandSeperator: currentUserSettings!.preferredCurrencyThousandSeperator,
+      preferredCurrencyDecimalSeperator: currentUserSettings!.preferredCurrencyDecimalSeperator,
     };
 
-    return res.status(200).send(userSettings);
+    return res.status(statusCodes.success).json({
+      isSuccess: true,
+      message: "",
+      data: userSettings,
+    });
   } catch (error) {
-    console.error(errorMessage(userSettingsController.name, "line_23", error));
-    return res.status(500).send(statusMessages.internalerror);
+    console.error(errorMessage(userSettingsController.name, "line_28", error));
+    return res.status(statusCodes.internalServerError).json({
+      isSuccess: false,
+      message: statusMessages.internalerror,
+      data: null,
+    });
   }
 };
 

@@ -1,3 +1,4 @@
+import statusCodes from "@/shared/statusCodes";
 import { Request, Response } from "express";
 
 import transactionModel from "@/models/transactionModel";
@@ -10,13 +11,25 @@ const getTransactionsController = async (req: Request, res: Response) => {
 
     const transactions = await transactionModel.find({ belongsToUser: currentUser }).exec();
     if (!transactions) {
-      return res.status(404).send(transactionMessages.getTransactions.noTransactionsFound);
+      return res.status(statusCodes.notFound).json({
+        isSuccess: false,
+        message: transactionMessages.getTransactions.noTransactionsFound,
+        data: null,
+      });
     }
 
-    return res.status(200).send(transactions);
+    return res.status(statusCodes.success).json({
+      isSuccess: true,
+      message: "",
+      data: transactions,
+    });
   } catch (error) {
-    console.error(errorMessage(getTransactionsController.name, "line_18", error));
-    return res.status(500).send(statusMessages.internalerror);
+    console.error(errorMessage(getTransactionsController.name, "line_29", error));
+    return res.status(statusCodes.internalServerError).json({
+      isSuccess: false,
+      message: statusMessages.internalerror,
+      data: null,
+    });
   }
 };
 

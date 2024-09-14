@@ -20,7 +20,7 @@ const Routes = () => {
           <Route path="/graphs" element={<DashboardPage />} errorElement={<ErrorPage />} />
           <Route path="/summaries" element={<DashboardPage />} errorElement={<ErrorPage />} />
         </Route>
-        <Route element={<PublicLayout />}>
+        <Route path="/" element={<PublicLayout />}>
           <Route path="/login" element={<LoginPage />} errorElement={<ErrorPage />} />
           <Route path="/register" element={<RegisterPage />} errorElement={<ErrorPage />} />
         </Route>

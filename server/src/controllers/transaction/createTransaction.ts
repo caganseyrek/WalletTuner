@@ -1,3 +1,4 @@
+import statusCodes from "@/shared/statusCodes";
 import { Request, Response } from "express";
 import mongoose from "mongoose";
 
@@ -22,7 +23,11 @@ const createTransactionController = async (req: Request, res: Response) => {
       !transactionDateTime ||
       !transactionDescription
     ) {
-      return res.status(400).send(statusMessages.badrequest);
+      return res.status(statusCodes.badRequest).json({
+        isSuccess: false,
+        message: statusMessages.badrequest,
+        data: null,
+      });
     }
 
     const newTransaction = new transactionModel({
@@ -37,14 +42,26 @@ const createTransactionController = async (req: Request, res: Response) => {
 
     const saveNewTransaction = await newTransaction.save();
     if (!saveNewTransaction) {
-      console.error(errorMessage(createTransactionController.name, "line_40"));
-      return res.status(500).send(statusMessages.internalerror);
+      console.error(errorMessage(createTransactionController.name, "line_45"));
+      return res.status(statusCodes.internalServerError).json({
+        isSuccess: false,
+        message: statusMessages.internalerror,
+        data: null,
+      });
     }
 
-    return res.status(201).send(transactionMessages.createTransaction.creationSuccessfull);
+    return res.status(statusCodes.created).json({
+      isSuccess: true,
+      message: transactionMessages.createTransaction.creationSuccessfull,
+      data: null,
+    });
   } catch (error) {
-    console.error(errorMessage(createTransactionController.name, "line_46", error));
-    return res.status(500).send(statusMessages.internalerror);
+    console.error(errorMessage(createTransactionController.name, "line_59", error));
+    return res.status(statusCodes.internalServerError).json({
+      isSuccess: false,
+      message: statusMessages.internalerror,
+      data: null,
+    });
   }
 };
 

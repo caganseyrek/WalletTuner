@@ -45,14 +45,13 @@ const DashboardPage = () => {
 
   const { data: authDetails } = useAuthDetails();
 
-  const { mutateAsync: logoutMutate, error: logoutError } = useLogoutMutation();
+  const { mutateAsync: logoutMutate } = useLogoutMutation();
 
   const HandleLogout = async () => {
     await logoutMutate({
-      currentUser: authDetails?.currentUser,
-      accessToken: authDetails?.accessToken,
+      currentUser: authDetails!.currentUser,
+      accessToken: authDetails!.accessToken,
     });
-    if (logoutError) return;
     return navigate("/login");
   };
 

@@ -1,3 +1,4 @@
+import statusCodes from "@/shared/statusCodes";
 import { Request, Response } from "express";
 
 import accountModel from "@/models/accountModel";
@@ -10,13 +11,25 @@ const getAccountsController = async (req: Request, res: Response) => {
 
     const accounts = await accountModel.find({ belongsToUser: currentUser }).exec();
     if (!accounts) {
-      return res.status(404).send(accountMessages.getAccounts.noAccountsFound);
+      return res.status(statusCodes.notFound).json({
+        isSuccess: false,
+        message: accountMessages.getAccounts.noAccountsFound,
+        data: null,
+      });
     }
 
-    return res.status(200).send(accounts);
+    return res.status(statusCodes.success).json({
+      isSuccess: true,
+      message: "",
+      data: accounts,
+    });
   } catch (error) {
-    console.error(errorMessage(getAccountsController.name, "line_18", error));
-    return res.status(500).send(statusMessages.internalerror);
+    console.error(errorMessage(getAccountsController.name, "line_27", error));
+    return res.status(statusCodes.internalServerError).json({
+      isSuccess: false,
+      message: statusMessages.internalerror,
+      data: null,
+    });
   }
 };
 

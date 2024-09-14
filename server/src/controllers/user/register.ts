@@ -1,3 +1,4 @@
+import statusCodes from "@/shared/statusCodes";
 import { genSalt, hash } from "bcrypt";
 import { Request, Response } from "express";
 import mongoose from "mongoose";
@@ -10,12 +11,20 @@ const registerController = async (req: Request, res: Response) => {
   try {
     const { name, surname, email, password } = req.body;
     if (!name || !surname || !email || !password) {
-      return res.status(400).send(statusMessages.badrequest);
+      return res.status(statusCodes.badRequest).json({
+        isSuccess: false,
+        message: statusMessages.badrequest,
+        data: null,
+      });
     }
 
     const existingUser = await userModel.find({ email: email }).exec();
     if (existingUser.length > 0) {
-      return res.status(409).send(userMessages.register.userExists);
+      return res.status(statusCodes.conflict).json({
+        isSuccess: false,
+        message: userMessages.register.userExists,
+        data: null,
+      });
     }
 
     const salt = await genSalt();
@@ -37,14 +46,26 @@ const registerController = async (req: Request, res: Response) => {
 
     const saveNewUser = await newUser.save();
     if (!saveNewUser) {
-      console.error(errorMessage(registerController.name, "line_40"));
-      return res.status(500).send(statusMessages.internalerror);
+      console.error(errorMessage(registerController.name, "line_49"));
+      return res.status(statusCodes.internalServerError).json({
+        isSuccess: false,
+        message: statusMessages.internalerror,
+        data: null,
+      });
     }
 
-    return res.status(201).send(userMessages.register.registerSuccessful);
+    return res.status(statusCodes.created).json({
+      isSuccess: true,
+      message: userMessages.register.registerSuccessful,
+      data: null,
+    });
   } catch (error) {
-    console.error(errorMessage(registerController.name, "line_46", error));
-    return res.status(500).send(statusMessages.internalerror);
+    console.error(errorMessage(registerController.name, "line_63", error));
+    return res.status(statusCodes.internalServerError).json({
+      isSuccess: false,
+      message: statusMessages.internalerror,
+      data: null,
+    });
   }
 };
 

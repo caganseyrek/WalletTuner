@@ -1,3 +1,4 @@
+import statusCodes from "@/shared/statusCodes";
 import { Request, Response } from "express";
 
 import transactionModel from "@/models/transactionModel";
@@ -17,7 +18,11 @@ const updateTransactionController = async (req: Request, res: Response) => {
       transactionValue,
     } = req.body;
     if (belongsToUser) {
-      return res.status(400).send(statusMessages.badrequest);
+      return res.status(statusCodes.notFound).json({
+        isSuccess: false,
+        message: statusMessages.badrequest,
+        data: null,
+      });
     }
 
     const update = await transactionModel
@@ -31,14 +36,26 @@ const updateTransactionController = async (req: Request, res: Response) => {
       })
       .exec();
     if (!update) {
-      console.error(errorMessage(updateTransactionController.name, "line_34"));
-      return res.status(500).send(statusMessages.internalerror);
+      console.error(errorMessage(updateTransactionController.name, "line_39"));
+      return res.status(statusCodes.internalServerError).json({
+        isSuccess: false,
+        message: statusMessages.internalerror,
+        data: null,
+      });
     }
 
-    return res.status(200).send(transactionMessages.updateTransaction.updateSuccessful);
+    return res.status(statusCodes.success).json({
+      isSuccess: true,
+      message: transactionMessages.updateTransaction.updateSuccessful,
+      data: null,
+    });
   } catch (error) {
-    console.error(errorMessage(updateTransactionController.name, "line_40", error));
-    return res.status(500).send(statusMessages.internalerror);
+    console.error(errorMessage(updateTransactionController.name, "line_53", error));
+    return res.status(statusCodes.internalServerError).json({
+      isSuccess: false,
+      message: statusMessages.internalerror,
+      data: null,
+    });
   }
 };
 

@@ -3,6 +3,8 @@ import { useTranslation } from "react-i18next";
 import { Grid2 as Grid, Paper, Typography } from "@mui/material";
 import { PieChart, PieValueType } from "@mui/x-charts";
 
+import GridOverlay from "@/components/GridOverlay";
+
 import useAccountQuery from "@/hooks/account/useAccountQuery";
 import useAuthDetails from "@/hooks/useAuthDetails";
 
@@ -12,12 +14,26 @@ const GraphsPage = () => {
   const { t } = useTranslation();
 
   const { data: authData } = useAuthDetails();
-  const { data } = useAccountQuery({
+  const { data: accountQueryData, isLoading: isAccountLoading } = useAccountQuery({
     accessToken: authData?.accessToken,
     currentUser: authData?.currentUser,
   });
 
-  const chartData: PieValueType[] | undefined = data?.map((accountData, index) => ({
+  if (isAccountLoading) {
+    return <GridOverlay type="loading" />;
+  }
+
+  if (!accountQueryData?.isSuccess) {
+    return <GridOverlay type="error" message={accountQueryData?.message} />;
+  }
+
+  const accounts = accountQueryData.data;
+
+  if (!accounts) {
+    return <GridOverlay type="error" message={accountQueryData?.message} />;
+  }
+
+  const chartData: PieValueType[] | undefined = accounts.map((accountData, index) => ({
     id: index,
     value: accountData.balance,
     label: accountData.accountName,
@@ -32,7 +48,7 @@ const GraphsPage = () => {
           height: "400px",
         }}>
         <Grid sx={{ width: "495px", height: "400px" }}>
-          <Typography variant="button">{t("dashboard.overview.balancePerAccount")}</Typography>
+          <Typography variant="button">{t("overview.balancePerAccount")}</Typography>
           <PieChart
             series={[
               {

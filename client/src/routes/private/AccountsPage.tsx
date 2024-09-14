@@ -4,6 +4,7 @@ import { GridColDef, GridPreProcessEditCellProps } from "@mui/x-data-grid";
 import dayjs from "dayjs";
 
 import DataGrid from "@/components/DataGrid";
+import GridOverlay from "@/components/GridOverlay";
 
 import useAccountCreateMutation from "@/hooks/account/useAccountCreateMutation";
 import useAccountDeleteMutation from "@/hooks/account/useAccountDeleteMutation";
@@ -21,23 +22,37 @@ interface accountDataRowProps {
 
 const AccountsPage = () => {
   const { data: authDetails } = useAuthDetails();
-  const { t } = useTranslation();
+  const { t } = useTranslation(["data_grid"]);
 
-  const { mutateAsync: accounteCreateMutate, isError: accountCreateError } =
+  const { mutateAsync: accounteCreateMutate, isError: accountCreateMutateError } =
     useAccountCreateMutation();
-  const { mutateAsync: accounteUpdateMutate, isError: accountUpdateError } =
+  const { mutateAsync: accounteUpdateMutate, isError: accountUpdateMutateError } =
     useAccountUpdateMutation();
-  const { mutateAsync: accounteDeleteMutate, isError: accountDeleteError } =
+  const { mutateAsync: accounteDeleteMutate, isError: accountDeleteMutateError } =
     useAccountDeleteMutation();
-  const { data: accounts = [] } = useAccountQuery({
+  const { data: accountQueryData, isLoading: isAccountLoading } = useAccountQuery({
     accessToken: authDetails!.accessToken,
     currentUser: authDetails!.currentUser,
   });
 
+  if (isAccountLoading) {
+    return <GridOverlay type="loading" />;
+  }
+
+  if (!accountQueryData?.isSuccess) {
+    return <GridOverlay type="error" message={accountQueryData?.message} />;
+  }
+
+  const accounts = accountQueryData.data;
+
+  if (!accounts) {
+    return <GridOverlay type="error" message={accountQueryData?.message} />;
+  }
+
   const columns: GridColDef[] = [
     {
       field: "id",
-      headerName: t("dashboard.accounts.columns.no"),
+      headerName: t("accounts.columns.no"),
       width: 100,
       editable: false,
       headerAlign: "left",
@@ -46,7 +61,7 @@ const AccountsPage = () => {
     {
       field: "accountName",
       type: "string",
-      headerName: t("dashboard.accounts.columns.accountName"),
+      headerName: t("accounts.columns.accountName"),
       flex: 1,
       editable: true,
       headerAlign: "left",
@@ -59,7 +74,7 @@ const AccountsPage = () => {
     {
       field: "balance",
       type: "number",
-      headerName: t("dashboard.accounts.columns.balance"),
+      headerName: t("accounts.columns.balance"),
       flex: 1,
       editable: false,
       headerAlign: "left",
@@ -67,7 +82,7 @@ const AccountsPage = () => {
     },
     {
       field: "createdAt",
-      headerName: t("dashboard.accounts.columns.createdAt"),
+      headerName: t("accounts.columns.createdAt"),
       flex: 1,
       editable: false,
       headerAlign: "left",
@@ -75,7 +90,7 @@ const AccountsPage = () => {
     },
     {
       field: "uniqueId",
-      headerName: t("dashboard.accounts.columns.uniqueId"),
+      headerName: t("accounts.columns.uniqueId"),
       flex: 1,
       editable: false,
       headerAlign: "left",
@@ -90,7 +105,7 @@ const AccountsPage = () => {
     createdAt: "",
   };
 
-  const accountDataRow: accountDataRowProps[] = accounts!.map((accountData, index) => ({
+  const accountDataRow: accountDataRowProps[] = accounts.map((accountData, index) => ({
     id: index + 1,
     uniqueId: accountData._id,
     accountName: accountData.accountName,
@@ -100,7 +115,7 @@ const AccountsPage = () => {
 
   return (
     <DataGrid<AccountCreateRequestProps, AccountUpdateRequestProps, AccountDeleteRequestProps>
-      key={accounts?.length} /* for reloading the data grid */
+      key={accounts.length} /* for reloading the data grid */
       rowsProp={accountDataRow}
       columnsProp={columns}
       dataCategory="account"
@@ -109,9 +124,9 @@ const AccountsPage = () => {
       newDataFunction={accounteCreateMutate}
       updateDataFunction={accounteUpdateMutate}
       deleteDataFunction={accounteDeleteMutate}
-      isNewDataError={accountCreateError}
-      isUpdateDataError={accountUpdateError}
-      isDeleteDataError={accountDeleteError}
+      isNewDataError={accountCreateMutateError}
+      isUpdateDataError={accountUpdateMutateError}
+      isDeleteDataError={accountDeleteMutateError}
     />
   );
 };

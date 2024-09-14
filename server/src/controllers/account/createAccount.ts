@@ -1,3 +1,4 @@
+import statusCodes from "@/shared/statusCodes";
 import { Request, Response } from "express";
 import mongoose from "mongoose";
 
@@ -9,7 +10,11 @@ const createAccountController = async (req: Request, res: Response) => {
   try {
     const { currentUser, accountName } = req.body;
     if (!accountName) {
-      return res.status(400).send(statusMessages.badrequest);
+      return res.status(statusCodes.badRequest).json({
+        isSuccess: false,
+        message: statusMessages.badrequest,
+        data: null,
+      });
     }
 
     const newAccount = new accountModel({
@@ -24,14 +29,26 @@ const createAccountController = async (req: Request, res: Response) => {
 
     const saveNewAccount = await newAccount.save();
     if (!saveNewAccount) {
-      console.error(errorMessage(createAccountController.name, "line_28"));
-      return res.status(500).send(statusMessages.internalerror);
+      console.error(errorMessage(createAccountController.name, "line_32"));
+      return res.status(statusCodes.internalServerError).json({
+        isSuccess: false,
+        message: statusMessages.internalerror,
+        data: null,
+      });
     }
 
-    return res.status(201).send(accountMessages.createAccount.creationSuccessful);
+    return res.status(statusCodes.created).json({
+      isSuccess: true,
+      message: accountMessages.createAccount.creationSuccessful,
+      data: null,
+    });
   } catch (error) {
-    console.error(errorMessage(createAccountController.name, "line_34", error));
-    return res.status(500).send(statusMessages.internalerror);
+    console.error(errorMessage(createAccountController.name, "line_46", error));
+    return res.status(statusCodes.internalServerError).json({
+      isSuccess: false,
+      message: statusMessages.internalerror,
+      data: null,
+    });
   }
 };
 

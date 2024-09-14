@@ -1,9 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import i18next from "i18next";
 
 import { controllers, methods, Requester, routes } from "@/shared/utils/requester";
-
-import { errorMessage } from "@/localization/i18n";
 
 const useSettingsMutation = () => {
   const queryClient = useQueryClient();
@@ -12,30 +9,20 @@ const useSettingsMutation = () => {
     mutationKey: ["settingsMutation"],
     mutationFn: async (settingsData: SettingsRequestProps) => {
       const { accessToken, ...requestPayload } = settingsData;
-      try {
-        const response = await new Requester({
-          method: methods.post,
-          endpoint: {
-            route: routes.user,
-            controller: controllers.settings,
-          },
-          accessToken: accessToken,
-          payload: requestPayload,
-        }).send<SettingsResponseProps>();
+      const response = await new Requester({
+        method: methods.post,
+        endpoint: {
+          route: routes.user,
+          controller: controllers.settings,
+        },
+        accessToken: accessToken,
+        payload: requestPayload,
+      }).send<SettingsResponseProps>();
 
-        return response;
-      } catch (error) {
-        if (error instanceof Error) {
-          console.error(errorMessage(useSettingsMutation.name, error));
-          throw error;
-        } else {
-          console.error(errorMessage(useSettingsMutation.name, error));
-          throw new Error(i18next.t("hookMessages.error"));
-        }
-      }
+      return response;
     },
-    onSuccess: (settingsData: SettingsResponseProps) => {
-      queryClient.setQueryData(["userSettings"], settingsData);
+    onSuccess: (settingsData: BackendResponseProps<SettingsResponseProps>) => {
+      queryClient.setQueryData(["userSettings"], settingsData.data);
     },
   });
 

@@ -10,12 +10,8 @@ declare interface EssentialRequestProps {
   currentUser?: string;
 }
 
-declare interface MessageResponseProps {
-  message: string;
-}
-
-declare interface StatusProps {
-  isLoading: boolean;
-  isError: boolean;
+declare interface BackendResponseProps<TResponseData = null> {
   isSuccess: boolean;
+  message: string;
+  data?: TResponseData;
 }

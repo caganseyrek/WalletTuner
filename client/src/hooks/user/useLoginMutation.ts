@@ -1,9 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import i18next from "i18next";
 
 import { controllers, methods, Requester, routes } from "@/shared/utils/requester";
-
-import { errorMessage } from "@/localization/i18n";
 
 const useLoginMutation = () => {
   const queryClient = useQueryClient();
@@ -11,29 +8,25 @@ const useLoginMutation = () => {
   const login = useMutation({
     mutationKey: ["loginMutation"],
     mutationFn: async (loginData: LoginRequestProps) => {
-      try {
-        const response = await new Requester({
-          method: methods.post,
-          endpoint: {
-            route: routes.user,
-            controller: controllers.login,
-          },
-          payload: loginData,
-        }).send<LoginResponseProps>();
+      const response = await new Requester({
+        method: methods.post,
+        endpoint: {
+          route: routes.user,
+          controller: controllers.login,
+        },
+        payload: loginData,
+      }).send<LoginResponseProps>();
 
-        return response;
-      } catch (error) {
-        if (error instanceof Error) {
-          console.error(errorMessage(useLoginMutation.name, error));
-          throw error;
-        } else {
-          console.error(errorMessage(useLoginMutation.name, error));
-          throw new Error(i18next.t("hookMessages.error"));
-        }
-      }
+      return response;
     },
-    onSuccess: (loginData: LoginResponseProps) => {
-      queryClient.setQueryData<AuthDetailsProps>(["authDetails"], loginData);
+    onSuccess: (loginData: BackendResponseProps<LoginResponseProps>) => {
+      const authDetails: AuthDetailsProps = {
+        accessToken: loginData.data?.accessToken,
+        currentUser: loginData.data?.currentUser,
+        currentEmail: loginData.data?.currentEmail,
+        name: loginData.data?.name,
+      };
+      queryClient.setQueryData<AuthDetailsProps>(["authDetails"], authDetails);
     },
   });
 

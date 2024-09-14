@@ -1,3 +1,4 @@
+import statusCodes from "@/shared/statusCodes";
 import { compare } from "bcrypt";
 import { Request, Response } from "express";
 
@@ -9,13 +10,21 @@ const updateUserController = async (req: Request, res: Response) => {
   try {
     const { currentUser, password, name, surname, email } = req.body;
     if (password) {
-      return res.status(400).send(statusMessages.badrequest);
+      return res.status(statusCodes.badRequest).json({
+        isSuccess: false,
+        message: statusMessages.badrequest,
+        data: null,
+      });
     }
 
     const userDetails = await userModel.findById(currentUser).exec();
     const passwordValidation = await compare(password, userDetails!.password as string);
     if (!passwordValidation) {
-      return res.status(401).send(userMessages.updateUser.passwordValidationFail);
+      return res.status(statusCodes.unauthorized).json({
+        isSuccess: false,
+        message: userMessages.updateUser.passwordValidationFail,
+        data: null,
+      });
     }
 
     const update = await userModel
@@ -26,14 +35,26 @@ const updateUserController = async (req: Request, res: Response) => {
       })
       .exec();
     if (!update) {
-      console.error(errorMessage(updateUserController.name, "line_29"));
-      return res.status(500).send(userMessages.updateUser.updateFailed);
+      console.error(errorMessage(updateUserController.name, "line_38"));
+      return res.status(statusCodes.internalServerError).json({
+        isSuccess: false,
+        message: userMessages.updateUser.updateFailed,
+        data: null,
+      });
     }
 
-    return res.status(200).send(userMessages.updateUser.updateSuccessful);
+    return res.status(statusCodes.success).json({
+      isSuccess: false,
+      message: userMessages.updateUser.updateSuccessful,
+      data: null,
+    });
   } catch (error) {
-    console.error(errorMessage(updateUserController.name, "line_35", error));
-    return res.status(500).send(statusMessages.internalerror);
+    console.error(errorMessage(updateUserController.name, "line_52", error));
+    return res.status(statusCodes.internalServerError).json({
+      isSuccess: false,
+      message: statusMessages.internalerror,
+      data: null,
+    });
   }
 };
 

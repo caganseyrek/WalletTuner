@@ -25,6 +25,7 @@
     "newTransactionNamePlaceholder": "New Transaction",
     "addNewTransactionButton": "Add New Transaction"
   },
+  "validationFail": "Failed to validate",
   "gridLocale": {
     "noRowsLabel": "No Rows",
     "noResultsOverlayLabel": "No Results Found",

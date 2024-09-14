@@ -1,4 +1,5 @@
 import { FRONTENTD_URL } from "../../../server";
+import statusCodes from "@/shared/statusCodes";
 import { compare } from "bcrypt";
 import { Request, Response } from "express";
 import { sign } from "jsonwebtoken";
@@ -13,17 +14,29 @@ const loginController = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
-      return res.status(400).send(statusMessages.badrequest);
+      return res.status(statusCodes.conflict).json({
+        isSuccess: false,
+        message: statusMessages.badrequest,
+        data: null,
+      });
     }
 
     const userExists = await userModel.findOne({ email: email }).exec();
     if (!userExists) {
-      return res.status(409).send(userMessages.login.wrongEmailOrPassword);
+      return res.status(statusCodes.unauthorized).json({
+        isSuccess: false,
+        message: userMessages.login.wrongEmailOrPassword,
+        data: null,
+      });
     }
 
     const passwordMatch = await compare(password, userExists.password as string);
     if (!passwordMatch) {
-      return res.status(401).send(userMessages.login.wrongEmailOrPassword);
+      return res.status(statusCodes.unauthorized).json({
+        isSuccess: false,
+        message: userMessages.login.wrongEmailOrPassword,
+        data: null,
+      });
     }
 
     const existingRefreshTokens = await tokenModel.find({ belongsTo: userExists._id }).exec();
@@ -32,7 +45,7 @@ const loginController = async (req: Request, res: Response) => {
         try {
           await tokenModel.findByIdAndDelete(token._id).exec();
         } catch {
-          console.error(errorMessage(loginController.name, "line_35"));
+          console.error(errorMessage(loginController.name, "line_48"));
         }
       });
     }
@@ -55,8 +68,12 @@ const loginController = async (req: Request, res: Response) => {
     });
     const saved = await newToken.save();
     if (!saved) {
-      console.error(errorMessage(loginController.name, "line_58"));
-      return res.status(500).send(statusMessages.internalerror);
+      console.error(errorMessage(loginController.name, "line_71"));
+      return res.status(statusCodes.internalServerError).json({
+        isSuccess: false,
+        message: statusMessages.internalerror,
+        data: null,
+      });
     }
 
     res.cookie("refreshToken", refreshToken, {
@@ -68,15 +85,22 @@ const loginController = async (req: Request, res: Response) => {
       signed: true,
     });
 
-    return res.status(200).send({
+    return res.status(statusCodes.success).json({
+      isSuccess: true,
       message: userMessages.login.loginSuccessful,
-      accessToken: accessToken,
-      currentUser: userExists._id as string,
-      name: userExists.name as string,
+      data: {
+        accessToken: accessToken,
+        currentUser: userExists._id as string,
+        name: userExists.name as string,
+      },
     });
   } catch (error) {
-    console.error(errorMessage(loginController.name, "line_78", error));
-    return res.status(500).send(statusMessages.badrequest);
+    console.error(errorMessage(loginController.name, "line_98", error));
+    return res.status(statusCodes.internalServerError).json({
+      isSuccess: false,
+      message: statusMessages.badrequest,
+      data: null,
+    });
   }
 };
 

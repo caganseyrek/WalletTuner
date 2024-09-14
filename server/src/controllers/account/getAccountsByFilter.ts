@@ -1,3 +1,4 @@
+import statusCodes from "@/shared/statusCodes";
 import { Request, Response } from "express";
 
 import accountModel from "@/models/accountModel";
@@ -15,13 +16,25 @@ const getAccountsByFilterController = async (req: Request, res: Response) => {
 
     const accounts = await accountModel.find(filters).exec();
     if (!accounts) {
-      return res.status(404).send(accountMessages.getAccounts.noAccountsFound);
+      return res.status(statusCodes.notFound).json({
+        isSuccess: false,
+        message: accountMessages.getAccounts.noAccountsFound,
+        data: null,
+      });
     }
 
-    return res.status(200).send(accounts);
+    return res.status(statusCodes.success).json({
+      isSuccess: true,
+      message: "",
+      data: accounts,
+    });
   } catch (error) {
-    console.error(errorMessage(getAccountsByFilterController.name, "line_23", error));
-    return res.status(500).send(statusMessages.internalerror);
+    console.error(errorMessage(getAccountsByFilterController.name, "line_32", error));
+    return res.status(statusCodes.internalServerError).json({
+      isSuccess: false,
+      message: statusMessages.internalerror,
+      data: null,
+    });
   }
 };
 

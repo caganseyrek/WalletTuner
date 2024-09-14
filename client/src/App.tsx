@@ -54,7 +54,7 @@ const App = () => {
       <CssBaseline />
       <QueryClientProvider client={queryClient}>
         <Routes />
-        {IS_DEV && <ReactQueryDevtools initialIsOpen={false} />}
+        {IS_DEV ? <ReactQueryDevtools initialIsOpen={false} /> : null}
       </QueryClientProvider>
     </ThemeProvider>
   );

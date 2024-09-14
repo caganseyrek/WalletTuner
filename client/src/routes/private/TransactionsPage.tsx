@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { GridColDef, GridPreProcessEditCellProps } from "@mui/x-data-grid";
 
 import DataGrid from "@/components/DataGrid";
+import GridOverlay from "@/components/GridOverlay";
 
 import useAccountQuery from "@/hooks/account/useAccountQuery";
 import useTransactionCreateMutation from "@/hooks/transaction/useTransactionCreateMutation";
@@ -36,8 +37,24 @@ const TransactionsPage = () => {
     accessToken: authDetails!.accessToken,
     currentUser: authDetails!.currentUser,
   };
-  const { data: transactions = [] } = useTransactionQuery(queryPayload);
-  const { data: accounts = [] } = useAccountQuery(queryPayload);
+  const { data: transactionQueryData, isLoading: isTransactionLoading } =
+    useTransactionQuery(queryPayload);
+  const { data: accountQueryData, isLoading: isAccountLoading } = useAccountQuery(queryPayload);
+
+  if (isAccountLoading || isTransactionLoading) {
+    return <GridOverlay type="loading" />;
+  }
+
+  if (!accountQueryData?.isSuccess || !transactionQueryData?.isSuccess) {
+    return <GridOverlay type="error" message={transactionQueryData?.message} />;
+  }
+
+  const accounts = accountQueryData.data;
+  const transactions = transactionQueryData.data;
+
+  if (!accounts || !transactions) {
+    return <GridOverlay type="error" message={transactionQueryData?.message} />;
+  }
 
   const columns: GridColDef[] = [
     {

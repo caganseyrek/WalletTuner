@@ -5,13 +5,6 @@
     "evening": "Good Evening",
     "night": "Good Night"
   },
-  "requesterMessages": {
-    "error": "An error ocurred, please try again"
-  },
-  "hookMessages": {
-    "formatterError": "Formatting Error",
-    "error": "An error ocurred, please try again"
-  },
   "layouts": {
     "sidebar": {
       "dashboardsTitle": "Dashboards",

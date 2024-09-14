@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { Add, Cancel, Delete, Edit, Save } from "@mui/icons-material";
@@ -19,14 +19,11 @@ import {
   GridToolbarColumnsButton,
   GridToolbarContainer,
   GridToolbarDensitySelector,
-  GridToolbarExport,
-  GridToolbarFilterButton,
+  GridToolbarQuickFilter,
 } from "@mui/x-data-grid";
 import { UseMutateAsyncFunction } from "@tanstack/react-query";
 
 import useAuthDetails from "@/hooks/useAuthDetails";
-
-import { mediumColor } from "@/shared/globals.style";
 
 import gridLocaleText from "@/localization/gridLocaleText";
 
@@ -61,7 +58,7 @@ const DataGrid = <TNew, TUpdate, TDelete>({
   isUpdateDataError,
   isDeleteDataError,
 }: DataGridProps<TNew, TUpdate, TDelete>) => {
-  const { t } = useTranslation(["main", "datagrid"]);
+  const { t } = useTranslation(["data_grid"]);
 
   const [isWaiting, setIsWaiting] = useState<boolean>(false);
   const [snackbarState, setSnackbarState] = useState<SnackbarStateProps>({
@@ -79,10 +76,16 @@ const DataGrid = <TNew, TUpdate, TDelete>({
 
   const CustomToolbar = () => {
     const handleAddNewClick = async () => {
-      setRows((rows) => [...rows, { id: rows.length + 1, ...newDataObject, isNew: true }]);
+      setRows((rows) =>
+        rows.map((row) => ({
+          ...row,
+          id: row.id + 1,
+        })),
+      );
+      setRows((rows) => [{ id: 1, ...newDataObject, isNew: true }, ...rows]);
       setRowModesModel((currentModel) => ({
+        [1]: { mode: GridRowModes.Edit },
         ...currentModel,
-        [rows.length + 1]: { mode: GridRowModes.Edit },
       }));
     };
 
@@ -93,15 +96,14 @@ const DataGrid = <TNew, TUpdate, TDelete>({
           alignItems: "center",
           justifyContent: "space-between",
         }}>
-        <Box>
+        <GridToolbarQuickFilter variant="outlined" size="small" />
+        <Box sx={{ display: "flex", alignItems: "center", columnGap: 1 }}>
           <GridToolbarColumnsButton />
-          <GridToolbarFilterButton />
           <GridToolbarDensitySelector />
-          <GridToolbarExport />
+          <Button color="primary" startIcon={<Add />} onClick={handleAddNewClick}>
+            {t(`${dataCategory}s.addNew${formattedDataCategory}Button`)}
+          </Button>
         </Box>
-        <Button color="primary" startIcon={<Add />} onClick={handleAddNewClick}>
-          {t(`main:dashboard.${dataCategory}s.addNew${formattedDataCategory}Button`)}
-        </Button>
       </GridToolbarContainer>
     );
   };
@@ -165,14 +167,14 @@ const DataGrid = <TNew, TUpdate, TDelete>({
       return setSnackbarState({
         isOpen: true,
         isError: true,
-        message: t("datagrid:validationFail"),
+        message: t("validationFail"),
       });
     }
 
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
     setIsWaiting(true);
     const newData = {
-      [`${dataCategory}${formattedNewDataIdentifier}`]: `${t(`main:dashboard.${dataCategory}s.new${formattedDataCategory}NamePlaceholder`)}`,
+      [`${dataCategory}${formattedNewDataIdentifier}`]: `${t(`${dataCategory}s.new${formattedDataCategory}NamePlaceholder`)}`,
     };
     const response = await newDataFunction({
       accessToken: authData?.accessToken,
@@ -215,7 +217,11 @@ const DataGrid = <TNew, TUpdate, TDelete>({
     }
   };
 
-  // TODO: add simpler filters
+  const filteredColumns: GridColDef[] = useMemo(() => {
+    const visibleFields: string[] = [];
+    columnsProp.forEach((column) => visibleFields.push(column.field));
+    return columnsProp.filter((column) => visibleFields.includes(column.field));
+  }, [columnsProp]);
 
   return (
     <>
@@ -226,14 +232,14 @@ const DataGrid = <TNew, TUpdate, TDelete>({
       />
       <DataGridComponent
         loading={isWaiting ? true : false}
-        sx={{ borderRadius: 0, border: `solid 1px ${mediumColor}` }}
+        sx={{ borderRadius: 0, border: 0 }}
         rows={rows}
         columns={[
-          ...columnsProp,
+          ...filteredColumns,
           {
             field: "actions",
             type: "actions",
-            headerName: t("main:dashboard.accounts.columns.actions"),
+            headerName: t("accounts.columns.actions"),
             width: 100,
             getActions: ({ id }) => {
               const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
@@ -242,12 +248,12 @@ const DataGrid = <TNew, TUpdate, TDelete>({
                 return [
                   <GridActionsCellItem
                     icon={<Save />}
-                    label={t("main:accounts.columns.saveActionLabel")}
+                    label={t("accounts.columns.saveActionLabel")}
                     onClick={() => handleSaveClick(id)}
                   />,
                   <GridActionsCellItem
                     icon={<Cancel />}
-                    label={t("main:accounts.columns.cancelActionLabel")}
+                    label={t("accounts.columns.cancelActionLabel")}
                     onClick={() => handleCancelClick(id)}
                   />,
                 ];
@@ -256,12 +262,12 @@ const DataGrid = <TNew, TUpdate, TDelete>({
               return [
                 <GridActionsCellItem
                   icon={<Edit />}
-                  label={t("main:accounts.columns.editActionLabel")}
+                  label={t("accounts.columns.editActionLabel")}
                   onClick={() => handleEditClick(id)}
                 />,
                 <GridActionsCellItem
                   icon={<Delete />}
-                  label={t("main:accounts.columns.deleteActionLabel")}
+                  label={t("accounts.columns.deleteActionLabel")}
                   onClick={() => handleDeleteClick(id)}
                 />,
               ];

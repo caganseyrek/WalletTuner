@@ -1,7 +1,8 @@
 import axios, { AxiosRequestConfig, RawAxiosRequestHeaders } from "axios";
-import i18next from "i18next";
 
-import { errorMessage } from "@/localization/i18n";
+// import i18next from "i18next";
+
+// import { errorMessage } from "@/localization/i18n";
 
 interface endpointProps {
   route: string;
@@ -20,16 +21,19 @@ interface RequesterConfig {
 }
 
 const BACKEND_URL = import.meta.env.VITE_APP_BACKEND_URL;
-const TOKEN_ENDPOINT = import.meta.env.VITE_APP_TOKEN_ENDPOINT;
+// const TOKEN_ENDPOINT = import.meta.env.VITE_APP_TOKEN_ENDPOINT;
+// const IS_DEV = Boolean(import.meta.env.VITE_APP_IS_DEV);
+
+const POSSIBLE_STATUS_CODES = [200, 201, 400, 401, 404, 409, 500];
 
 export class Requester {
   private baseURL: string = BACKEND_URL;
-  private tokenEndpoint: string = TOKEN_ENDPOINT;
+  // private tokenEndpoint: string = TOKEN_ENDPOINT;
   private endpoint: { route: string; controller: string };
   private method: string;
   private headers?: RawAxiosRequestHeaders;
   private accessToken?: string;
-  private currentUser?: string;
+  // private currentUser?: string;
   private query?: Record<string, string>;
   private payload: object;
 
@@ -38,7 +42,7 @@ export class Requester {
     method,
     headers,
     accessToken,
-    currentUser,
+    // currentUser,
     query,
     payload,
   }: RequesterConfig) {
@@ -50,41 +54,47 @@ export class Requester {
       ...(accessToken && { Authorization: `Bearer ${this.accessToken}` }),
       ...headers,
     };
-    this.currentUser = currentUser;
+    // this.currentUser = currentUser;
     this.payload = payload;
     this.query = query;
   }
 
-  async send<TResponse>(): Promise<TResponse> {
+  async send<TResponseData = null>(): Promise<BackendResponseProps<TResponseData>> {
     let requestUrl = `${this.baseURL}${this.endpoint.route}/${this.endpoint.controller}`;
     if (this.query) {
       const queryString = new URLSearchParams(this.query).toString();
       requestUrl += `?${queryString}`;
     }
+
+    const axiosInstance = axios.create({
+      baseURL: requestUrl,
+    });
+    axiosInstance.interceptors.response.use(
+      (response) => {
+        return response;
+      },
+      (error) => {
+        if (error.response && POSSIBLE_STATUS_CODES.includes(error.response.status)) {
+          return Promise.resolve(error.response.data);
+        }
+      },
+    );
+
     const axiosConfig: AxiosRequestConfig = {
       url: requestUrl,
       method: this.method,
       headers: this.headers,
       data: this.payload,
+      validateStatus: function (status) {
+        return POSSIBLE_STATUS_CODES.includes(status);
+      },
     };
-    try {
-      const response = await axios<TResponse>(axiosConfig);
-      return response.data as TResponse;
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        if (error.response?.status === 401 && error.response.data.message === "Expired Token") {
-          const newAccessToken = await this.refresh();
-          if (newAccessToken) return this.send<TResponse>();
-          return null as TResponse;
-        }
-        console.error(errorMessage(this.send.name, error.response?.data || error.message));
-        throw new Error(error.response?.data || error.message);
-      }
-      console.error(errorMessage(this.send.name, error));
-      throw new Error(i18next.t("requesterInstanceMessages.error"));
-    }
+    const response = await axiosInstance.request<BackendResponseProps<TResponseData>>(axiosConfig);
+    return response.data as BackendResponseProps<TResponseData>;
   }
 
+  /*
+  FIXME
   private async refresh(): Promise<string | null> {
     try {
       const requestUrl = this.baseURL + this.tokenEndpoint;
@@ -101,10 +111,11 @@ export class Requester {
       }
       return null;
     } catch (error) {
-      console.error(errorMessage(this.refresh.name, error));
+      IS_DEV && console.error(errorMessage(this.refresh.name, error));
       return null;
     }
   }
+  */
 }
 
 export enum methods {

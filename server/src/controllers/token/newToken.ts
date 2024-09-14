@@ -1,3 +1,4 @@
+import statusCodes from "@/shared/statusCodes";
 import { Request, Response } from "express";
 import { sign, verify } from "jsonwebtoken";
 
@@ -9,12 +10,20 @@ const newTokenController = async (req: Request, res: Response) => {
   try {
     const { currentUser, refreshToken } = req.body;
     if (!refreshToken) {
-      return res.status(401).send(tokenMessages.noRefreshTokenReceived);
+      return res.status(statusCodes.unauthorized).json({
+        isSuccess: false,
+        message: tokenMessages.noRefreshTokenReceived,
+        data: null,
+      });
     }
 
     const isRefreshTokenExpired = verify(refreshToken, process.env.JWT_REFRESH_SECRET!);
     if (!isRefreshTokenExpired) {
-      return res.status(401).send(tokenMessages.refreshTokenExpired);
+      return res.status(statusCodes.unauthorized).json({
+        isSuccess: false,
+        message: tokenMessages.refreshTokenExpired,
+        data: null,
+      });
     }
 
     const filters = {
@@ -24,7 +33,11 @@ const newTokenController = async (req: Request, res: Response) => {
 
     const hasRefreshToken = await tokenModel.findOne(filters).exec();
     if (!hasRefreshToken) {
-      return res.status(405).send(tokenMessages.noRefreshTokenFound);
+      return res.status(statusCodes.unauthorized).json({
+        isSuccess: false,
+        message: tokenMessages.noRefreshTokenFound,
+        data: null,
+      });
     }
 
     const isRefreshTokenValid = verify(
@@ -33,20 +46,38 @@ const newTokenController = async (req: Request, res: Response) => {
     );
 
     if (!isRefreshTokenValid) {
-      return res.status(405).send(tokenMessages.refreshTokenExpired);
+      return res.status(statusCodes.unauthorized).json({
+        isSuccess: false,
+        message: tokenMessages.refreshTokenExpired,
+        data: null,
+      });
     }
     if (hasRefreshToken.refreshToken !== refreshToken) {
-      return res.status(401).send(tokenMessages.invalidRefreshToken);
+      return res.status(statusCodes.unauthorized).json({
+        isSuccess: false,
+        message: tokenMessages.invalidRefreshToken,
+        data: null,
+      });
     }
 
     const newAccessToken = sign(currentUser, process.env.JWT_ACCESS_SECRET!, {
       expiresIn: "15m",
     });
 
-    return res.status(200).send({ accessToken: newAccessToken });
+    return res.status(statusCodes.success).json({
+      isSuccess: true,
+      message: "",
+      data: {
+        accessToken: newAccessToken,
+      },
+    });
   } catch (error) {
-    console.error(errorMessage(newTokenController.name, "line_46", error));
-    return res.status(500).send(statusMessages.internalerror);
+    console.error(errorMessage(newTokenController.name, "line_75", error));
+    return res.status(statusCodes.internalServerError).json({
+      isSuccess: false,
+      message: statusMessages.internalerror,
+      data: null,
+    });
   }
 };
 

@@ -1,10 +1,6 @@
 import { useMemo } from "react";
 
-import i18next from "i18next";
-
 import { currencies } from "@/shared/currencies";
-
-import { errorMessage } from "@/localization/i18n";
 
 import useSettings from "./useSettings";
 
@@ -34,7 +30,6 @@ function useFormatter() {
 
     const selectedCurrency = currencies.find((c) => c.currencyAbbr === currency);
     if (!selectedCurrency) {
-      console.error(errorMessage(useFormatter.name, i18next.t("hookMessages.formatterError")));
       return (value: string) => value;
     }
 
