@@ -45,10 +45,7 @@
     },
     "buttons": {
       "registerButton": "Register",
-      "loginButton": "Login",
-      "loginIsLoadingText": "Logging In...",
-      "loginIsSuccessText": "Logged In!",
-      "loginIsErrorText": "An error occurred."
+      "loginButton": "Login"
     },
     "schemas": {
       "required": "This field is required",
@@ -58,6 +55,6 @@
   "errorPage": {
     "title": "An error occurred",
     "description": "We are unable to load the page and are really sorry about it.",
-    "reload": "Reload"
+    "reload": "Refresh"
   }
 }

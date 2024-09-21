@@ -22,12 +22,11 @@ const RegisterPage = () => {
 
   const { mutateAsync: registerMutateAsync } = useRegisterMutation();
 
-  const [snackbarState, setSnackbarState] = useState<SnackbarStateProps>({
-    isOpen: false,
-    isError: false,
-    message: "",
+  const [dataState, setDataState] = useState<DataStateProps>({
+    snackbarState: { isOpen: false, message: "" },
+    isLoading: false,
+    isSuccess: false,
   });
-  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const {
     handleSubmit,
@@ -37,24 +36,23 @@ const RegisterPage = () => {
 
   const RegisterFormSubmit = async (formdata: FieldValues) => {
     if (formdata.password1 !== formdata.password2) {
-      return setSnackbarState({
-        isOpen: true,
-        isError: false,
-        message: t("forms.messages.passwordsNotMatch"),
-      });
+      return setDataState(() => ({
+        snackbarState: { isOpen: true, message: t("forms.messages.passwordsNotMatch") },
+        isLoading: false,
+        isSuccess: false,
+      }));
     }
-    setIsLoading(true);
+    setDataState((currentState) => ({ ...currentState, isLoading: true }));
     const response = await registerMutateAsync({
       name: formdata.name,
       surname: formdata.surname,
       email: formdata.email,
       password: formdata.password1,
     });
-    setIsLoading(false);
-    return setSnackbarState(() => ({
-      isOpen: true,
-      isError: response.isSuccess ? false : true,
-      message: response.message,
+    return setDataState(() => ({
+      snackbarState: { isOpen: true, message: response.message },
+      isLoading: false,
+      isSuccess: response.isSuccess ? true : false,
     }));
   };
 
@@ -152,17 +150,17 @@ const RegisterPage = () => {
             );
           }}
         />
-        <SubmitButton isLoading={isLoading} />
+        <SubmitButton isLoading={dataState.isLoading} isSuccess={dataState.isSuccess} />
       </form>
       <Divider sx={DividerStyles} orientation="horizontal" flexItem />
       <RouterLink to={"/login"} style={LinkStyles}>
         {t("forms.placeholders.loginLink")}
       </RouterLink>
-      {snackbarState.isOpen && (
+      {dataState.snackbarState?.isOpen && (
         <Snackbar
-          snackbarState={snackbarState}
-          setSnackbarState={setSnackbarState}
-          severity={snackbarState.isError ? "error" : "success"}
+          snackbarState={dataState}
+          setSnackbarState={setDataState}
+          severity={dataState.isSuccess ? "success" : "error"}
         />
       )}
     </>

@@ -4,9 +4,10 @@ import { Button, CircularProgress } from "@mui/material";
 
 interface SubmitButtonProps {
   isLoading: boolean;
+  isSuccess: boolean;
 }
 
-const SubmitButtonText = ({ isLoading }: SubmitButtonProps) => {
+const SubmitButtonText = ({ isLoading }: Omit<SubmitButtonProps, "isSuccess">) => {
   const { t } = useTranslation();
 
   if (isLoading) {
@@ -15,7 +16,7 @@ const SubmitButtonText = ({ isLoading }: SubmitButtonProps) => {
   return t("forms.buttons.loginButton");
 };
 
-const SubmitButton = ({ isLoading }: SubmitButtonProps) => {
+const SubmitButton = ({ isLoading, isSuccess }: SubmitButtonProps) => {
   return (
     <Button
       variant="contained"
@@ -23,7 +24,7 @@ const SubmitButton = ({ isLoading }: SubmitButtonProps) => {
       color="primary"
       fullWidth
       sx={{ height: "40px" }}
-      disabled={isLoading}>
+      disabled={isLoading || isSuccess}>
       <SubmitButtonText isLoading={isLoading} />
     </Button>
   );

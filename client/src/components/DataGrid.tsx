@@ -34,11 +34,10 @@ interface DataGridProps<TNew, TUpdate, TDelete> {
   columnsProp: GridColDef[];
   paginationModel?: GridPaginationModel;
   dataCategory: string;
-  newDataIdentifier: string;
   newDataObject: object;
-  newDataFunction: UseMutateAsyncFunction<MessageResponseProps, Error, TNew, unknown>;
-  updateDataFunction: UseMutateAsyncFunction<MessageResponseProps, Error, TUpdate, unknown>;
-  deleteDataFunction: UseMutateAsyncFunction<MessageResponseProps, Error, TDelete, unknown>;
+  newDataFunction: UseMutateAsyncFunction<BackendResponseProps, Error, TNew, unknown>;
+  updateDataFunction: UseMutateAsyncFunction<BackendResponseProps, Error, TUpdate, unknown>;
+  deleteDataFunction: UseMutateAsyncFunction<BackendResponseProps, Error, TDelete, unknown>;
   isNewDataError: boolean;
   isUpdateDataError: boolean;
   isDeleteDataError: boolean;
@@ -49,7 +48,6 @@ const DataGrid = <TNew, TUpdate, TDelete>({
   columnsProp,
   paginationModel,
   dataCategory,
-  newDataIdentifier,
   newDataObject,
   newDataFunction,
   updateDataFunction,
@@ -60,28 +58,20 @@ const DataGrid = <TNew, TUpdate, TDelete>({
 }: DataGridProps<TNew, TUpdate, TDelete>) => {
   const { t } = useTranslation(["data_grid"]);
 
-  const [isWaiting, setIsWaiting] = useState<boolean>(false);
-  const [snackbarState, setSnackbarState] = useState<SnackbarStateProps>({
-    isOpen: false,
-    isError: false,
-    message: "",
+  const [dataState, setDataState] = useState<DataStateProps>({
+    snackbarState: { isOpen: false, message: "" },
+    isLoading: false,
+    isSuccess: false,
   });
   const [rows, setRows] = useState<GridRowsProp>(rowsProp);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
   const { data: authData } = useAuthDetails();
 
   const formattedDataCategory = dataCategory.charAt(0).toUpperCase() + dataCategory.slice(1);
-  const formattedNewDataIdentifier =
-    newDataIdentifier.charAt(0).toUpperCase() + newDataIdentifier.slice(1);
 
   const CustomToolbar = () => {
     const handleAddNewClick = async () => {
-      setRows((rows) =>
-        rows.map((row) => ({
-          ...row,
-          id: row.id + 1,
-        })),
-      );
+      setRows((rows) => rows.map((row) => ({ ...row, id: row.id + 1 })));
       setRows((rows) => [{ id: 1, ...newDataObject, isNew: true }, ...rows]);
       setRowModesModel((currentModel) => ({
         [1]: { mode: GridRowModes.Edit },
@@ -96,7 +86,6 @@ const DataGrid = <TNew, TUpdate, TDelete>({
           alignItems: "center",
           justifyContent: "space-between",
         }}>
-        <GridToolbarQuickFilter variant="outlined" size="small" />
         <Box sx={{ display: "flex", alignItems: "center", columnGap: 1 }}>
           <GridToolbarColumnsButton />
           <GridToolbarDensitySelector />
@@ -104,6 +93,7 @@ const DataGrid = <TNew, TUpdate, TDelete>({
             {t(`${dataCategory}s.addNew${formattedDataCategory}Button`)}
           </Button>
         </Box>
+        <GridToolbarQuickFilter variant="outlined" size="small" />
       </GridToolbarContainer>
     );
   };
@@ -114,35 +104,82 @@ const DataGrid = <TNew, TUpdate, TDelete>({
     }
   };
 
-  const processRowUpdate = async (updatedRow: GridRowModel, originalRow: GridRowModel) => {
-    const updatedValues: Record<string, string | number>[] = [];
-    if (!updatedRow.isNew) {
-      const keys = new Set([...Object.keys(originalRow), ...Object.keys(updatedRow)]);
-      keys.forEach((key) => {
-        if (key === "uniqueId") {
-          updatedValues.push({ [`${dataCategory}Id`]: updatedRow[key] });
-        }
-        if (updatedRow[key] !== originalRow[key]) {
-          updatedValues.push({ [key]: updatedRow[key] });
-        }
-      });
-    }
-    const requestValues = updatedRow.isNew
-      ? updatedValues.reduce((acc, record) => ({ ...acc, ...record }))
-      : updatedRow;
+  const processRowUpdate = async (updatedRow: GridRowModel) => {
+    const row = updatedRow;
+    let isNew = false;
 
-    setIsWaiting(true);
-    const response = await updateDataFunction({
-      accessToken: authData?.accessToken,
-      currentUser: authData?.currentUser,
-      ...requestValues,
-    } as TUpdate);
-    setIsWaiting(false);
-    setSnackbarState({
-      isOpen: true,
-      isError: isUpdateDataError,
-      message: response.message,
-    });
+    for (const key in row) {
+      const column = columnsProp.find((column) => column.field === key);
+      if (key === "isNew" && row[key] === true) {
+        isNew = true;
+      }
+
+      if (key === "id") {
+        delete row[key];
+      }
+
+      if (key === "uniqueId" && !isNew) {
+        row[`${dataCategory}Id`] = row["uniqueId"];
+        delete row["uniqueId"];
+      } else if (isNew) {
+        delete row["uniqueId"];
+      }
+
+      if (column?.editable && !row[key]) {
+        return setDataState(() => ({
+          snackbarState: { isOpen: true, message: t("validationFail") },
+          isLoading: false,
+          isSuccess: false,
+        }));
+      }
+
+      if (!column?.editable) {
+        delete row[key];
+      }
+    }
+
+    setDataState((currentState) => ({ ...currentState, isLoading: true }));
+    if (isNew) {
+      const response = await newDataFunction({
+        accessToken: authData?.accessToken,
+        currentUser: authData?.currentUser,
+        ...row,
+      } as TNew);
+
+      if (!response.isSuccess) {
+        return setDataState(() => ({
+          snackbarState: { isOpen: true, message: response.message },
+          isLoading: false,
+          isSuccess: response.isSuccess,
+        }));
+      }
+
+      setDataState(() => ({
+        snackbarState: { isOpen: true, message: response.message },
+        isLoading: false,
+        isSuccess: true,
+      }));
+    } else {
+      const response = await updateDataFunction({
+        accessToken: authData?.accessToken,
+        currentUser: authData?.currentUser,
+        ...row,
+      } as TUpdate);
+
+      if (!response.isSuccess) {
+        return setDataState(() => ({
+          snackbarState: { isOpen: true, message: response.message },
+          isLoading: false,
+          isSuccess: response.isSuccess,
+        }));
+      }
+
+      setDataState(() => ({
+        snackbarState: { isOpen: true, message: response.message },
+        isLoading: false,
+        isSuccess: true,
+      }));
+    }
     return updatedRow;
   };
 
@@ -155,54 +192,23 @@ const DataGrid = <TNew, TUpdate, TDelete>({
   };
 
   const handleSaveClick = async (id: GridRowId) => {
-    const savedRow = rows.filter((row) => row.id === id)[0];
-    const validateRow = Object.values(savedRow).every((value) => {
-      if (typeof value === "string") {
-        return value.trim() !== "";
-      } else {
-        return value !== null && value !== undefined;
-      }
-    });
-    if (!validateRow) {
-      return setSnackbarState({
-        isOpen: true,
-        isError: true,
-        message: t("validationFail"),
-      });
-    }
-
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
-    setIsWaiting(true);
-    const newData = {
-      [`${dataCategory}${formattedNewDataIdentifier}`]: `${t(`${dataCategory}s.new${formattedDataCategory}NamePlaceholder`)}`,
-    };
-    const response = await newDataFunction({
-      accessToken: authData?.accessToken,
-      currentUser: authData?.currentUser,
-      ...newData,
-    } as TNew);
-    setIsWaiting(false);
-    setSnackbarState({
-      isOpen: true,
-      isError: true,
-      message: response.message,
-    });
   };
 
   const handleDeleteClick = async (id: GridRowId) => {
     const rowToBeDeleted = rows.filter((row) => row.id === id);
-    setIsWaiting(true);
+    setDataState((currentState) => ({ ...currentState, isLoading: true }));
     const response = await deleteDataFunction({
       accessToken: authData?.accessToken,
       currentUser: authData?.currentUser,
       [`${dataCategory}Id`]: rowToBeDeleted[0].uniqueId,
     } as TDelete);
-    setIsWaiting(false);
-    setSnackbarState({
-      isOpen: true,
-      isError: true, // FIXME: fix isError props on every setSnackbarState call
-      message: response.message,
-    });
+
+    return setDataState(() => ({
+      snackbarState: { isOpen: true, message: response.message },
+      isLoading: false,
+      isSuccess: true,
+    }));
   };
 
   const handleCancelClick = (id: GridRowId) => {
@@ -214,6 +220,7 @@ const DataGrid = <TNew, TUpdate, TDelete>({
     const editedRow = rows.find((row) => row.id === id);
     if (editedRow!.isNew) {
       setRows(rows.filter((row) => row.id !== id));
+      setRows((rows) => rows.map((row) => ({ ...row, id: row.id - 1 })));
     }
   };
 
@@ -226,12 +233,16 @@ const DataGrid = <TNew, TUpdate, TDelete>({
   return (
     <>
       <Snackbar
-        snackbarState={snackbarState}
-        setSnackbarState={setSnackbarState}
-        severity={isNewDataError || isUpdateDataError || isDeleteDataError ? "error" : "success"}
+        snackbarState={dataState}
+        setSnackbarState={setDataState}
+        severity={
+          isNewDataError || isUpdateDataError || isDeleteDataError || !dataState.isSuccess
+            ? "error"
+            : "success"
+        }
       />
       <DataGridComponent
-        loading={isWaiting ? true : false}
+        loading={dataState.isLoading ? true : false}
         sx={{ borderRadius: 0, border: 0 }}
         rows={rows}
         columns={[
@@ -239,7 +250,7 @@ const DataGrid = <TNew, TUpdate, TDelete>({
           {
             field: "actions",
             type: "actions",
-            headerName: t("accounts.columns.actions"),
+            headerName: t("actions.header"),
             width: 100,
             getActions: ({ id }) => {
               const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
@@ -248,12 +259,12 @@ const DataGrid = <TNew, TUpdate, TDelete>({
                 return [
                   <GridActionsCellItem
                     icon={<Save />}
-                    label={t("accounts.columns.saveActionLabel")}
+                    label={t("actions.saveActionLabel")}
                     onClick={() => handleSaveClick(id)}
                   />,
                   <GridActionsCellItem
                     icon={<Cancel />}
-                    label={t("accounts.columns.cancelActionLabel")}
+                    label={t("actions.cancelActionLabel")}
                     onClick={() => handleCancelClick(id)}
                   />,
                 ];
@@ -262,12 +273,12 @@ const DataGrid = <TNew, TUpdate, TDelete>({
               return [
                 <GridActionsCellItem
                   icon={<Edit />}
-                  label={t("accounts.columns.editActionLabel")}
+                  label={t("actions.editActionLabel")}
                   onClick={() => handleEditClick(id)}
                 />,
                 <GridActionsCellItem
                   icon={<Delete />}
-                  label={t("accounts.columns.deleteActionLabel")}
+                  label={t("actions.deleteActionLabel")}
                   onClick={() => handleDeleteClick(id)}
                 />,
               ];

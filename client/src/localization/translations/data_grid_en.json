@@ -5,8 +5,7 @@
       "accountName": "Account Name",
       "balance": "Balance",
       "createdAt": "Created At",
-      "uniqueId": "Account ID",
-      "actions": "Actions"
+      "uniqueId": "Account ID"
     },
     "newAccountNamePlaceholder": "New Account",
     "addNewAccountButton": "Add New Account"
@@ -19,13 +18,21 @@
       "type": "Type",
       "description": "Description",
       "dateTime": "DateTime",
-      "value": "Value",
-      "actions": "Actions"
+      "value": "Value"
     },
     "newTransactionNamePlaceholder": "New Transaction",
     "addNewTransactionButton": "Add New Transaction"
   },
-  "validationFail": "Failed to validate",
+  "actions": {
+    "header": "Actions",
+    "saveActionLabel": "Save",
+    "cancelActionLabel": "Cancel",
+    "editActionLabel": "Edit",
+    "deleteActionLabel": "Delete"
+  },
+  "validationFail": "Please fill all required sections.",
+  "loadingMessage": "Loading Data...",
+  "errorMessage": "An error occurred. Try relogging.",
   "gridLocale": {
     "noRowsLabel": "No Rows",
     "noResultsOverlayLabel": "No Results Found",
@@ -116,7 +123,7 @@
     "columnHeaderFiltersTooltipOneActive": "active filter",
     "columnHeaderFiltersTooltipMultipleActive": "active filters",
     "columnHeaderFiltersLabel": "Show Filters",
-    "columnHeaderSordIconLabel": "Sort",
+    "columnHeaderSortIconLabel": "Sort",
     "footerRowOneSelected": "row selected",
     "footerRowMultipleSelected": "rows selected",
     "footerTotalRows": "Total Rows:",

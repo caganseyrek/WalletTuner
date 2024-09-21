@@ -1,65 +1,60 @@
 {
   "greetingMessages": {
-    "morning": "Good Morning",
-    "afternoon": "Good Afternoon",
-    "evening": "Good Evening",
-    "night": "Good Night"
+    "morning": "Günaydın",
+    "afternoon": "Tünaydın",
+    "evening": "İyi akşamlar",
+    "night": "İyi geceler"
   },
   "layouts": {
     "sidebar": {
-      "dashboardsTitle": "Dashboards",
-      "accounts": "Accounts",
-      "transactions": "Transactions",
-      "graphs": "Graphs",
-      "summaries": "Summaries",
-      "generalTitle": "General",
-      "settings": "Settings",
-      "shortcuts": "Shortcuts",
-      "docs": "Docs"
+      "dashboardsTitle": "Paneller",
+      "accounts": "Hesaplar",
+      "transactions": "İşlemler",
+      "graphs": "Grafikler",
+      "summaries": "Özetler",
+      "generalTitle": "Genel",
+      "settings": "Ayarlar",
+      "shortcuts": "Kısayollar",
+      "docs": "Dökümanlar"
     },
     "appbar": {
-      "translateTooltip": "Change Language",
-      "toggleDarkTooltip": "Toggle Dark Mode",
-      "logoutTooltip": "Logout"
+      "translateTooltip": "Dili Değiştir",
+      "toggleDarkTooltip": "Karanlık Modu Aç",
+      "logoutTooltip": "Çıkış Yap"
     }
   },
   "forms": {
     "header": {
-      "loginTitle": "Welcome Back!",
-      "loginSubtitle": "Sign In to continue",
-      "registerTitle": "Welcome to WalletTuner!",
-      "registerSubtitle": "Create your new account"
+      "loginTitle": "Tekrar Hoşgeldin!",
+      "loginSubtitle": "Devam etmek için giriş yapın",
+      "registerTitle": "WalletTuner'a Hoşgeldin!",
+      "registerSubtitle": "Yeni hesabınızı oluşturun"
     },
     "messages": {
-      "passwordsNotMatch": "Passwords do not match",
-      "error": "An unknown error occurred, please try again later"
+      "passwordsNotMatch": "Şifreler eşleşmiyor",
+      "error": "Bilinmeyen bir hata oluştu, lütfen daha sonra tekrar deneyin"
     },
     "placeholders": {
-      "firstNamePlaceholder": "First Name",
-      "lastNamePlaceholder": "Last Name",
-      "emailPlaceholder": "E-Mail",
-      "passwordPlaceholder": "Password",
-      "passwordAgainPlaceholder": "Password Again",
-      "registerText": "Don't have an account?",
-      "registerLink": "Register Now!",
-      "loginText": "Already have an account?",
-      "loginLink": "Login now!"
+      "firstNamePlaceholder": "İsim",
+      "lastNamePlaceholder": "Soyisim",
+      "emailPlaceholder": "E-Posta",
+      "passwordPlaceholder": "Şifre",
+      "passwordAgainPlaceholder": "Şifre Tekrar",
+      "registerLink": "Yeni hesap oluşturun",
+      "loginLink": "Hesabınıza giriş yapın"
     },
     "buttons": {
-      "registerButton": "Register",
-      "loginButton": "Login",
-      "loginIsLoadingText": "Logging In...",
-      "loginIsSuccessText": "Logged In!",
-      "loginIsErrorText": "An error occurred."
+      "registerButton": "Kayıt Ol",
+      "loginButton": "Giriş Yap"
     },
     "schemas": {
-      "required": "This field is required",
-      "invalidEmail": "Please enter a valid e-mail address"
+      "required": "Bu alan zorunludur",
+      "invalidEmail": "Lütfen geçerli bir e-posta edresi giriniz"
     }
   },
   "errorPage": {
-    "title": "An error occurred",
-    "description": "We are unable to load the page and are really sorry about it.",
-    "reload": "Reload"
+    "title": "Bir hata oluştu",
+    "description": "Sayfayı yükleyemiyoruz ve bu konuda çok üzgünüz.",
+    "reload": "Yenile"
   }
 }

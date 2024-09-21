@@ -11,6 +11,7 @@ import useAccountDeleteMutation from "@/hooks/account/useAccountDeleteMutation";
 import useAccountQuery from "@/hooks/account/useAccountQuery";
 import useAccountUpdateMutation from "@/hooks/account/useAccountUpdateMutation";
 import useAuthDetails from "@/hooks/useAuthDetails";
+import useFormatter from "@/hooks/useFormatter";
 
 interface accountDataRowProps {
   id: number;
@@ -23,6 +24,8 @@ interface accountDataRowProps {
 const AccountsPage = () => {
   const { data: authDetails } = useAuthDetails();
   const { t } = useTranslation(["data_grid"]);
+
+  const format = useFormatter();
 
   const { mutateAsync: accounteCreateMutate, isError: accountCreateMutateError } =
     useAccountCreateMutation();
@@ -109,7 +112,7 @@ const AccountsPage = () => {
     id: index + 1,
     uniqueId: accountData._id,
     accountName: accountData.accountName,
-    balance: accountData.balance.toString(),
+    balance: format(accountData.balance.toString()),
     createdAt: dayjs(accountData.createdAt).format("DD/MM/YYYY - HH:mm:ss"),
   }));
 
@@ -119,7 +122,6 @@ const AccountsPage = () => {
       rowsProp={accountDataRow}
       columnsProp={columns}
       dataCategory="account"
-      newDataIdentifier="name"
       newDataObject={accountsNewDataObject}
       newDataFunction={accounteCreateMutate}
       updateDataFunction={accounteUpdateMutate}

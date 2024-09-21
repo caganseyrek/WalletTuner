@@ -22,7 +22,17 @@ const useLogoutMutation = () => {
 
       return response;
     },
-    onSuccess: () => queryClient.resetQueries(),
+    onSuccess: () => {
+      queryClient.resetQueries();
+
+      const emptyAuthDetails: AuthDetailsProps = {
+        accessToken: undefined,
+        currentUser: undefined,
+        currentEmail: undefined,
+        name: undefined,
+      };
+      queryClient.setQueryData<AuthDetailsProps>(["authDetails"], emptyAuthDetails);
+    },
   });
 
   return logout;

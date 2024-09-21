@@ -3,25 +3,25 @@ import { Dispatch, SetStateAction } from "react";
 import { Alert, AlertColor, Snackbar as SnackbarComponent } from "@mui/material";
 
 interface SnackbarProps {
-  snackbarState: SnackbarStateProps;
-  setSnackbarState: Dispatch<SetStateAction<SnackbarStateProps>>;
+  snackbarState: DataStateProps;
+  setSnackbarState: Dispatch<SetStateAction<DataStateProps>>;
   severity: AlertColor;
 }
 
 const Snackbar = ({ snackbarState, setSnackbarState, severity }: SnackbarProps) => {
   return (
     <SnackbarComponent
-      open={snackbarState.isOpen}
+      open={snackbarState.snackbarState?.isOpen}
       autoHideDuration={3000}
       onClose={(_event, reason?) => {
         if (reason === "clickaway") return;
-        setSnackbarState((snackbarState: SnackbarStateProps) => ({
+        setSnackbarState((snackbarState: DataStateProps) => ({
           ...snackbarState,
           isOpen: false,
         }));
       }}>
       <Alert severity={severity} variant="filled" sx={{ width: "100%" }}>
-        {snackbarState.message}
+        {snackbarState.snackbarState?.message}
       </Alert>
     </SnackbarComponent>
   );

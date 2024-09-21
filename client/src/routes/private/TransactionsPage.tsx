@@ -24,7 +24,7 @@ interface transactionDataRowProps {
 
 const TransactionsPage = () => {
   const { data: authDetails } = useAuthDetails();
-  const { t } = useTranslation();
+  const { t } = useTranslation(["data_grid"]);
 
   const { mutateAsync: transactionCreateMutate, isError: transactionCreateError } =
     useTransactionCreateMutation();
@@ -59,7 +59,7 @@ const TransactionsPage = () => {
   const columns: GridColDef[] = [
     {
       field: "id",
-      headerName: t("dashboard.transactions.columns.no"),
+      headerName: t("transactions.columns.no"),
       width: 100,
       editable: false,
       headerAlign: "left",
@@ -67,7 +67,7 @@ const TransactionsPage = () => {
     },
     {
       field: "uniqueId",
-      headerName: t("dashboard.transactions.columns.uniqueId"),
+      headerName: t("transactions.columns.uniqueId"),
       flex: 1,
       editable: false,
       headerAlign: "left",
@@ -76,7 +76,7 @@ const TransactionsPage = () => {
     {
       field: "belongsToAccount",
       type: "singleSelect",
-      headerName: t("dashboard.transactions.columns.belongsToAccount"),
+      headerName: t("transactions.columns.belongsToAccount"),
       flex: 1,
       editable: true,
       headerAlign: "left",
@@ -89,7 +89,7 @@ const TransactionsPage = () => {
     {
       field: "transactionType",
       type: "singleSelect",
-      headerName: t("dashboard.transactions.columns.type"),
+      headerName: t("transactions.columns.type"),
       flex: 1,
       editable: true,
       headerAlign: "left",
@@ -102,7 +102,7 @@ const TransactionsPage = () => {
     {
       field: "transactionDescription",
       type: "string",
-      headerName: t("dashboard.transactions.columns.description"),
+      headerName: t("transactions.columns.description"),
       flex: 1,
       editable: true,
       headerAlign: "left",
@@ -115,7 +115,7 @@ const TransactionsPage = () => {
     {
       field: "transactionDatetime",
       type: "dateTime",
-      headerName: t("dashboard.transactions.columns.dateTime"),
+      headerName: t("transactions.columns.dateTime"),
       flex: 1,
       editable: true,
       headerAlign: "left",
@@ -128,7 +128,7 @@ const TransactionsPage = () => {
     {
       field: "transactionValue",
       type: "number",
-      headerName: t("dashboard.transactions.columns.value"),
+      headerName: t("transactions.columns.value"),
       flex: 1,
       editable: true,
       headerAlign: "left",
@@ -173,7 +173,6 @@ const TransactionsPage = () => {
       rowsProp={transactionDataRow}
       columnsProp={columns}
       dataCategory="transaction"
-      newDataIdentifier="description"
       newDataObject={transactionsNewDataObject}
       newDataFunction={transactionCreateMutate}
       updateDataFunction={transactionUpdateMutate}

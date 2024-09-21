@@ -2,29 +2,37 @@
   "accounts": {
     "columns": {
       "no": "No",
-      "accountName": "Account Name",
-      "balance": "Balance",
-      "createdAt": "Created At",
-      "uniqueId": "Account ID",
-      "actions": "Actions"
+      "accountName": "Hesap İsmi",
+      "balance": "Bakiye",
+      "createdAt": "Oluşturulma Zamanı",
+      "uniqueId": "Hesap No"
     },
-    "newAccountNamePlaceholder": "New Account",
-    "addNewAccountButton": "Add New Account"
+    "newAccountNamePlaceholder": "Yeni Hesap",
+    "addNewAccountButton": "Yeni Hesap Ekle"
   },
   "transactions": {
     "columns": {
       "no": "No",
-      "uniqueId": "Transaction ID",
-      "belongsToAccount": "Belongs To Account",
-      "type": "Type",
-      "description": "Description",
-      "dateTime": "DateTime",
-      "value": "Value",
-      "actions": "Actions"
+      "uniqueId": "İşlem No",
+      "belongsToAccount": "Ait olduğu hesap",
+      "type": "Tür",
+      "description": "Açıklama",
+      "dateTime": "Zaman",
+      "value": "Değer"
     },
-    "newTransactionNamePlaceholder": "New Transaction",
-    "addNewTransactionButton": "Add New Transaction"
+    "newTransactionNamePlaceholder": "Yeni İşlem",
+    "addNewTransactionButton": "Yeni İşlem Ekle"
   },
+  "actions": {
+    "header": "İşlemler",
+    "saveActionLabel": "Kaydet",
+    "cancelActionLabel": "İptal",
+    "editActionLabel": "Düzenle",
+    "deleteActionLabel": "Sil"
+  },
+  "validationFail": "Lütfen tüm zorunlu alanları doldurunuz.",
+  "loadingMessage": "Veriler yükleniyor...",
+  "errorMessage": "Bir hata oluştu. Yeniden giriş yapmayı deneyiniz.",
   "gridLocale": {
     "noRowsLabel": "Satır yok",
     "noResultsOverlayLabel": "Sonuç bulunamadı",
@@ -82,7 +90,7 @@
     "filterOperator>=": ">=",
     "filterOperator<": "<",
     "filterOperator<=": "<=",
-    "headerFilterOperatorContains": "Contain",
+    "headerFilterOperatorContains": "Contains",
     "headerFilterOperatorEquals": "Equals",
     "headerFilterOperatorStartsWith": "Starts with",
     "headerFilterOperatorEndsWith": "Ends with",
@@ -115,7 +123,7 @@
     "columnHeaderFiltersTooltipOneActive": "aktif filtre",
     "columnHeaderFiltersTooltipMultipleActive": "aktif filtre",
     "columnHeaderFiltersLabel": "Filtreleri göster",
-    "columnHeaderSordIconLabel": "Sıralam",
+    "columnHeaderSortIconLabel": "Sırala",
     "footerRowOneSelected": "satır seçildi",
     "footerRowMultipleSelected": "satır seçildi",
     "footerTotalRows": "Toplam Satır:",

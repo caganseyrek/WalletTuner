@@ -26,12 +26,11 @@ const LoginPage = () => {
   const { mutateAsync: settingsMutateAsync } = useSettingsMutation();
   const { mutateAsync: loginMutateAsync } = useLoginMutation();
 
-  const [snackbarState, setSnackbarState] = useState<SnackbarStateProps>({
-    isOpen: false,
-    isError: false,
-    message: "",
+  const [dataState, setDataState] = useState<DataStateProps>({
+    snackbarState: { isOpen: false, message: "" },
+    isLoading: false,
+    isSuccess: false,
   });
-  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const {
     handleSubmit,
@@ -39,14 +38,11 @@ const LoginPage = () => {
     formState: { errors },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
+    defaultValues: { email: "", password: "" },
   });
 
   const LoginFormSubmit = async (formdata: FieldValues) => {
-    setIsLoading(true);
+    setDataState((currentState) => ({ ...currentState, isLoading: true }));
     const response = await loginMutateAsync({
       email: formdata.email,
       password: formdata.password,
@@ -57,11 +53,10 @@ const LoginPage = () => {
         accessToken: response.data!.accessToken,
       });
     }
-    setIsLoading(false);
-    setSnackbarState(() => ({
-      isOpen: true,
-      isError: response.isSuccess ? false : true,
-      message: response.message,
+    setDataState(() => ({
+      snackbarState: { isOpen: true, message: response.message },
+      isLoading: false,
+      isSuccess: response.isSuccess ? true : false,
     }));
     if (response.isSuccess) {
       return setTimeout(() => {
@@ -109,17 +104,17 @@ const LoginPage = () => {
             );
           }}
         />
-        <SubmitButton isLoading={isLoading} />
+        <SubmitButton isLoading={dataState.isLoading} isSuccess={dataState.isSuccess} />
       </form>
       <Divider sx={DividerStyles} orientation="horizontal" flexItem />
       <RouterLink to={"/register"} style={LinkStyles}>
         {t("forms.placeholders.registerLink")}
       </RouterLink>
-      {snackbarState.isOpen && (
+      {dataState.snackbarState?.isOpen && (
         <Snackbar
-          snackbarState={snackbarState}
-          setSnackbarState={setSnackbarState}
-          severity={snackbarState.isError ? "error" : "success"}
+          snackbarState={dataState}
+          setSnackbarState={setDataState}
+          severity={dataState.isSuccess ? "success" : "error"}
         />
       )}
     </>
