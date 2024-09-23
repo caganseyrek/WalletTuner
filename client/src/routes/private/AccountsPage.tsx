@@ -27,12 +27,9 @@ const AccountsPage = () => {
 
   const format = useFormatter();
 
-  const { mutateAsync: accounteCreateMutate, isError: accountCreateMutateError } =
-    useAccountCreateMutation();
-  const { mutateAsync: accounteUpdateMutate, isError: accountUpdateMutateError } =
-    useAccountUpdateMutation();
-  const { mutateAsync: accounteDeleteMutate, isError: accountDeleteMutateError } =
-    useAccountDeleteMutation();
+  const { mutateAsync: accounteCreateMutate } = useAccountCreateMutation();
+  const { mutateAsync: accounteUpdateMutate } = useAccountUpdateMutation();
+  const { mutateAsync: accounteDeleteMutate } = useAccountDeleteMutation();
   const { data: accountQueryData, isLoading: isAccountLoading } = useAccountQuery({
     accessToken: authDetails!.accessToken,
     currentUser: authDetails!.currentUser,
@@ -118,7 +115,7 @@ const AccountsPage = () => {
 
   return (
     <DataGrid<AccountCreateRequestProps, AccountUpdateRequestProps, AccountDeleteRequestProps>
-      key={accounts.length} /* for reloading the data grid */
+      key={JSON.stringify(accountDataRow)} /* for reloading the data grid */
       rowsProp={accountDataRow}
       columnsProp={columns}
       dataCategory="account"
@@ -126,9 +123,6 @@ const AccountsPage = () => {
       newDataFunction={accounteCreateMutate}
       updateDataFunction={accounteUpdateMutate}
       deleteDataFunction={accounteDeleteMutate}
-      isNewDataError={accountCreateMutateError}
-      isUpdateDataError={accountUpdateMutateError}
-      isDeleteDataError={accountDeleteMutateError}
     />
   );
 };

@@ -22,6 +22,7 @@ import {
   GridToolbarQuickFilter,
 } from "@mui/x-data-grid";
 import { UseMutateAsyncFunction } from "@tanstack/react-query";
+import lodash from "lodash";
 
 import useAuthDetails from "@/hooks/useAuthDetails";
 
@@ -38,9 +39,6 @@ interface DataGridProps<TNew, TUpdate, TDelete> {
   newDataFunction: UseMutateAsyncFunction<BackendResponseProps, Error, TNew, unknown>;
   updateDataFunction: UseMutateAsyncFunction<BackendResponseProps, Error, TUpdate, unknown>;
   deleteDataFunction: UseMutateAsyncFunction<BackendResponseProps, Error, TDelete, unknown>;
-  isNewDataError: boolean;
-  isUpdateDataError: boolean;
-  isDeleteDataError: boolean;
 }
 
 const DataGrid = <TNew, TUpdate, TDelete>({
@@ -52,9 +50,6 @@ const DataGrid = <TNew, TUpdate, TDelete>({
   newDataFunction,
   updateDataFunction,
   deleteDataFunction,
-  isNewDataError,
-  isUpdateDataError,
-  isDeleteDataError,
 }: DataGridProps<TNew, TUpdate, TDelete>) => {
   const { t } = useTranslation(["data_grid"]);
 
@@ -71,11 +66,11 @@ const DataGrid = <TNew, TUpdate, TDelete>({
 
   const CustomToolbar = () => {
     const handleAddNewClick = async () => {
-      setRows((rows) => rows.map((row) => ({ ...row, id: row.id + 1 })));
-      setRows((rows) => [{ id: 1, ...newDataObject, isNew: true }, ...rows]);
+      const newId = rows.length + 1;
+      setRows((rows) => [...rows, { id: newId, ...newDataObject, isNew: true }]);
       setRowModesModel((currentModel) => ({
-        [1]: { mode: GridRowModes.Edit },
         ...currentModel,
+        [newId]: { mode: GridRowModes.Edit },
       }));
     };
 
@@ -105,7 +100,7 @@ const DataGrid = <TNew, TUpdate, TDelete>({
   };
 
   const processRowUpdate = async (updatedRow: GridRowModel) => {
-    const row = updatedRow;
+    const row = lodash.cloneDeep(updatedRow);
     let isNew = false;
 
     for (const key in row) {
@@ -113,18 +108,15 @@ const DataGrid = <TNew, TUpdate, TDelete>({
       if (key === "isNew" && row[key] === true) {
         isNew = true;
       }
-
       if (key === "id") {
         delete row[key];
       }
-
       if (key === "uniqueId" && !isNew) {
         row[`${dataCategory}Id`] = row["uniqueId"];
         delete row["uniqueId"];
       } else if (isNew) {
         delete row["uniqueId"];
       }
-
       if (column?.editable && !row[key]) {
         return setDataState(() => ({
           snackbarState: { isOpen: true, message: t("validationFail") },
@@ -132,7 +124,6 @@ const DataGrid = <TNew, TUpdate, TDelete>({
           isSuccess: false,
         }));
       }
-
       if (!column?.editable) {
         delete row[key];
       }
@@ -145,7 +136,6 @@ const DataGrid = <TNew, TUpdate, TDelete>({
         currentUser: authData?.currentUser,
         ...row,
       } as TNew);
-
       if (!response.isSuccess) {
         return setDataState(() => ({
           snackbarState: { isOpen: true, message: response.message },
@@ -153,7 +143,6 @@ const DataGrid = <TNew, TUpdate, TDelete>({
           isSuccess: response.isSuccess,
         }));
       }
-
       setDataState(() => ({
         snackbarState: { isOpen: true, message: response.message },
         isLoading: false,
@@ -165,7 +154,6 @@ const DataGrid = <TNew, TUpdate, TDelete>({
         currentUser: authData?.currentUser,
         ...row,
       } as TUpdate);
-
       if (!response.isSuccess) {
         return setDataState(() => ({
           snackbarState: { isOpen: true, message: response.message },
@@ -173,7 +161,6 @@ const DataGrid = <TNew, TUpdate, TDelete>({
           isSuccess: response.isSuccess,
         }));
       }
-
       setDataState(() => ({
         snackbarState: { isOpen: true, message: response.message },
         isLoading: false,
@@ -235,11 +222,7 @@ const DataGrid = <TNew, TUpdate, TDelete>({
       <Snackbar
         snackbarState={dataState}
         setSnackbarState={setDataState}
-        severity={
-          isNewDataError || isUpdateDataError || isDeleteDataError || !dataState.isSuccess
-            ? "error"
-            : "success"
-        }
+        severity={dataState.isSuccess ? "success" : "error"}
       />
       <DataGridComponent
         loading={dataState.isLoading ? true : false}
@@ -290,6 +273,9 @@ const DataGrid = <TNew, TUpdate, TDelete>({
         onRowModesModelChange={handleRowModesModelChange}
         onRowEditStop={handleRowEditStop}
         processRowUpdate={processRowUpdate}
+        onProcessRowUpdateError={(error) => {
+          console.error(error);
+        }}
         initialState={{
           pagination: { paginationModel },
         }}

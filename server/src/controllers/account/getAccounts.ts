@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 
 import accountModel from "@/models/accountModel";
 
-import { accountMessages, errorMessage, statusMessages } from "@/localization/messages.en";
+import { errorMessage } from "@/localization/i18n";
 
 const getAccountsController = async (req: Request, res: Response) => {
   try {
@@ -13,7 +13,7 @@ const getAccountsController = async (req: Request, res: Response) => {
     if (!accounts) {
       return res.status(statusCodes.notFound).json({
         isSuccess: false,
-        message: accountMessages.getAccounts.noAccountsFound,
+        message: req.t("account.error.noAccountsFound"),
         data: null,
       });
     }
@@ -27,7 +27,7 @@ const getAccountsController = async (req: Request, res: Response) => {
     console.error(errorMessage(getAccountsController.name, "line_27", error));
     return res.status(statusCodes.internalServerError).json({
       isSuccess: false,
-      message: statusMessages.internalerror,
+      message: req.t("statusMessages.internalerror"),
       data: null,
     });
   }

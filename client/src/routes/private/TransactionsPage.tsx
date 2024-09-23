@@ -26,12 +26,9 @@ const TransactionsPage = () => {
   const { data: authDetails } = useAuthDetails();
   const { t } = useTranslation(["data_grid"]);
 
-  const { mutateAsync: transactionCreateMutate, isError: transactionCreateError } =
-    useTransactionCreateMutation();
-  const { mutateAsync: transactionUpdateMutate, isError: transactionUpdateError } =
-    useTransactionUpdateMutation();
-  const { mutateAsync: transactionDeleteMutate, isError: transactionDeleteError } =
-    useTransactionDeleteMutation();
+  const { mutateAsync: transactionCreateMutate } = useTransactionCreateMutation();
+  const { mutateAsync: transactionUpdateMutate } = useTransactionUpdateMutation();
+  const { mutateAsync: transactionDeleteMutate } = useTransactionDeleteMutation();
 
   const queryPayload = {
     accessToken: authDetails!.accessToken,
@@ -55,6 +52,13 @@ const TransactionsPage = () => {
   if (!accounts || !transactions) {
     return <GridOverlay type="error" message={transactionQueryData?.message} />;
   }
+
+  const availableAccounts: { uniqueId: string; accountName: string }[] = accounts.map(
+    (accountData) => ({
+      uniqueId: accountData._id,
+      accountName: accountData.accountName,
+    }),
+  );
 
   const columns: GridColDef[] = [
     {
@@ -81,6 +85,14 @@ const TransactionsPage = () => {
       editable: true,
       headerAlign: "left",
       align: "left",
+      valueOptions: availableAccounts.map((account) => account.accountName),
+      /*
+       * // FIXME
+       * Same named accounts all shown as selected if one is selected
+       * Dropdown values should be shown as account names but use the account id in the mutation
+       *
+       * Try not allowing same named accounts
+       */
       preProcessEditCellProps: (params: GridPreProcessEditCellProps) => {
         const hasError = params.props.value.length === 0;
         return { ...params.props, error: hasError };
@@ -169,7 +181,7 @@ const TransactionsPage = () => {
       TransactionUpdateRequestProps,
       TransactionDeleteRequestProps
     >
-      key={transactions!.length} /* for reloading the data grid */
+      key={JSON.stringify(transactionDataRow)}
       rowsProp={transactionDataRow}
       columnsProp={columns}
       dataCategory="transaction"
@@ -177,13 +189,6 @@ const TransactionsPage = () => {
       newDataFunction={transactionCreateMutate}
       updateDataFunction={transactionUpdateMutate}
       deleteDataFunction={transactionDeleteMutate}
-      isNewDataError={transactionCreateError}
-      isUpdateDataError={transactionUpdateError}
-      isDeleteDataError={transactionDeleteError}
-      paginationModel={{
-        page: 0,
-        pageSize: 20,
-      }}
     />
   );
 };

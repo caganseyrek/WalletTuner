@@ -1,8 +1,7 @@
 import axios, { AxiosRequestConfig, RawAxiosRequestHeaders } from "axios";
+import i18next from "i18next";
 
 // import i18next from "i18next";
-
-// import { errorMessage } from "@/localization/i18n";
 
 interface endpointProps {
   route: string;
@@ -50,9 +49,10 @@ export class Requester {
     this.method = method;
     this.accessToken = accessToken;
     this.headers = {
+      ...headers,
       "Content-Type": "application/json",
       ...(accessToken && { Authorization: `Bearer ${this.accessToken}` }),
-      ...headers,
+      "Accept-Language": i18next.language,
     };
     // this.currentUser = currentUser;
     this.payload = payload;

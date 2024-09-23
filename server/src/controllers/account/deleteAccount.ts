@@ -4,7 +4,7 @@ import { Request, Response } from "express";
 import accountModel from "@/models/accountModel";
 import transactionModel from "@/models/transactionModel";
 
-import { accountMessages, errorMessage, statusMessages } from "@/localization/messages.en";
+import { errorMessage } from "@/localization/i18n";
 
 const deleteAccountController = async (req: Request, res: Response) => {
   try {
@@ -20,7 +20,7 @@ const deleteAccountController = async (req: Request, res: Response) => {
       console.error(errorMessage(deleteAccountController.name, "line_20"));
       return res.status(statusCodes.internalServerError).json({
         isSuccess: false,
-        message: statusMessages.internalerror,
+        message: req.t("statusMessages.internalerror"),
         data: null,
       });
     }
@@ -31,21 +31,21 @@ const deleteAccountController = async (req: Request, res: Response) => {
         try {
           await transactionModel.findByIdAndDelete(transaction._id).exec();
         } catch (error) {
-          console.error(errorMessage(deleteAccountController.name, "line_36", error));
+          console.error(errorMessage(deleteAccountController.name, "line_34", error));
         }
       });
     }
 
     return res.status(statusCodes.success).json({
       isSuccess: true,
-      message: accountMessages.deleteAccount.deletionSuccessful,
+      message: req.t("account.success.deletionSuccessful"),
       data: null,
     });
   } catch (error) {
-    console.error(errorMessage(deleteAccountController.name, "line_47", error));
+    console.error(errorMessage(deleteAccountController.name, "line_45", error));
     return res.status(statusCodes.internalServerError).json({
       isSuccess: false,
-      message: statusMessages.internalerror,
+      message: req.t("statusMessages.internalerror"),
       data: null,
     });
   }

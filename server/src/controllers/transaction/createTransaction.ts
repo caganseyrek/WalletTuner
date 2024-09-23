@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 
 import transactionModel from "@/models/transactionModel";
 
-import { errorMessage, statusMessages, transactionMessages } from "@/localization/messages.en";
+import { errorMessage } from "@/localization/i18n";
 
 const createTransactionController = async (req: Request, res: Response) => {
   try {
@@ -25,7 +25,7 @@ const createTransactionController = async (req: Request, res: Response) => {
     ) {
       return res.status(statusCodes.badRequest).json({
         isSuccess: false,
-        message: statusMessages.badrequest,
+        message: req.t("statusMessages.badrequest"),
         data: null,
       });
     }
@@ -45,21 +45,21 @@ const createTransactionController = async (req: Request, res: Response) => {
       console.error(errorMessage(createTransactionController.name, "line_45"));
       return res.status(statusCodes.internalServerError).json({
         isSuccess: false,
-        message: statusMessages.internalerror,
+        message: req.t("statusMessages.internalerror"),
         data: null,
       });
     }
 
     return res.status(statusCodes.created).json({
       isSuccess: true,
-      message: transactionMessages.createTransaction.creationSuccessfull,
+      message: req.t("transaction.success.creationSuccessful"),
       data: null,
     });
   } catch (error) {
     console.error(errorMessage(createTransactionController.name, "line_59", error));
     return res.status(statusCodes.internalServerError).json({
       isSuccess: false,
-      message: statusMessages.internalerror,
+      message: req.t("statusMessages.internalerror"),
       data: null,
     });
   }

@@ -1,0 +1,58 @@
+{
+  "statusMessages": {
+    "notfound": "İstenilen kaynak mevcut değil.",
+    "badrequest": "İsteğiniz işlenirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.",
+    "internalerror": "Bir sunucu hatası oluştu. Lütfen daha sonra tekrar deneyin.",
+    "unauthorized": "Bunu yapmaya yetkiniz yoktur.",
+    "expiredToken": "Expired Token"
+  },
+  "middlewareMessages": {
+    "noAccountFound": "İstenilen hesap bulunamadı.",
+    "noTransactionFound": "İstenilen işlem bulunamadı.",
+    "invalidUserId": "Geçersiz kullanıcı ID. Lütfen tekrar giriş yapınız."
+  },
+  "account": {
+    "success": {
+      "deletionSuccessful": "Hesap başarıyla silindi.",
+      "creationSuccessful": "Yeni hesap başarıyla oluşturuldu.",
+      "updateSuccessful": "Hesap başarıyla güncellendi."
+    },
+    "error": {
+      "noAccountsFound": "İstenilen hesabın detayları bulunamadı.",
+      "accountExists": "Bu isim başka bir hesap tarafından kullanılmakta."
+    }
+  },
+  "transaction": {
+    "success": {
+      "creationSuccessfull": "Yeni işlem başarıyla oluşturuldu.",
+      "deletionSuccessful": "İşlem başarıyla silindi.",
+      "updateSuccessful": "İşlem başarıyla güncellendi."
+    },
+    "error": {
+      "noTransactionsFound": "Verilen filtrelere uygun bir işlem bulunamadı."
+    }
+  },
+  "user": {
+    "success": {
+      "loginSuccessful": "Başarıyla giriş yapıldı.",
+      "deleteSuccessful": "Kullanıcı başarıyla silindi.",
+      "logoutSuccessful": "Başarıyla çıkış yapıldı.",
+      "registerSuccessful": "Yeni kullanıcı başarıyla oluşturuldu.",
+      "resetpwSuccessful": "Şifre başarıyla yenilendi.",
+      "updateSuccessful": "Kullanıcı detayları başarıyla güncellendi."
+    },
+    "error": {
+      "wrongEmailOrPassword": "E-Posta veya şifre yanlış.",
+      "passwordValidationFail": "Şifre yanlış.",
+      "userExists": "Kullanıcı oluşturulurken hata oluştu.",
+      "expiredRefreshToken": "Bunu yapmak için tekrar giriş yapmanız gerekmektedir.",
+      "updateFailed": "Hesap detayları güncellenirken bir hata oluştu."
+    }
+  },
+  "token": {
+    "noRefreshTokenReceived": "Bunu yapmak için tekrar giriş yapmanız gerekmektedir.",
+    "noRefreshTokenFound": "Bunu yapmak için tekrar giriş yapmanız gerekmektedir.",
+    "refreshTokenExpired": "Bunu yapmak için tekrar giriş yapmanız gerekmektedir.",
+    "invalidRefreshToken": "Bunu yapmak için tekrar giriş yapmanız gerekmektedir."
+  }
+}

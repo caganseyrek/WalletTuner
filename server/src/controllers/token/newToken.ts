@@ -4,7 +4,7 @@ import { sign, verify } from "jsonwebtoken";
 
 import tokenModel from "@/models/tokenModel";
 
-import { errorMessage, statusMessages, tokenMessages } from "@/localization/messages.en";
+import { errorMessage } from "@/localization/i18n";
 
 const newTokenController = async (req: Request, res: Response) => {
   try {
@@ -12,7 +12,7 @@ const newTokenController = async (req: Request, res: Response) => {
     if (!refreshToken) {
       return res.status(statusCodes.unauthorized).json({
         isSuccess: false,
-        message: tokenMessages.noRefreshTokenReceived,
+        message: req.t("token.noRefreshTokenReceived"),
         data: null,
       });
     }
@@ -21,7 +21,7 @@ const newTokenController = async (req: Request, res: Response) => {
     if (!isRefreshTokenExpired) {
       return res.status(statusCodes.unauthorized).json({
         isSuccess: false,
-        message: tokenMessages.refreshTokenExpired,
+        message: req.t("token.refreshTokenExpired"),
         data: null,
       });
     }
@@ -35,7 +35,7 @@ const newTokenController = async (req: Request, res: Response) => {
     if (!hasRefreshToken) {
       return res.status(statusCodes.unauthorized).json({
         isSuccess: false,
-        message: tokenMessages.noRefreshTokenFound,
+        message: req.t("token.noRefreshTokenFound"),
         data: null,
       });
     }
@@ -48,14 +48,14 @@ const newTokenController = async (req: Request, res: Response) => {
     if (!isRefreshTokenValid) {
       return res.status(statusCodes.unauthorized).json({
         isSuccess: false,
-        message: tokenMessages.refreshTokenExpired,
+        message: req.t("token.refreshTokenExpired"),
         data: null,
       });
     }
     if (hasRefreshToken.refreshToken !== refreshToken) {
       return res.status(statusCodes.unauthorized).json({
         isSuccess: false,
-        message: tokenMessages.invalidRefreshToken,
+        message: req.t("token.invalidRefreshToken"),
         data: null,
       });
     }
@@ -75,7 +75,7 @@ const newTokenController = async (req: Request, res: Response) => {
     console.error(errorMessage(newTokenController.name, "line_75", error));
     return res.status(statusCodes.internalServerError).json({
       isSuccess: false,
-      message: statusMessages.internalerror,
+      message: req.t("statusMessages.internalerror"),
       data: null,
     });
   }

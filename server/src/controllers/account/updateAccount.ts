@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 
 import accountModel from "@/models/accountModel";
 
-import { accountMessages, errorMessage, statusMessages } from "@/localization/messages.en";
+import { errorMessage } from "@/localization/i18n";
 
 const updateAccountController = async (req: Request, res: Response) => {
   try {
@@ -11,7 +11,7 @@ const updateAccountController = async (req: Request, res: Response) => {
     if (!accountName) {
       return res.status(statusCodes.badRequest).json({
         isSuccess: false,
-        message: statusMessages.badrequest,
+        message: req.t("statusMessages.badrequest"),
         data: null,
       });
     }
@@ -21,7 +21,16 @@ const updateAccountController = async (req: Request, res: Response) => {
       console.error(errorMessage(updateAccountController.name, "line_21"));
       return res.status(statusCodes.internalServerError).json({
         isSuccess: false,
-        message: statusMessages.internalerror,
+        message: req.t("statusMessages.internalerror"),
+        data: null,
+      });
+    }
+
+    const doesAccountExists = await accountModel.find({ accountName: accountName }).exec();
+    if (doesAccountExists.length > 0) {
+      return res.status(statusCodes.conflict).json({
+        isSuccess: false,
+        message: req.t("account.error.accountExists"),
         data: null,
       });
     }
@@ -37,24 +46,24 @@ const updateAccountController = async (req: Request, res: Response) => {
       })
       .exec();
     if (!update) {
-      console.error(errorMessage(updateAccountController.name, "line_40"));
+      console.error(errorMessage(updateAccountController.name, "line_49"));
       return res.status(statusCodes.internalServerError).json({
         isSuccess: false,
-        message: statusMessages.internalerror,
+        message: req.t("statusMessages.internalerror"),
         data: null,
       });
     }
 
     return res.status(statusCodes.success).json({
       isSuccess: true,
-      message: accountMessages.updateAccount.updateSuccessful,
+      message: req.t("account.success.updateSuccessful"),
       data: null,
     });
   } catch (error) {
-    console.error(errorMessage(updateAccountController.name, "line_54", error));
+    console.error(errorMessage(updateAccountController.name, "line_63", error));
     return res.status(statusCodes.internalServerError).json({
       isSuccess: false,
-      message: statusMessages.internalerror,
+      message: req.t("statusMessages.internalerror"),
       data: null,
     });
   }

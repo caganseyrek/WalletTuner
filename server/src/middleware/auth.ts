@@ -1,7 +1,6 @@
+import statusCodes from "@/shared/statusCodes";
 import { NextFunction, Request, Response } from "express";
 import { verify } from "jsonwebtoken";
-
-import { statusMessages } from "@/localization/messages.en";
 
 export default (req: Request, res: Response, next: NextFunction) => {
   const token = req.headers.authorization?.toString();
@@ -12,8 +11,16 @@ export default (req: Request, res: Response, next: NextFunction) => {
       req.body.user = decoded;
       return next();
     } catch {
-      return res.status(401).send(statusMessages.custom.expiredToken);
+      return res.status(statusCodes.unauthorized).send({
+        isSuccess: false,
+        message: req.t("statusMessages.expiredToken"),
+        data: null,
+      });
     }
   }
-  return res.status(401).send(statusMessages.unauthorized);
+  return res.status(statusCodes.unauthorized).send({
+    isSuccess: false,
+    message: req.t("statusMessages.unauthorized"),
+    data: null,
+  });
 };

@@ -8,7 +8,7 @@ import mongoose from "mongoose";
 import tokenModel from "@/models/tokenModel";
 import userModel from "@/models/userModel";
 
-import { errorMessage, statusMessages, userMessages } from "@/localization/messages.en";
+import { errorMessage } from "@/localization/i18n";
 
 const loginController = async (req: Request, res: Response) => {
   try {
@@ -16,7 +16,7 @@ const loginController = async (req: Request, res: Response) => {
     if (!email || !password) {
       return res.status(statusCodes.conflict).json({
         isSuccess: false,
-        message: statusMessages.badrequest,
+        message: req.t("statusMessages.badrequest"),
         data: null,
       });
     }
@@ -25,7 +25,7 @@ const loginController = async (req: Request, res: Response) => {
     if (!userExists) {
       return res.status(statusCodes.unauthorized).json({
         isSuccess: false,
-        message: userMessages.login.wrongEmailOrPassword,
+        message: req.t("user.error.wrongEmailOrPassword"),
         data: null,
       });
     }
@@ -34,7 +34,7 @@ const loginController = async (req: Request, res: Response) => {
     if (!passwordMatch) {
       return res.status(statusCodes.unauthorized).json({
         isSuccess: false,
-        message: userMessages.login.wrongEmailOrPassword,
+        message: req.t("user.error.wrongEmailOrPassword"),
         data: null,
       });
     }
@@ -45,7 +45,7 @@ const loginController = async (req: Request, res: Response) => {
         try {
           await tokenModel.findByIdAndDelete(token._id).exec();
         } catch {
-          console.error(errorMessage(loginController.name, "line_48"));
+          console.error(errorMessage(loginController.name, "line_47"));
         }
       });
     }
@@ -68,10 +68,10 @@ const loginController = async (req: Request, res: Response) => {
     });
     const saved = await newToken.save();
     if (!saved) {
-      console.error(errorMessage(loginController.name, "line_71"));
+      console.error(errorMessage(loginController.name, "line_70"));
       return res.status(statusCodes.internalServerError).json({
         isSuccess: false,
-        message: statusMessages.internalerror,
+        message: req.t("statusMessages.internalerror"),
         data: null,
       });
     }
@@ -87,7 +87,7 @@ const loginController = async (req: Request, res: Response) => {
 
     return res.status(statusCodes.success).json({
       isSuccess: true,
-      message: userMessages.login.loginSuccessful,
+      message: req.t("user.success.loginSuccessful"),
       data: {
         accessToken: accessToken,
         currentUser: userExists._id as string,
@@ -98,7 +98,7 @@ const loginController = async (req: Request, res: Response) => {
     console.error(errorMessage(loginController.name, "line_98", error));
     return res.status(statusCodes.internalServerError).json({
       isSuccess: false,
-      message: statusMessages.badrequest,
+      message: req.t("statusMessages.badrequest"),
       data: null,
     });
   }

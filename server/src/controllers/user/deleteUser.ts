@@ -4,7 +4,7 @@ import { Request, Response } from "express";
 
 import userModel from "@/models/userModel";
 
-import { errorMessage, statusMessages, userMessages } from "@/localization/messages.en";
+import { errorMessage } from "@/localization/i18n";
 
 const deleteUserController = async (req: Request, res: Response) => {
   try {
@@ -15,7 +15,7 @@ const deleteUserController = async (req: Request, res: Response) => {
       console.error(errorMessage(deleteUserController.name, "line_15"));
       return res.status(statusCodes.internalServerError).json({
         isSuccess: false,
-        message: statusMessages.internalerror,
+        message: req.t("statusMessages.internalerror"),
         data: null,
       });
     }
@@ -24,7 +24,7 @@ const deleteUserController = async (req: Request, res: Response) => {
     if (!validatePassword) {
       return res.status(statusCodes.unauthorized).json({
         isSuccess: false,
-        message: userMessages.deleteUser.passwordValidationFail,
+        message: req.t("user.error.passwordValidationFail"),
         data: null,
       });
     }
@@ -33,21 +33,21 @@ const deleteUserController = async (req: Request, res: Response) => {
       console.error(errorMessage(deleteUserController.name, "line_33"));
       return res.status(statusCodes.internalServerError).json({
         isSuccess: false,
-        message: statusMessages.internalerror,
+        message: req.t("statusMessages.internalerror"),
         data: null,
       });
     }
 
     return res.status(statusCodes.success).json({
       isSuccess: true,
-      message: userMessages.deleteUser.deleteSuccessful,
+      message: req.t("user.success.deleteSuccessful"),
       data: null,
     });
   } catch (error) {
     console.error(errorMessage(deleteUserController.name, "line_47", error));
     return res.status(statusCodes.internalServerError).json({
       isSuccess: false,
-      message: statusMessages.internalerror,
+      message: req.t("statusMessages.internalerror"),
       data: null,
     });
   }

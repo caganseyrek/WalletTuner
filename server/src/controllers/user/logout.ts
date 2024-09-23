@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 
 import tokenModel from "@/models/tokenModel";
 
-import { errorMessage, statusMessages, userMessages } from "@/localization/messages.en";
+import { errorMessage } from "@/localization/i18n";
 
 const logoutController = async (req: Request, res: Response) => {
   try {
@@ -15,7 +15,7 @@ const logoutController = async (req: Request, res: Response) => {
         try {
           await tokenModel.findByIdAndDelete(token._id).exec();
         } catch {
-          console.error(errorMessage(logoutController.name, "line_18"));
+          console.error(errorMessage(logoutController.name, "line_17"));
         }
       });
     }
@@ -28,14 +28,14 @@ const logoutController = async (req: Request, res: Response) => {
 
     return res.status(statusCodes.success).json({
       isSuccess: true,
-      message: userMessages.logout.logoutSuccessful,
+      message: req.t("user.success.logoutSuccessful"),
       data: null,
     });
   } catch (error) {
-    console.error(errorMessage(logoutController.name, "line_35", error));
+    console.error(errorMessage(logoutController.name, "line_34", error));
     return res.status(statusCodes.internalServerError).json({
       isSuccess: false,
-      message: statusMessages.internalerror,
+      message: req.t("statusMessages.internalerror"),
       data: null,
     });
   }

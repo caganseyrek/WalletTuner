@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 
 import userModel from "@/models/userModel";
 
-import { errorMessage, statusMessages, userMessages } from "@/localization/messages.en";
+import { errorMessage } from "@/localization/i18n";
 
 const registerController = async (req: Request, res: Response) => {
   try {
@@ -13,7 +13,7 @@ const registerController = async (req: Request, res: Response) => {
     if (!name || !surname || !email || !password) {
       return res.status(statusCodes.badRequest).json({
         isSuccess: false,
-        message: statusMessages.badrequest,
+        message: req.t("statusMessages.badrequest"),
         data: null,
       });
     }
@@ -22,7 +22,7 @@ const registerController = async (req: Request, res: Response) => {
     if (existingUser.length > 0) {
       return res.status(statusCodes.conflict).json({
         isSuccess: false,
-        message: userMessages.register.userExists,
+        message: req.t("user.error.userExists"),
         data: null,
       });
     }
@@ -49,21 +49,21 @@ const registerController = async (req: Request, res: Response) => {
       console.error(errorMessage(registerController.name, "line_49"));
       return res.status(statusCodes.internalServerError).json({
         isSuccess: false,
-        message: statusMessages.internalerror,
+        message: req.t("statusMessages.internalerror"),
         data: null,
       });
     }
 
     return res.status(statusCodes.created).json({
       isSuccess: true,
-      message: userMessages.register.registerSuccessful,
+      message: req.t("user.success.registerSuccessful"),
       data: null,
     });
   } catch (error) {
     console.error(errorMessage(registerController.name, "line_63", error));
     return res.status(statusCodes.internalServerError).json({
       isSuccess: false,
-      message: statusMessages.internalerror,
+      message: req.t("statusMessages.internalerror"),
       data: null,
     });
   }

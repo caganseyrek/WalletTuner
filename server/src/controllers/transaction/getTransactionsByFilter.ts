@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 
 import transactionModel from "@/models/transactionModel";
 
-import { errorMessage, statusMessages, transactionMessages } from "@/localization/messages.en";
+import { errorMessage } from "@/localization/i18n";
 
 const getTransactionsByFilterController = async (req: Request, res: Response) => {
   try {
@@ -19,7 +19,7 @@ const getTransactionsByFilterController = async (req: Request, res: Response) =>
     if (!transactions) {
       return res.status(statusCodes.notFound).json({
         isSuccess: false,
-        message: transactionMessages.getTransactionsById.noTransactionsFound,
+        message: req.t("transaction.error.noTransactionsFound"),
         data: null,
       });
     }
@@ -33,7 +33,7 @@ const getTransactionsByFilterController = async (req: Request, res: Response) =>
     console.error(errorMessage(getTransactionsByFilterController.name, "line_33", error));
     return res.status(statusCodes.internalServerError).json({
       isSuccess: false,
-      message: statusMessages.internalerror,
+      message: req.t("statusMessages.internalerror"),
       data: null,
     });
   }

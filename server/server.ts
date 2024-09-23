@@ -1,8 +1,11 @@
+import statusCodes from "@/shared/statusCodes";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import "dotenv/config";
 import express, { Request, Response } from "express";
 import helmet, { HelmetOptions } from "helmet";
+import i18next from "i18next";
+import { handle } from "i18next-http-middleware";
 import mongoose from "mongoose";
 import morgan from "morgan";
 
@@ -10,6 +13,8 @@ import { accountRoutes } from "@/routes/accountRoutes";
 import { tokenRoutes } from "@/routes/tokenRoutes";
 import { transactionRoutes } from "@/routes/transactionRoutes";
 import { userRoutes } from "@/routes/userRoutes";
+
+import { errorMessage } from "@/localization/i18n";
 
 // This project is NOT tested for production environments
 
@@ -65,6 +70,9 @@ app.use(morgan("dev"));
 app.use(cookieParser(COOKIE_SECRET));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(handle(i18next));
+
+console.log(i18next.store.data);
 
 // Routes
 app.use("/api/user", userRoutes);
@@ -73,14 +81,22 @@ app.use("/api/account", accountRoutes);
 app.use("/api/transaction", transactionRoutes);
 
 // Not found handler
-app.use((_req: Request, res: Response) => {
-  return res.status(404).send({ message: "Not found" });
+app.use((req: Request, res: Response) => {
+  return res.status(statusCodes.notFound).json({
+    isSuccess: false,
+    message: req.t("statusMessages.notfound"),
+    data: null,
+  });
 });
 
 // Error handler
-app.use((error: Error, _req: Request, res: Response) => {
-  console.error(`An error occurred: ${error}`);
-  return res.status(500);
+app.use((error: Error, req: Request, res: Response) => {
+  console.error(errorMessage("server.ts", "line_91", error));
+  return res.status(statusCodes.internalServerError).json({
+    isSuccess: false,
+    message: req.t("statusMessages.internalerror"),
+    data: null,
+  });
 });
 
 // Start the express app

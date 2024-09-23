@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 
 import transactionModel from "@/models/transactionModel";
 
-import { errorMessage, statusMessages, transactionMessages } from "@/localization/messages.en";
+import { errorMessage } from "@/localization/i18n";
 
 const updateTransactionController = async (req: Request, res: Response) => {
   try {
@@ -20,7 +20,7 @@ const updateTransactionController = async (req: Request, res: Response) => {
     if (belongsToUser) {
       return res.status(statusCodes.notFound).json({
         isSuccess: false,
-        message: statusMessages.badrequest,
+        message: req.t("statusMessages.badrequest"),
         data: null,
       });
     }
@@ -39,21 +39,21 @@ const updateTransactionController = async (req: Request, res: Response) => {
       console.error(errorMessage(updateTransactionController.name, "line_39"));
       return res.status(statusCodes.internalServerError).json({
         isSuccess: false,
-        message: statusMessages.internalerror,
+        message: req.t("statusMessages.internalerror"),
         data: null,
       });
     }
 
     return res.status(statusCodes.success).json({
       isSuccess: true,
-      message: transactionMessages.updateTransaction.updateSuccessful,
+      message: req.t("transaction.success.updateSuccessful"),
       data: null,
     });
   } catch (error) {
     console.error(errorMessage(updateTransactionController.name, "line_53", error));
     return res.status(statusCodes.internalServerError).json({
       isSuccess: false,
-      message: statusMessages.internalerror,
+      message: req.t("statusMessages.internalerror"),
       data: null,
     });
   }

@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 
 import transactionModel from "@/models/transactionModel";
 
-import { errorMessage, statusMessages, transactionMessages } from "@/localization/messages.en";
+import { errorMessage } from "@/localization/i18n";
 
 const deleteTransactionController = async (req: Request, res: Response) => {
   try {
@@ -15,21 +15,21 @@ const deleteTransactionController = async (req: Request, res: Response) => {
     if (!deleteTransaction) {
       return res.status(statusCodes.internalServerError).json({
         isSuccess: false,
-        message: statusMessages.internalerror,
+        message: req.t("statusMessages.internalerror"),
         data: null,
       });
     }
 
     return res.status(statusCodes.success).json({
       isSuccess: true,
-      message: transactionMessages.deleteTransaction.deletionSuccessful,
+      message: req.t("transaction.success.deletionSuccessful"),
       data: null,
     });
   } catch (error) {
     console.error(errorMessage(deleteTransactionController.name, "line_29", error));
     return res.status(statusCodes.internalServerError).json({
       isSuccess: false,
-      message: statusMessages.internalerror,
+      message: req.t("statusMessages.internalerror"),
       data: null,
     });
   }

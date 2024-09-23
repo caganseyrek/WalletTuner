@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 
 import userModel from "@/models/userModel";
 
-import { errorMessage, statusMessages } from "@/localization/messages.en";
+import { errorMessage } from "@/localization/i18n";
 
 const userDetailsController = async (req: Request, res: Response) => {
   try {
@@ -22,10 +22,10 @@ const userDetailsController = async (req: Request, res: Response) => {
       data: userDetails,
     });
   } catch (error) {
-    console.error(errorMessage(userDetailsController.name, "line_25", error));
+    console.error(errorMessage(userDetailsController.name, "line_24", error));
     return res.status(statusCodes.internalServerError).json({
       isSuccess: false,
-      message: statusMessages.internalerror,
+      message: req.t("statusMessages.internalerror"),
       data: null,
     });
   }

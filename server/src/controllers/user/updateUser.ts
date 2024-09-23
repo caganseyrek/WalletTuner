@@ -4,7 +4,7 @@ import { Request, Response } from "express";
 
 import userModel from "@/models/userModel";
 
-import { errorMessage, statusMessages, userMessages } from "@/localization/messages.en";
+import { errorMessage } from "@/localization/i18n";
 
 const updateUserController = async (req: Request, res: Response) => {
   try {
@@ -12,7 +12,7 @@ const updateUserController = async (req: Request, res: Response) => {
     if (password) {
       return res.status(statusCodes.badRequest).json({
         isSuccess: false,
-        message: statusMessages.badrequest,
+        message: req.t("statusMessages.badrequest"),
         data: null,
       });
     }
@@ -22,7 +22,7 @@ const updateUserController = async (req: Request, res: Response) => {
     if (!passwordValidation) {
       return res.status(statusCodes.unauthorized).json({
         isSuccess: false,
-        message: userMessages.updateUser.passwordValidationFail,
+        message: req.t("user.error.passwordValidationFail"),
         data: null,
       });
     }
@@ -38,21 +38,21 @@ const updateUserController = async (req: Request, res: Response) => {
       console.error(errorMessage(updateUserController.name, "line_38"));
       return res.status(statusCodes.internalServerError).json({
         isSuccess: false,
-        message: userMessages.updateUser.updateFailed,
+        message: req.t("statusMessages.internalerror"),
         data: null,
       });
     }
 
     return res.status(statusCodes.success).json({
       isSuccess: false,
-      message: userMessages.updateUser.updateSuccessful,
+      message: req.t("user.success.updateSuccessful"),
       data: null,
     });
   } catch (error) {
     console.error(errorMessage(updateUserController.name, "line_52", error));
     return res.status(statusCodes.internalServerError).json({
       isSuccess: false,
-      message: statusMessages.internalerror,
+      message: req.t("statusMessages.internalerror"),
       data: null,
     });
   }
