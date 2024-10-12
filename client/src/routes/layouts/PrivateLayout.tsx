@@ -83,7 +83,7 @@ const DashboardPage = () => {
               <MenuItem
                 icon={<ListAlt sx={lightColorStyles} />}
                 text={t("layouts.sidebar.summaries")}
-                onClick={() => navigate("/summeries")}
+                onClick={() => navigate("/summaries")}
               />
             </MenuList>
           </Grid>
@@ -93,17 +93,17 @@ const DashboardPage = () => {
               <MenuItem
                 icon={<Settings sx={lightColorStyles} />}
                 text={t("layouts.sidebar.settings")}
-                /* TODO: add modal for settings */
+                // TODO: add modal for settings
               />
               <MenuItem
                 icon={<KeyboardCommandKey sx={lightColorStyles} />}
                 text={t("layouts.sidebar.shortcuts")}
-                /* TODO: add modal for shortcuts */
+                // TODO: add modal for shortcuts
               />
               <MenuItem
                 icon={<FindInPage sx={lightColorStyles} />}
                 text={t("layouts.sidebar.docs")}
-                /* TODO: add docs */
+                // TODO: add docs
               />
             </MenuList>
           </Grid>
