@@ -26,6 +26,7 @@ const TranslatePopover: FC<TranslatePopoverProps> = ({ anchor, setAnchor }) => {
           selected={i18n.language === "en" ? true : false}
           onClick={() => {
             i18n.changeLanguage("en");
+            localStorage.setItem("language", i18n.language);
             setAnchor(null);
           }}>
           English
@@ -34,6 +35,7 @@ const TranslatePopover: FC<TranslatePopoverProps> = ({ anchor, setAnchor }) => {
           selected={i18n.language === "tr" ? true : false}
           onClick={() => {
             i18n.changeLanguage("tr");
+            localStorage.setItem("language", i18n.language);
             setAnchor(null);
           }}>
           Türkçe

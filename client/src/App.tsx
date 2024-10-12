@@ -3,6 +3,8 @@ import { TypographyOptions } from "@mui/material/styles/createTypography";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
+import LoadLanguage from "./components/LoadLanguage";
+
 import { darkColor, lightColor } from "./shared/globals.style";
 
 import Routes from "./Routes";
@@ -53,7 +55,7 @@ const App = () => {
     <ThemeProvider theme={lightTheme}>
       <CssBaseline />
       <QueryClientProvider client={queryClient}>
-        <Routes />
+        <LoadLanguage children={<Routes />} />
         {IS_DEV ? <ReactQueryDevtools initialIsOpen={false} /> : null}
       </QueryClientProvider>
     </ThemeProvider>

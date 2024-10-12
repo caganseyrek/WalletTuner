@@ -2,6 +2,10 @@ declare interface AuthCheckProps {
   children: ReactNode;
 }
 
+interface LoadLanguageProps {
+  children: ReactNode;
+}
+
 declare interface DataStateProps {
   snackbarState?: {
     isOpen: boolean;
