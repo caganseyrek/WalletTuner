@@ -7,8 +7,8 @@ function useSettings() {
     queryKey: ["userSettings"],
     queryFn: () => queryClient.getQueryData<SettingsResponseProps>(["userSettings"]),
     initialData: {
-      preferredFormat: "en-GB",
-      preferredCurrency: "en-GB",
+      preferredFormat: "en-US",
+      preferredCurrency: "USD",
       preferredCurrencyDisplay: "narrowSymbol",
     },
     enabled: false,
