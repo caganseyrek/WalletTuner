@@ -11,12 +11,9 @@ const userSettingsController = async (req: Request, res: Response) => {
 
     const currentUserSettings = await userModel.findById(currentUser).exec();
     const userSettings = {
+      preferredFormat: currentUserSettings!.preferredFormat,
       preferredCurrency: currentUserSettings!.preferredCurrency,
-      preferredCurrencyDisplayType: currentUserSettings!.preferredCurrencyDisplayType,
-      preferredCurrencyDisplayPosition: currentUserSettings!.preferredCurrencyDisplayPosition,
-      preferredCurrencyDisplaySpacing: currentUserSettings!.preferredCurrencyDisplaySpacing,
-      preferredCurrencyThousandSeperator: currentUserSettings!.preferredCurrencyThousandSeperator,
-      preferredCurrencyDecimalSeperator: currentUserSettings!.preferredCurrencyDecimalSeperator,
+      preferredCurrencyDisplay: currentUserSettings!.preferredCurrencyDisplay,
     };
 
     return res.status(statusCodes.success).json({
@@ -25,7 +22,7 @@ const userSettingsController = async (req: Request, res: Response) => {
       data: userSettings,
     });
   } catch (error) {
-    console.error(errorMessage(userSettingsController.name, "line_27", error));
+    console.error(errorMessage(userSettingsController.name, "line_25", error));
     return res.status(statusCodes.internalServerError).json({
       isSuccess: false,
       message: req.t("statusMessages.internalerror"),

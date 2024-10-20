@@ -13,20 +13,50 @@ declare interface LoginResponseProps {
 
 declare interface LogoutRequestProps extends EssentialRequestProps {}
 
-declare interface SettingsRequestProps extends EssentialRequestProps {}
-
-declare interface SettingsResponseProps {
-  preferredCurrency: string | undefined;
-  preferredCurrencyDisplayType: string | undefined;
-  preferredCurrencyDisplayPosition: string | undefined;
-  preferredCurrencyDisplaySpacing: string | undefined;
-  preferredCurrencyThousandSeperator: string | undefined;
-  preferredCurrencyDecimalSeperator: string | undefined;
-}
-
 interface RegisterRequestProps {
   name: string;
   surname: string;
   email: string;
   password: string;
+}
+
+declare type SupportedLocaleString =
+  | "en-US"
+  | "en-GB"
+  | "fr-FR"
+  | "de-DE"
+  | "es-ES"
+  | "it-IT"
+  | "ja-jp"
+  | "zh-CN"
+  | "ko-KR"
+  | "pt-BR"
+  | "ru-RU"
+  | "es-MX"
+  | "ar-SA"
+  | "nl-NL"
+  | "sv-SE"
+  | "en-IN";
+
+declare type SupportedCurrencies =
+  | "USD"
+  | "GBP"
+  | "EUR"
+  | "JPY"
+  | "CNY"
+  | "BRL"
+  | "RUB"
+  | "KRW"
+  | "SAR"
+  | "SEK"
+  | "INR";
+
+declare type SupportedDisplayType = "code" | "name" | "symbol" | "narrowSymbol";
+
+declare interface SettingsRequestProps extends EssentialRequestProps {}
+
+declare interface SettingsResponseProps {
+  preferredFormat: SupportedLocaleString;
+  preferredCurrency: SupportedCurrencies;
+  preferredCurrencyDisplay: SupportedDisplayType;
 }

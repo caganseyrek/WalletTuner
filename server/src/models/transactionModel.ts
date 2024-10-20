@@ -2,7 +2,7 @@ import mongoose, { Schema } from "mongoose";
 
 const transactionSchema: Schema = new Schema({
   _id: mongoose.Schema.Types.ObjectId,
-  belongsToAccount: {
+  accountId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "accountModel",
     required: true,

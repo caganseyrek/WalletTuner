@@ -1,6 +1,8 @@
 import { useTranslation } from "react-i18next";
 
 import { GridColDef, GridPreProcessEditCellProps } from "@mui/x-data-grid";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 
 import DataGrid from "@/components/DataGrid";
 import GridOverlay from "@/components/GridOverlay";
@@ -11,24 +13,29 @@ import useTransactionDeleteMutation from "@/hooks/transaction/useTransactionDele
 import useTransactionQuery from "@/hooks/transaction/useTransactionQuery";
 import useTransactionUpdateMutation from "@/hooks/transaction/useTransactionUpdateMutation";
 import useAuthDetails from "@/hooks/useAuthDetails";
+import useFormatter from "@/hooks/useFormatter";
 
 interface transactionDataRowProps {
   id: number;
   uniqueId: string;
-  belongsToAccount: string;
+  accountId: string;
   transactionType: string;
   transactionDescription: string;
-  transactionDatetime: string;
-  transactionValue: string;
+  transactionDateTime: string;
+  transactionValue: number;
 }
 
 const TransactionsPage = () => {
   const { data: authDetails } = useAuthDetails();
   const { t } = useTranslation(["data_grid"]);
 
+  const format = useFormatter();
+
   const { mutateAsync: transactionCreateMutate } = useTransactionCreateMutation();
   const { mutateAsync: transactionUpdateMutate } = useTransactionUpdateMutation();
   const { mutateAsync: transactionDeleteMutate } = useTransactionDeleteMutation();
+
+  dayjs.extend(customParseFormat);
 
   const queryPayload = {
     accessToken: authDetails!.accessToken,
@@ -78,21 +85,14 @@ const TransactionsPage = () => {
       align: "left",
     },
     {
-      field: "belongsToAccount",
+      field: "accountId",
       type: "singleSelect",
-      headerName: t("transactions.columns.belongsToAccount"),
+      headerName: t("transactions.columns.accountId"),
       flex: 1,
       editable: true,
       headerAlign: "left",
       align: "left",
       valueOptions: availableAccounts.map((account) => account.accountName),
-      /*
-       * // FIXME
-       * Same named accounts all shown as selected if one is selected
-       * Dropdown values should be shown as account names but use the account id in the mutation
-       *
-       * Try not allowing same named accounts
-       */
       preProcessEditCellProps: (params: GridPreProcessEditCellProps) => {
         const hasError = params.props.value.length === 0;
         return { ...params.props, error: hasError };
@@ -106,6 +106,10 @@ const TransactionsPage = () => {
       editable: true,
       headerAlign: "left",
       align: "left",
+      valueOptions: [
+        t("transactions.transactionType.income"),
+        t("transactions.transactionType.expense"),
+      ],
       preProcessEditCellProps: (params: GridPreProcessEditCellProps) => {
         const hasError = params.props.value.length === 0;
         return { ...params.props, error: hasError };
@@ -125,13 +129,14 @@ const TransactionsPage = () => {
       },
     },
     {
-      field: "transactionDatetime",
+      field: "transactionDateTime",
       type: "dateTime",
       headerName: t("transactions.columns.dateTime"),
       flex: 1,
       editable: true,
       headerAlign: "left",
       align: "left",
+      valueFormatter: (value) => dayjs(value).format("DD/MM/YYYY, HH:mm:ss"),
       preProcessEditCellProps: (params: GridPreProcessEditCellProps) => {
         const hasError = params.props.value.length === 0;
         return { ...params.props, error: hasError };
@@ -145,6 +150,7 @@ const TransactionsPage = () => {
       editable: true,
       headerAlign: "left",
       align: "left",
+      valueFormatter: (value: number) => format({ value: value }),
       preProcessEditCellProps: (params: GridPreProcessEditCellProps) => {
         const hasError = params.props.value.length === 0;
         return { ...params.props, error: hasError };
@@ -154,23 +160,22 @@ const TransactionsPage = () => {
 
   const transactionsNewDataObject: Omit<transactionDataRowProps, "id"> = {
     uniqueId: "",
-    belongsToAccount: "",
+    accountId: "",
     transactionType: "",
     transactionDescription: "",
-    transactionDatetime: "",
-    transactionValue: "",
+    transactionDateTime: "",
+    transactionValue: 0,
   };
 
-  const transactionDataRow: transactionDataRowProps[] = transactions!.map(
+  const transactionDataRow: transactionDataRowProps[] = transactions.map(
     (transactionData, index) => ({
       id: index + 1,
       uniqueId: transactionData._id,
-      belongsToAccount: accounts.find(
-        (accountData) => accountData._id === transactionData.belongsToAccount,
-      )!.accountName,
+      accountId: accounts.find((accountData) => accountData._id === transactionData.accountId)!
+        .accountName,
       transactionType: transactionData.transactionType,
       transactionDescription: transactionData.transactionDescription,
-      transactionDatetime: transactionData.transactionDatetime,
+      transactionDateTime: transactionData.transactionDateTime,
       transactionValue: transactionData.transactionValue,
     }),
   );

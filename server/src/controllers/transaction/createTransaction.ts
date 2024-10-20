@@ -32,7 +32,7 @@ const createTransactionController = async (req: Request, res: Response) => {
 
     const newTransaction = new transactionModel({
       _id: new mongoose.Types.ObjectId(),
-      belongsToAccount: accountId,
+      accountId: accountId,
       belongsToUser: currentUser,
       transactionType: transactionType,
       transactionDescription: transactionDescription,

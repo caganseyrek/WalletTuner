@@ -1,57 +1,35 @@
-import { useMemo } from "react";
-
-import { currencies } from "@/shared/currencies";
-
 import useSettings from "./useSettings";
+
+interface useFormatterProps {
+  value: number;
+}
 
 function useFormatter() {
   const { data: savedSettings } = useSettings();
 
-  const currency = savedSettings?.preferredCurrency;
-  const currencyDisplayType = savedSettings?.preferredCurrencyDisplayType;
-  const currencySpacing = savedSettings?.preferredCurrencyDisplaySpacing;
-  const currencyPosition = savedSettings?.preferredCurrencyDisplayPosition;
-  const thousandSeperator = savedSettings?.preferredCurrencyThousandSeperator;
-  const decimalSeperator = savedSettings?.preferredCurrencyDecimalSeperator;
+  if (!savedSettings) {
+    return ({ value }: useFormatterProps) =>
+      new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+        maximumSignificantDigits: 3,
+        currencySign: "standard",
+        currencyDisplay: "narrowSymbol",
+      }).format(value);
+  }
 
-  return useMemo(() => {
-    const handleSeperators = (value: string): string => {
-      const [integer, decimal] = value.split(".");
+  const regionalFormat = savedSettings.preferredFormat;
+  const currency = savedSettings.preferredCurrency;
+  const currencyDisplayType = savedSettings.preferredCurrencyDisplay;
 
-      const selectedThousandSeperator =
-        thousandSeperator === "comma" ? "," : thousandSeperator === "dot" ? "." : "";
-      const selectedDecimalSeperator = decimalSeperator === "comma" ? "," : ".";
-
-      const formattedInteger = integer.replace(/\B(?=(\d{3})+(?!\d))/g, selectedThousandSeperator);
-
-      if (!decimal) return formattedInteger;
-      return `${formattedInteger}${selectedDecimalSeperator}${decimal}`;
-    };
-
-    const selectedCurrency = currencies.find((c) => c.currencyAbbr === currency);
-    if (!selectedCurrency) {
-      return (value: string) => value;
-    }
-
-    const displayedCurrency =
-      currencyDisplayType === "abbr"
-        ? selectedCurrency.currencyAbbr
-        : selectedCurrency.currencySymbol;
-
-    const spacing = currencySpacing === "nbsp" ? " " : "";
-
-    return (value: string) =>
-      currencyPosition === "left"
-        ? `${displayedCurrency}${spacing}${handleSeperators(value)}`
-        : `${handleSeperators(value)}${spacing}${displayedCurrency}`;
-  }, [
-    currency,
-    currencyDisplayType,
-    currencyPosition,
-    currencySpacing,
-    thousandSeperator,
-    decimalSeperator,
-  ]);
+  return ({ value }: useFormatterProps) =>
+    new Intl.NumberFormat([regionalFormat, "en-US"], {
+      style: "currency",
+      currency: currency,
+      maximumSignificantDigits: 3,
+      currencySign: "standard",
+      currencyDisplay: currencyDisplayType as Intl.NumberFormatOptionsCurrencyDisplay,
+    }).format(value);
 }
 
 export default useFormatter;

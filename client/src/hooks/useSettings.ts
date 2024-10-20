@@ -7,12 +7,9 @@ function useSettings() {
     queryKey: ["userSettings"],
     queryFn: () => queryClient.getQueryData<SettingsResponseProps>(["userSettings"]),
     initialData: {
-      preferredCurrency: undefined,
-      preferredCurrencyDisplayType: undefined,
-      preferredCurrencyDisplayPosition: undefined,
-      preferredCurrencyDisplaySpacing: undefined,
-      preferredCurrencyThousandSeperator: undefined,
-      preferredCurrencyDecimalSeperator: undefined,
+      preferredFormat: "en-GB",
+      preferredCurrency: "en-GB",
+      preferredCurrencyDisplay: "narrowSymbol",
     },
     enabled: false,
   });

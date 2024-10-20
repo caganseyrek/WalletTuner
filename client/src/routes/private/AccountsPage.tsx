@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 
 import { GridColDef, GridPreProcessEditCellProps } from "@mui/x-data-grid";
 import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 
 import DataGrid from "@/components/DataGrid";
 import GridOverlay from "@/components/GridOverlay";
@@ -17,7 +18,7 @@ interface accountDataRowProps {
   id: number;
   uniqueId: string;
   accountName: string;
-  balance: string;
+  balance: number;
   createdAt: string;
 }
 
@@ -26,6 +27,8 @@ const AccountsPage = () => {
   const { t } = useTranslation(["data_grid"]);
 
   const format = useFormatter();
+
+  dayjs.extend(customParseFormat);
 
   const { mutateAsync: accounteCreateMutate } = useAccountCreateMutation();
   const { mutateAsync: accounteUpdateMutate } = useAccountUpdateMutation();
@@ -79,6 +82,7 @@ const AccountsPage = () => {
       editable: false,
       headerAlign: "left",
       align: "left",
+      valueFormatter: (value: number) => format({ value: value }),
     },
     {
       field: "createdAt",
@@ -87,6 +91,7 @@ const AccountsPage = () => {
       editable: false,
       headerAlign: "left",
       align: "left",
+      valueFormatter: (value) => dayjs(value).format("DD/MM/YYYY, HH:mm:ss"),
     },
     {
       field: "uniqueId",
@@ -101,7 +106,7 @@ const AccountsPage = () => {
   const accountsNewDataObject: Omit<accountDataRowProps, "id"> = {
     uniqueId: "",
     accountName: "",
-    balance: "0",
+    balance: 0,
     createdAt: "",
   };
 
@@ -109,8 +114,8 @@ const AccountsPage = () => {
     id: index + 1,
     uniqueId: accountData._id,
     accountName: accountData.accountName,
-    balance: format(accountData.balance.toString()),
-    createdAt: dayjs(accountData.createdAt).format("DD/MM/YYYY - HH:mm:ss"),
+    balance: accountData.balance,
+    createdAt: accountData.createdAt,
   }));
 
   return (

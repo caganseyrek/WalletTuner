@@ -11,7 +11,7 @@ const updateTransactionController = async (req: Request, res: Response) => {
     const {
       currentUser,
       belongsToUser,
-      belongsToAccount,
+      accountId,
       transactionType,
       transactionDescription,
       transactionDateTime,
@@ -27,7 +27,7 @@ const updateTransactionController = async (req: Request, res: Response) => {
 
     const update = await transactionModel
       .findByIdAndUpdate(transactionId, {
-        belongsToAccount: belongsToAccount,
+        accountId: accountId,
         belongsToUser: currentUser,
         transactionType: transactionType,
         transactionDescription: transactionDescription ?? "",

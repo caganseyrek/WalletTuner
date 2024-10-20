@@ -14,11 +14,15 @@
     "columns": {
       "no": "No",
       "uniqueId": "Transaction ID",
-      "belongsToAccount": "Belongs To Account",
+      "accountId": "Belongs To Account",
       "type": "Type",
       "description": "Description",
       "dateTime": "DateTime",
       "value": "Value"
+    },
+    "transactionType": {
+      "income": "Income",
+      "expense": "Expense"
     },
     "newTransactionNamePlaceholder": "New Transaction",
     "addNewTransactionButton": "Add New Transaction"

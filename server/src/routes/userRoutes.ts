@@ -6,7 +6,6 @@ import logoutController from "@/controllers/user/logout";
 import registerController from "@/controllers/user/register";
 import resetPasswordController from "@/controllers/user/resetPassword";
 import updateUserController from "@/controllers/user/updateUser";
-import userDetailsController from "@/controllers/user/userDetails";
 import userSettingsController from "@/controllers/user/userSettings";
 
 import auth from "@/middleware/auth";
@@ -17,7 +16,6 @@ const router: Router = express.Router();
 router.post("/register", registerController);
 router.post("/login", loginController);
 
-router.post("/details", auth, validateUser, userDetailsController);
 router.post("/settings", auth, validateUser, userSettingsController);
 
 router.post("/logout", auth, validateUser, logoutController);

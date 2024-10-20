@@ -107,7 +107,7 @@ const LoginPage = () => {
         <SubmitButton isLoading={dataState.isLoading} isSuccess={dataState.isSuccess} />
       </form>
       <Divider sx={DividerStyles} orientation="horizontal" flexItem />
-      <RouterLink to={"/register"} style={LinkStyles}>
+      <RouterLink to={dataState.isSuccess ? "#" : "/register"} style={LinkStyles}>
         {t("forms.placeholders.registerLink")}
       </RouterLink>
       {dataState.snackbarState?.isOpen && (

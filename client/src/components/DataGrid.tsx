@@ -22,6 +22,7 @@ import {
   GridToolbarQuickFilter,
 } from "@mui/x-data-grid";
 import { UseMutateAsyncFunction } from "@tanstack/react-query";
+import dayjs from "dayjs";
 import lodash from "lodash";
 
 import useAuthDetails from "@/hooks/useAuthDetails";
@@ -117,6 +118,11 @@ const DataGrid = <TNew, TUpdate, TDelete>({
       } else if (isNew) {
         delete row["uniqueId"];
       }
+      if (key.includes("DateTime")) {
+        const parsedDate = dayjs(row[key], "DD/MM/YYYY - HH:mm:ss");
+        row[key] = parsedDate.toISOString();
+      }
+
       if (column?.editable && !row[key]) {
         return setDataState(() => ({
           snackbarState: { isOpen: true, message: t("validationFail") },

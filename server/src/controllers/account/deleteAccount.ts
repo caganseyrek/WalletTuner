@@ -25,7 +25,7 @@ const deleteAccountController = async (req: Request, res: Response) => {
       });
     }
 
-    const relatedTransactions = await transactionModel.find({ belongsToAccount: accountId }).exec();
+    const relatedTransactions = await transactionModel.find({ accountId: accountId }).exec();
     if (relatedTransactions) {
       relatedTransactions.forEach(async (transaction) => {
         try {

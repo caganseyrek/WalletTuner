@@ -14,7 +14,7 @@
     "columns": {
       "no": "No",
       "uniqueId": "İşlem No",
-      "belongsToAccount": "Ait olduğu hesap",
+      "accountId": "Ait olduğu hesap",
       "type": "Tür",
       "description": "Açıklama",
       "dateTime": "Zaman",
@@ -22,6 +22,10 @@
     },
     "newTransactionNamePlaceholder": "Yeni İşlem",
     "addNewTransactionButton": "Yeni İşlem Ekle"
+  },
+  "transactionType": {
+    "income": "Gelir",
+    "expense": "Gider"
   },
   "actions": {
     "header": "İşlemler",
