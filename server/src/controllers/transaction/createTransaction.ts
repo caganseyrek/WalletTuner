@@ -21,7 +21,8 @@ const createTransactionController = async (req: Request, res: Response) => {
       !transactionType ||
       !transactionValue ||
       !transactionDateTime ||
-      !transactionDescription
+      !transactionDescription ||
+      (transactionType !== "inc" && transactionType !== "exp")
     ) {
       return res.status(statusCodes.badRequest).json({
         isSuccess: false,

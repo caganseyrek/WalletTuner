@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 
-import { GridColDef, GridPreProcessEditCellProps } from "@mui/x-data-grid";
+import { GridColDef } from "@mui/x-data-grid";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 
@@ -19,7 +19,7 @@ interface transactionDataRowProps {
   id: number;
   uniqueId: string;
   accountId: string;
-  transactionType: string;
+  transactionType: "inc" | "exp";
   transactionDescription: string;
   transactionDateTime: string;
   transactionValue: number;
@@ -92,11 +92,10 @@ const TransactionsPage = () => {
       editable: true,
       headerAlign: "left",
       align: "left",
-      valueOptions: availableAccounts.map((account) => account.accountName),
-      preProcessEditCellProps: (params: GridPreProcessEditCellProps) => {
-        const hasError = params.props.value.length === 0;
-        return { ...params.props, error: hasError };
-      },
+      valueOptions: availableAccounts.map((account) => ({
+        value: account.uniqueId,
+        label: account.accountName,
+      })),
     },
     {
       field: "transactionType",
@@ -107,13 +106,9 @@ const TransactionsPage = () => {
       headerAlign: "left",
       align: "left",
       valueOptions: [
-        t("transactions.transactionType.income"),
-        t("transactions.transactionType.expense"),
+        { label: t("transactions.transactionType.income"), value: "inc" },
+        { label: t("transactions.transactionType.expense"), value: "exp" },
       ],
-      preProcessEditCellProps: (params: GridPreProcessEditCellProps) => {
-        const hasError = params.props.value.length === 0;
-        return { ...params.props, error: hasError };
-      },
     },
     {
       field: "transactionDescription",
@@ -123,10 +118,6 @@ const TransactionsPage = () => {
       editable: true,
       headerAlign: "left",
       align: "left",
-      preProcessEditCellProps: (params: GridPreProcessEditCellProps) => {
-        const hasError = params.props.value.length === 0;
-        return { ...params.props, error: hasError };
-      },
     },
     {
       field: "transactionDateTime",
@@ -137,10 +128,6 @@ const TransactionsPage = () => {
       headerAlign: "left",
       align: "left",
       valueFormatter: (value) => dayjs(value).format("DD/MM/YYYY, HH:mm:ss"),
-      preProcessEditCellProps: (params: GridPreProcessEditCellProps) => {
-        const hasError = params.props.value.length === 0;
-        return { ...params.props, error: hasError };
-      },
     },
     {
       field: "transactionValue",
@@ -151,19 +138,15 @@ const TransactionsPage = () => {
       headerAlign: "left",
       align: "left",
       valueFormatter: (value: number) => format({ value: value }),
-      preProcessEditCellProps: (params: GridPreProcessEditCellProps) => {
-        const hasError = params.props.value.length === 0;
-        return { ...params.props, error: hasError };
-      },
     },
   ];
 
   const transactionsNewDataObject: Omit<transactionDataRowProps, "id"> = {
     uniqueId: "",
     accountId: "",
-    transactionType: "",
+    transactionType: "exp",
     transactionDescription: "",
-    transactionDateTime: "",
+    transactionDateTime: new Date().toISOString(),
     transactionValue: 0,
   };
 
@@ -171,8 +154,7 @@ const TransactionsPage = () => {
     (transactionData, index) => ({
       id: index + 1,
       uniqueId: transactionData._id,
-      accountId: accounts.find((accountData) => accountData._id === transactionData.accountId)!
-        .accountName,
+      accountId: accounts.find((accountData) => accountData._id === transactionData.accountId)!._id,
       transactionType: transactionData.transactionType,
       transactionDescription: transactionData.transactionDescription,
       transactionDateTime: transactionData.transactionDateTime,

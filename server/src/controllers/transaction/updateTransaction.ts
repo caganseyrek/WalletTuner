@@ -7,18 +7,17 @@ import { errorMessage } from "@/localization/i18n";
 
 const updateTransactionController = async (req: Request, res: Response) => {
   try {
-    const { transactionId } = req.params;
     const {
       currentUser,
-      belongsToUser,
       accountId,
+      transactionId,
       transactionType,
       transactionDescription,
       transactionDateTime,
       transactionValue,
     } = req.body;
-    if (belongsToUser) {
-      return res.status(statusCodes.notFound).json({
+    if (transactionType !== "inc" && transactionType !== "exp") {
+      return res.status(statusCodes.badRequest).json({
         isSuccess: false,
         message: req.t("statusMessages.badrequest"),
         data: null,

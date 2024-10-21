@@ -107,7 +107,7 @@ const AccountsPage = () => {
     uniqueId: "",
     accountName: "",
     balance: 0,
-    createdAt: "",
+    createdAt: new Date().toISOString(),
   };
 
   const accountDataRow: accountDataRowProps[] = accounts.map((accountData, index) => ({

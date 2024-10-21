@@ -23,6 +23,7 @@ import {
 } from "@mui/x-data-grid";
 import { UseMutateAsyncFunction } from "@tanstack/react-query";
 import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 import lodash from "lodash";
 
 import useAuthDetails from "@/hooks/useAuthDetails";
@@ -64,6 +65,8 @@ const DataGrid = <TNew, TUpdate, TDelete>({
   const { data: authData } = useAuthDetails();
 
   const formattedDataCategory = dataCategory.charAt(0).toUpperCase() + dataCategory.slice(1);
+
+  dayjs.extend(customParseFormat);
 
   const CustomToolbar = () => {
     const handleAddNewClick = async () => {
@@ -117,10 +120,6 @@ const DataGrid = <TNew, TUpdate, TDelete>({
         delete row["uniqueId"];
       } else if (isNew) {
         delete row["uniqueId"];
-      }
-      if (key.includes("DateTime")) {
-        const parsedDate = dayjs(row[key], "DD/MM/YYYY - HH:mm:ss");
-        row[key] = parsedDate.toISOString();
       }
 
       if (column?.editable && !row[key]) {

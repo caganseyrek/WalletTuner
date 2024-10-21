@@ -20,12 +20,12 @@
       "dateTime": "Zaman",
       "value": "Değer"
     },
+    "transactionType": {
+      "income": "Gelir",
+      "expense": "Gider"
+    },
     "newTransactionNamePlaceholder": "Yeni İşlem",
     "addNewTransactionButton": "Yeni İşlem Ekle"
-  },
-  "transactionType": {
-    "income": "Gelir",
-    "expense": "Gider"
   },
   "actions": {
     "header": "İşlemler",

@@ -2,7 +2,7 @@ declare interface TransactionQueryRequestProps extends EssentialRequestProps {}
 
 declare interface TransactionCreateRequestProps extends EssentialRequestProps {
   accountId: string;
-  transactionType: "income" | "expense";
+  transactionType: "inc" | "exp";
   transactionDescription: string;
   transactionDateTime: string;
   transactionValue: number;
@@ -10,7 +10,7 @@ declare interface TransactionCreateRequestProps extends EssentialRequestProps {
 
 declare interface TransactionUpdateRequestProps extends EssentialRequestProps {
   accountId: string;
-  transactionType: "income" | "expense";
+  transactionType: "inc" | "exp";
   transactionDescription: string;
   transactionDateTime: string;
   transactionValue: number;
@@ -24,7 +24,7 @@ declare interface TransactionQueryResponseProps {
   _id: string;
   accountId: string;
   belongsToUser: string;
-  transactionType: string;
+  transactionType: "inc" | "exp";
   transactionDescription: string;
   transactionDateTime: string;
   transactionValue: number;
