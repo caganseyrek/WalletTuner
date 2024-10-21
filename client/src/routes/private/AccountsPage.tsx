@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 
-import { GridColDef, GridPreProcessEditCellProps } from "@mui/x-data-grid";
+import { GridColDef } from "@mui/x-data-grid";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 
@@ -69,10 +69,6 @@ const AccountsPage = () => {
       editable: true,
       headerAlign: "left",
       align: "left",
-      preProcessEditCellProps: (params: GridPreProcessEditCellProps) => {
-        const hasError = params.props.value.length === 0;
-        return { ...params.props, error: hasError };
-      },
     },
     {
       field: "balance",
@@ -107,7 +103,7 @@ const AccountsPage = () => {
     uniqueId: "",
     accountName: "",
     balance: 0,
-    createdAt: new Date().toISOString(),
+    createdAt: "",
   };
 
   const accountDataRow: accountDataRowProps[] = accounts.map((accountData, index) => ({

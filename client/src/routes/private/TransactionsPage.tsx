@@ -77,14 +77,6 @@ const TransactionsPage = () => {
       align: "left",
     },
     {
-      field: "uniqueId",
-      headerName: t("transactions.columns.uniqueId"),
-      flex: 1,
-      editable: false,
-      headerAlign: "left",
-      align: "left",
-    },
-    {
       field: "accountId",
       type: "singleSelect",
       headerName: t("transactions.columns.accountId"),
@@ -139,6 +131,14 @@ const TransactionsPage = () => {
       align: "left",
       valueFormatter: (value: number) => format({ value: value }),
     },
+    {
+      field: "uniqueId",
+      headerName: t("transactions.columns.uniqueId"),
+      flex: 1,
+      editable: false,
+      headerAlign: "left",
+      align: "left",
+    },
   ];
 
   const transactionsNewDataObject: Omit<transactionDataRowProps, "id"> = {
@@ -146,7 +146,7 @@ const TransactionsPage = () => {
     accountId: "",
     transactionType: "exp",
     transactionDescription: "",
-    transactionDateTime: new Date().toISOString(),
+    transactionDateTime: "",
     transactionValue: 0,
   };
 
