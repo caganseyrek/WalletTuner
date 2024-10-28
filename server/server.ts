@@ -72,8 +72,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(handle(i18next));
 
-console.log(i18next.store.data);
-
 // Routes
 app.use("/api/user", userRoutes);
 app.use("/api/token", tokenRoutes);
