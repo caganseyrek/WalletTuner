@@ -1,4 +1,5 @@
 import statusCodes from "@/shared/statusCodes";
+import { UpdateUserProps, UserProps } from "@/shared/types";
 import { compare } from "bcrypt";
 import { Request, Response } from "express";
 
@@ -8,7 +9,7 @@ import { errorMessage } from "@/localization/i18n";
 
 const updateUserController = async (req: Request, res: Response) => {
   try {
-    const { currentUser, password, name, surname, email } = req.body;
+    const { currentUser, password, name, surname, email }: UpdateUserProps = req.body;
     if (password) {
       return res.status(statusCodes.badRequest).json({
         isSuccess: false,
@@ -17,8 +18,8 @@ const updateUserController = async (req: Request, res: Response) => {
       });
     }
 
-    const userDetails = await userModel.findById(currentUser).exec();
-    const passwordValidation = await compare(password, userDetails!.password as string);
+    const userDetails: UserProps = await userModel.findById(currentUser).exec();
+    const passwordValidation: boolean = await compare(password, userDetails!.password);
     if (!passwordValidation) {
       return res.status(statusCodes.unauthorized).json({
         isSuccess: false,
@@ -27,7 +28,7 @@ const updateUserController = async (req: Request, res: Response) => {
       });
     }
 
-    const update = await userModel
+    const update: UserProps = await userModel
       .findByIdAndUpdate(currentUser, {
         name: name,
         surname: surname,
@@ -35,7 +36,7 @@ const updateUserController = async (req: Request, res: Response) => {
       })
       .exec();
     if (!update) {
-      console.error(errorMessage(updateUserController.name, "line_38"));
+      console.error(errorMessage(updateUserController.name, "line_39"));
       return res.status(statusCodes.internalServerError).json({
         isSuccess: false,
         message: req.t("statusMessages.internalerror"),
@@ -49,7 +50,7 @@ const updateUserController = async (req: Request, res: Response) => {
       data: null,
     });
   } catch (error) {
-    console.error(errorMessage(updateUserController.name, "line_52", error));
+    console.error(errorMessage(updateUserController.name, "line_53", error));
     return res.status(statusCodes.internalServerError).json({
       isSuccess: false,
       message: req.t("statusMessages.internalerror"),

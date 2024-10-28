@@ -1,4 +1,5 @@
 import statusCodes from "@/shared/statusCodes";
+import { ResetPasswordProps, UserProps } from "@/shared/types";
 import { compare, genSalt, hash } from "bcrypt";
 import { Request, Response } from "express";
 
@@ -8,7 +9,7 @@ import { errorMessage } from "@/localization/i18n";
 
 const resetPasswordController = async (req: Request, res: Response) => {
   try {
-    const { currentUser, oldpassword, newpassword } = req.body;
+    const { currentUser, oldpassword, newpassword }: ResetPasswordProps = req.body;
     if (!oldpassword || !newpassword || oldpassword !== newpassword) {
       return res.status(statusCodes.badRequest).json({
         isSuccess: false,
@@ -26,8 +27,8 @@ const resetPasswordController = async (req: Request, res: Response) => {
       });
     }
 
-    const savedOldPassword = await userModel.find(currentUser).exec();
-    const oldPasswordValidate = await compare(oldpassword, savedOldPassword[0].password as string);
+    const savedOldPassword: UserProps = await userModel.findById(currentUser).exec();
+    const oldPasswordValidate: boolean = await compare(oldpassword, savedOldPassword.password);
     if (!oldPasswordValidate) {
       return res.status(statusCodes.unauthorized).json({
         isSuccess: false,
@@ -36,13 +37,13 @@ const resetPasswordController = async (req: Request, res: Response) => {
       });
     }
 
-    const salt = await genSalt();
-    const newHashedPassword = await hash(newpassword, salt);
-    const passwordUpdated = await userModel
+    const salt: string = await genSalt();
+    const newHashedPassword: string = await hash(newpassword, salt);
+    const passwordUpdated: UserProps = await userModel
       .findByIdAndUpdate(currentUser, { password: newHashedPassword })
       .exec();
     if (!passwordUpdated) {
-      console.error(errorMessage(resetPasswordController.name, "line_45"));
+      console.error(errorMessage(resetPasswordController.name, "line_46"));
       return res.status(statusCodes.internalServerError).json({
         isSuccess: false,
         message: req.t("statusMessages.internalerror"),
@@ -56,7 +57,7 @@ const resetPasswordController = async (req: Request, res: Response) => {
       data: null,
     });
   } catch (error) {
-    console.error(errorMessage(resetPasswordController.name, "line_59", error));
+    console.error(errorMessage(resetPasswordController.name, "line_60", error));
     return res.status(statusCodes.internalServerError).json({
       isSuccess: false,
       message: req.t("statusMessages.internalerror"),

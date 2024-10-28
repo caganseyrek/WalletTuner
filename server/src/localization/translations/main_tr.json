@@ -19,7 +19,8 @@
     },
     "error": {
       "noAccountsFound": "İstenilen hesabın detayları bulunamadı.",
-      "accountExists": "Bu isim başka bir hesap tarafından kullanılmakta."
+      "accountExists": "Bu isim başka bir hesap tarafından kullanılmakta.",
+      "deleteTransactionsFirst": "This account has transactions assigned to it. Delete them first."
     }
   },
   "transaction": {

@@ -1,4 +1,5 @@
 import statusCodes from "@/shared/statusCodes";
+import { AccountProps, UpdateAccountProps } from "@/shared/types";
 import { Request, Response } from "express";
 
 import accountModel from "@/models/accountModel";
@@ -7,7 +8,7 @@ import { errorMessage } from "@/localization/i18n";
 
 const updateAccountController = async (req: Request, res: Response) => {
   try {
-    const { currentUser, accountName, accountId } = req.body;
+    const { currentUser, accountName, accountId }: UpdateAccountProps = req.body;
     if (!accountName) {
       return res.status(statusCodes.badRequest).json({
         isSuccess: false,
@@ -16,9 +17,9 @@ const updateAccountController = async (req: Request, res: Response) => {
       });
     }
 
-    const currentAccountDetails = await accountModel.findById(accountId).exec();
+    const currentAccountDetails: AccountProps = await accountModel.findById(accountId).exec();
     if (!currentAccountDetails) {
-      console.error(errorMessage(updateAccountController.name, "line_21"));
+      console.error(errorMessage(updateAccountController.name, "line_22"));
       return res.status(statusCodes.internalServerError).json({
         isSuccess: false,
         message: req.t("statusMessages.internalerror"),
@@ -26,7 +27,9 @@ const updateAccountController = async (req: Request, res: Response) => {
       });
     }
 
-    const doesAccountExists = await accountModel.find({ accountName: accountName }).exec();
+    const doesAccountExists: AccountProps[] = await accountModel
+      .find({ accountName: accountName })
+      .exec();
     if (doesAccountExists.length > 0) {
       return res.status(statusCodes.conflict).json({
         isSuccess: false,
@@ -35,18 +38,18 @@ const updateAccountController = async (req: Request, res: Response) => {
       });
     }
 
-    const update = await accountModel
+    const update: AccountProps = await accountModel
       .findByIdAndUpdate(accountId, {
         belongsToUser: currentUser,
         accountName: accountName,
         createdAt: currentAccountDetails.createdAt,
         balance: currentAccountDetails.balance,
-        monthlyIncome: currentAccountDetails.monthlyIncome,
-        monthlyExpense: currentAccountDetails.monthlyExpense,
+        totalIncome: currentAccountDetails.totalIncome,
+        totalExpense: currentAccountDetails.totalExpense,
       })
       .exec();
     if (!update) {
-      console.error(errorMessage(updateAccountController.name, "line_49"));
+      console.error(errorMessage(updateAccountController.name, "line_52"));
       return res.status(statusCodes.internalServerError).json({
         isSuccess: false,
         message: req.t("statusMessages.internalerror"),
@@ -60,7 +63,7 @@ const updateAccountController = async (req: Request, res: Response) => {
       data: null,
     });
   } catch (error) {
-    console.error(errorMessage(updateAccountController.name, "line_63", error));
+    console.error(errorMessage(updateAccountController.name, "line_65", error));
     return res.status(statusCodes.internalServerError).json({
       isSuccess: false,
       message: req.t("statusMessages.internalerror"),

@@ -1,4 +1,5 @@
 import statusCodes from "@/shared/statusCodes";
+import { AccountProps, DeleteAccountProps, TransactionProps } from "@/shared/types";
 import { Request, Response } from "express";
 
 import accountModel from "@/models/accountModel";
@@ -8,31 +9,28 @@ import { errorMessage } from "@/localization/i18n";
 
 const deleteAccountController = async (req: Request, res: Response) => {
   try {
-    const { currentUser, accountId } = req.body;
+    const { currentUser, accountId }: DeleteAccountProps = req.body;
 
-    const filters = {
-      _id: accountId,
-      belongsToUser: currentUser,
-    };
-
-    const deleteAccount = await accountModel.findOneAndDelete(filters).exec();
-    if (!deleteAccount) {
-      console.error(errorMessage(deleteAccountController.name, "line_20"));
-      return res.status(statusCodes.internalServerError).json({
+    const relatedTransactions: TransactionProps[] = await transactionModel
+      .find({ accountId: accountId })
+      .exec();
+    if (relatedTransactions.length > 0) {
+      return res.status(statusCodes.conflict).json({
         isSuccess: false,
-        message: req.t("statusMessages.internalerror"),
+        message: req.t("account.error.deleteTransactionsFirst"), // FIXME snackbar shows success on frontend
         data: null,
       });
     }
 
-    const relatedTransactions = await transactionModel.find({ accountId: accountId }).exec();
-    if (relatedTransactions) {
-      relatedTransactions.forEach(async (transaction) => {
-        try {
-          await transactionModel.findByIdAndDelete(transaction._id).exec();
-        } catch (error) {
-          console.error(errorMessage(deleteAccountController.name, "line_34", error));
-        }
+    const deleteAccount: AccountProps = await accountModel
+      .findOneAndDelete({ _id: accountId, belongsToUser: currentUser })
+      .exec();
+    if (!deleteAccount) {
+      console.error(errorMessage(deleteAccountController.name, "line_29"));
+      return res.status(statusCodes.internalServerError).json({
+        isSuccess: false,
+        message: req.t("statusMessages.internalerror"),
+        data: null,
       });
     }
 
@@ -42,7 +40,7 @@ const deleteAccountController = async (req: Request, res: Response) => {
       data: null,
     });
   } catch (error) {
-    console.error(errorMessage(deleteAccountController.name, "line_45", error));
+    console.error(errorMessage(deleteAccountController.name, "line_43", error));
     return res.status(statusCodes.internalServerError).json({
       isSuccess: false,
       message: req.t("statusMessages.internalerror"),

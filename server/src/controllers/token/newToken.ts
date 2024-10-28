@@ -1,4 +1,5 @@
 import statusCodes from "@/shared/statusCodes";
+import { NewTokenProps, TokenProps } from "@/shared/types";
 import { Request, Response } from "express";
 import { sign, verify } from "jsonwebtoken";
 
@@ -8,7 +9,7 @@ import { errorMessage } from "@/localization/i18n";
 
 const newTokenController = async (req: Request, res: Response) => {
   try {
-    const { currentUser, refreshToken } = req.body;
+    const { currentUser, refreshToken }: NewTokenProps = req.body;
     if (!refreshToken) {
       return res.status(statusCodes.unauthorized).json({
         isSuccess: false,
@@ -31,7 +32,7 @@ const newTokenController = async (req: Request, res: Response) => {
       belongsTo: currentUser,
     };
 
-    const hasRefreshToken = await tokenModel.findOne(filters).exec();
+    const hasRefreshToken: TokenProps = await tokenModel.findOne(filters).exec();
     if (!hasRefreshToken) {
       return res.status(statusCodes.unauthorized).json({
         isSuccess: false,
@@ -72,7 +73,7 @@ const newTokenController = async (req: Request, res: Response) => {
       },
     });
   } catch (error) {
-    console.error(errorMessage(newTokenController.name, "line_75", error));
+    console.error(errorMessage(newTokenController.name, "line_76", error));
     return res.status(statusCodes.internalServerError).json({
       isSuccess: false,
       message: req.t("statusMessages.internalerror"),

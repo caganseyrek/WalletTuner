@@ -19,7 +19,8 @@
     },
     "error": {
       "noAccountsFound": "Could not get the details of this accounts.",
-      "accountExists": "This name is used by another account"
+      "accountExists": "This name is used by another account",
+      "deleteTransactionsFirst": "This account has transactions assigned to it. Delete them first."
     }
   },
   "transaction": {

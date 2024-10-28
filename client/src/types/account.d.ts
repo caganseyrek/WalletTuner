@@ -19,6 +19,6 @@ declare interface AccountQueryResponseProps {
   accountName: string;
   createdAt: string;
   balance: number;
-  monthlyIncome: number;
-  monthlyExpense: number;
+  totalIncome: number;
+  totalExpense: number;
 }

@@ -1,4 +1,5 @@
 import statusCodes from "@/shared/statusCodes";
+import { IdentifierProps, TokenProps } from "@/shared/types";
 import { Request, Response } from "express";
 
 import tokenModel from "@/models/tokenModel";
@@ -7,15 +8,15 @@ import { errorMessage } from "@/localization/i18n";
 
 const logoutController = async (req: Request, res: Response) => {
   try {
-    const { currentUser } = req.body;
+    const { currentUser }: IdentifierProps = req.body;
 
-    const refreshTokens = await tokenModel.find({ belongsTo: currentUser }).exec();
+    const refreshTokens: TokenProps[] = await tokenModel.find({ belongsTo: currentUser }).exec();
     if (refreshTokens.length >= 1) {
       refreshTokens.forEach(async (token) => {
         try {
           await tokenModel.findByIdAndDelete(token._id).exec();
         } catch {
-          console.error(errorMessage(logoutController.name, "line_17"));
+          console.error(errorMessage(logoutController.name, "line_19"));
         }
       });
     }
@@ -32,7 +33,7 @@ const logoutController = async (req: Request, res: Response) => {
       data: null,
     });
   } catch (error) {
-    console.error(errorMessage(logoutController.name, "line_34", error));
+    console.error(errorMessage(logoutController.name, "line_36", error));
     return res.status(statusCodes.internalServerError).json({
       isSuccess: false,
       message: req.t("statusMessages.internalerror"),

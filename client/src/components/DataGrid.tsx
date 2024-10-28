@@ -222,6 +222,10 @@ const DataGrid = <TNew, TUpdate, TDelete>({
     return columnsProp.filter((column) => visibleFields.includes(column.field));
   }, [columnsProp]);
 
+  // TODO
+  // add confirmation option for transactions and accounts
+  // when toggled, display a confirmation upon delete and update
+
   return (
     <>
       <Snackbar

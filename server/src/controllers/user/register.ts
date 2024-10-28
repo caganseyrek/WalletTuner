@@ -1,4 +1,5 @@
 import statusCodes from "@/shared/statusCodes";
+import { RegisterProps, UserProps } from "@/shared/types";
 import { genSalt, hash } from "bcrypt";
 import { Request, Response } from "express";
 import mongoose from "mongoose";
@@ -9,7 +10,7 @@ import { errorMessage } from "@/localization/i18n";
 
 const registerController = async (req: Request, res: Response) => {
   try {
-    const { name, surname, email, password } = req.body;
+    const { name, surname, email, password }: RegisterProps = req.body;
     if (!name || !surname || !email || !password) {
       return res.status(statusCodes.badRequest).json({
         isSuccess: false,
@@ -18,7 +19,7 @@ const registerController = async (req: Request, res: Response) => {
       });
     }
 
-    const existingUser = await userModel.find({ email: email }).exec();
+    const existingUser: UserProps[] = await userModel.find({ email: email }).exec();
     if (existingUser.length > 0) {
       return res.status(statusCodes.conflict).json({
         isSuccess: false,
@@ -27,26 +28,23 @@ const registerController = async (req: Request, res: Response) => {
       });
     }
 
-    const salt = await genSalt();
-    const hashedPassword = await hash(password, salt);
+    const salt: string = await genSalt();
+    const hashedPassword: string = await hash(password, salt);
 
-    const newUser = new userModel({
+    const newUser = new userModel<UserProps>({
       _id: new mongoose.Types.ObjectId(),
       name: name,
       surname: surname,
       email: email,
       password: hashedPassword,
+      preferredFormat: "en-US",
       preferredCurrency: "USD",
-      preferredCurrencyDisplayType: "symbol",
-      preferredCurrencyDisplayPosition: "left",
-      preferredCurrencyDisplaySpacing: "nbsp",
-      preferredCurrencyThousandSeperator: "comma",
-      preferredCurrencyDecimalSeperator: "dot",
+      preferredCurrencyDisplay: "narrowSymbol",
     });
 
     const saveNewUser = await newUser.save();
     if (!saveNewUser) {
-      console.error(errorMessage(registerController.name, "line_49"));
+      console.error(errorMessage(registerController.name, "line_47"));
       return res.status(statusCodes.internalServerError).json({
         isSuccess: false,
         message: req.t("statusMessages.internalerror"),
@@ -60,7 +58,7 @@ const registerController = async (req: Request, res: Response) => {
       data: null,
     });
   } catch (error) {
-    console.error(errorMessage(registerController.name, "line_63", error));
+    console.error(errorMessage(registerController.name, "line_61", error));
     return res.status(statusCodes.internalServerError).json({
       isSuccess: false,
       message: req.t("statusMessages.internalerror"),

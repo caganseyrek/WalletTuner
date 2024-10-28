@@ -1,4 +1,5 @@
 import statusCodes from "@/shared/statusCodes";
+import { AccountProps, IdentifierProps } from "@/shared/types";
 import { Request, Response } from "express";
 
 import accountModel from "@/models/accountModel";
@@ -7,9 +8,9 @@ import { errorMessage } from "@/localization/i18n";
 
 const getAccountsController = async (req: Request, res: Response) => {
   try {
-    const { currentUser } = req.body;
+    const { currentUser }: IdentifierProps = req.body;
 
-    const accounts = await accountModel.find({ belongsToUser: currentUser }).exec();
+    const accounts: AccountProps[] = await accountModel.find({ belongsToUser: currentUser }).exec();
     if (!accounts) {
       return res.status(statusCodes.notFound).json({
         isSuccess: false,
@@ -24,7 +25,7 @@ const getAccountsController = async (req: Request, res: Response) => {
       data: accounts,
     });
   } catch (error) {
-    console.error(errorMessage(getAccountsController.name, "line_27", error));
+    console.error(errorMessage(getAccountsController.name, "line_28", error));
     return res.status(statusCodes.internalServerError).json({
       isSuccess: false,
       message: req.t("statusMessages.internalerror"),

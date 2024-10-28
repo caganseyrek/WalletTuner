@@ -1,6 +1,7 @@
-import mongoose, { Schema } from "mongoose";
+import { TransactionProps } from "@/shared/types";
+import mongoose, { Model, Schema } from "mongoose";
 
-const transactionSchema: Schema = new Schema({
+const transactionSchema: Schema = new Schema<TransactionProps>({
   _id: mongoose.Schema.Types.ObjectId,
   accountId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -18,4 +19,7 @@ const transactionSchema: Schema = new Schema({
   transactionValue: { type: Number },
 });
 
-export default mongoose.model("transactionModel", transactionSchema);
+export default mongoose.model<TransactionProps>(
+  "transactionModel",
+  transactionSchema,
+) as Model<TransactionProps>;
