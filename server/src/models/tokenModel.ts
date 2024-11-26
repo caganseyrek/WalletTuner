@@ -1,7 +1,8 @@
-import { TokenProps } from "@/shared/types";
 import mongoose, { Model, Schema } from "mongoose";
 
-const tokenSchema: Schema = new Schema<TokenProps>({
+import TokenTypes from "@/types/token";
+
+const tokenSchema: Schema = new Schema<TokenTypes.TokenDetails>({
   _id: mongoose.Schema.Types.ObjectId,
   refreshToken: {
     type: String,
@@ -15,4 +16,7 @@ const tokenSchema: Schema = new Schema<TokenProps>({
   },
 });
 
-export default mongoose.model<TokenProps>("tokenModel", tokenSchema) as Model<TokenProps>;
+export default mongoose.model<TokenTypes.TokenDetails>(
+  "tokenModel",
+  tokenSchema,
+) as Model<TokenTypes.TokenDetails>;

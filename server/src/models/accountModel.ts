@@ -1,7 +1,8 @@
-import { AccountProps } from "@/shared/types";
 import mongoose, { Model, Schema } from "mongoose";
 
-const accountSchema: Schema = new Schema<AccountProps>({
+import AccountTypes from "@/types/account";
+
+const accountSchema: Schema = new Schema<AccountTypes.AccountDetails>({
   _id: mongoose.Schema.Types.ObjectId,
   belongsToUser: {
     type: mongoose.Schema.Types.ObjectId,
@@ -14,4 +15,7 @@ const accountSchema: Schema = new Schema<AccountProps>({
   totalExpense: { type: Number },
 });
 
-export default mongoose.model<AccountProps>("accountModel", accountSchema) as Model<AccountProps>;
+export default mongoose.model<AccountTypes.AccountDetails>(
+  "accountModel",
+  accountSchema,
+) as Model<AccountTypes.AccountDetails>;

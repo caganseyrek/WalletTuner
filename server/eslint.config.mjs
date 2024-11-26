@@ -4,7 +4,7 @@ import tseslint from "typescript-eslint";
 
 export default [
   {
-    files: ["**/*.{js,mjs,cjs,ts}", "server.ts"],
+    files: ["**/*.{js,mjs,cjs,ts}"],
     rules: {
       "no-alert": "warn",
       "no-console": ["warn", { allow: ["error"] }],
@@ -29,12 +29,6 @@ export default [
       "new-parens": "error",
       "no-multiple-empty-lines": ["error", { max: 2, maxEOF: 1 }],
       quotes: ["error", "double", { avoidEscape: true }],
-    },
-  },
-  {
-    files: ["server.ts"],
-    rules: {
-      "no-console": "off",
     },
   },
   { languageOptions: { globals: globals.browser } },

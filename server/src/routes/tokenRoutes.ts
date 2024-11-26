@@ -2,11 +2,19 @@ import express, { Router } from "express";
 
 import newTokenController from "@/controllers/token/newToken";
 
+import * as schemas from "@/middleware/validation/tokenSchemas";
 import auth from "@/middleware/auth";
-import validateUser from "@/middleware/validation/validateUser";
+import validate from "@/middleware/validate";
+
+import { MiddlewareArray } from "@/types/global";
 
 const router: Router = express.Router();
 
-router.post("/newtoken", auth, validateUser, newTokenController);
+const middlewares: MiddlewareArray = {
+  newToken: [auth, validate(schemas.newTokenSchema)],
+};
 
-export const tokenRoutes: Router = router;
+router.post("/newtoken", middlewares.newToken, newTokenController);
+
+const tokenRoutes: Router = router;
+export default tokenRoutes;

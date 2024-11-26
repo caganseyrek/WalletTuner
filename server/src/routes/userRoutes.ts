@@ -1,26 +1,30 @@
 import express, { Router } from "express";
 
-import deleteUserController from "@/controllers/user/deleteUser";
-import loginController from "@/controllers/user/login";
-import logoutController from "@/controllers/user/logout";
-import registerController from "@/controllers/user/register";
-import resetPasswordController from "@/controllers/user/resetPassword";
-import updateUserController from "@/controllers/user/updateUser";
-import userSettingsController from "@/controllers/user/userSettings";
+import userController from "@/controllers/userController";
 
+import * as schemas from "../middleware/validation/userSchemas";
 import auth from "@/middleware/auth";
-import validateUser from "@/middleware/validation/validateUser";
+import validate from "@/middleware/validate";
+
+import { MiddlewareArray } from "@/types/global";
 
 const router: Router = express.Router();
 
-router.post("/register", registerController);
-router.post("/login", loginController);
+const middlewares: MiddlewareArray = {
+  login: [validate(schemas.loginUserSchema)],
+  logout: [auth, validate(schemas.identifierSchema)],
+  register: [validate(schemas.registerUserSchema)],
+  update: [auth, validate(schemas.updateUserSchema)],
+  delete: [auth, validate(schemas.deleteUserSchema)],
+  settings: [auth, validate(schemas.identifierSchema)],
+};
 
-router.post("/settings", auth, validateUser, userSettingsController);
+router.post("/login", middlewares.login, userController.loginUser);
+router.post("/logout", middlewares.logout, userController.logoutUser);
+router.post("/register", middlewares.register, userController.registerUser);
+router.patch("/update", middlewares.update, userController.updateUser);
+router.delete("/delete", middlewares.delete, userController.deleteUser);
+router.post("/settings", middlewares.settings, userController.getUserSettings);
 
-router.post("/logout", auth, validateUser, logoutController);
-router.patch("/resetpw", auth, validateUser, resetPasswordController);
-router.patch("/update", auth, validateUser, updateUserController);
-router.delete("/delete", auth, validateUser, deleteUserController);
-
-export const userRoutes: Router = router;
+const userRoutes: Router = router;
+export default userRoutes;
