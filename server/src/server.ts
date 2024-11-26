@@ -56,7 +56,7 @@ app.use((req: Request, res: Response) => {
   return res.status(statusCodes.notFound).json(
     generateResponse({
       isSuccess: false,
-      message: req.t("statusMessages.notfound"),
+      message: req.t("statusMessages.notFound"),
       data: null,
     }),
   );
@@ -67,7 +67,7 @@ app.use((error: Error, req: Request, res: Response) => {
   return res.status(statusCodes.internalServerError).json(
     generateResponse({
       isSuccess: false,
-      message: req.t("statusMessages.internalerror"),
+      message: req.t("statusMessages.internalError"),
       data: null,
     }),
   );
@@ -75,9 +75,7 @@ app.use((error: Error, req: Request, res: Response) => {
 
 const dbConnection = new DbConnection();
 
-async function shutdownServer(
-  server: Server<typeof IncomingMessage, typeof ServerResponse>,
-): Promise<void> {
+async function shutdownServer(server: Server<typeof IncomingMessage, typeof ServerResponse>): Promise<void> {
   logger.info("Shutting down the server...");
   try {
     dbConnection.disconnect();

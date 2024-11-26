@@ -1,25 +1,26 @@
 import express, { Router } from "express";
 
-import createTransactionController from "@/controllers/transaction/createTransaction";
-import deleteTransactionController from "@/controllers/transaction/deleteTransaction";
-import getTransactionsController from "@/controllers/transaction/getTransactions";
-import updateTransactionController from "@/controllers/transaction/updateTransaction";
+import transactionController from "@/controllers/transactionController";
 
+import * as schemas from "@/middleware/validation/transactionSchema";
 import auth from "@/middleware/auth";
-import validateAccount from "@/middleware/validation/validateAccount";
-import validateTransaction from "@/middleware/validation/validateTransaction";
-import validateUser from "@/middleware/validation/validateUser";
+import validate from "@/middleware/validate";
+
+import { MiddlewareArray } from "@/types/global";
 
 const router: Router = express.Router();
 
-const getAllValidation = [validateUser];
-const createValidation = [validateUser, validateAccount];
-const updateValidation = [validateUser, validateAccount, validateTransaction];
-const deleteValidation = [validateUser, validateTransaction];
+const middlewares: MiddlewareArray = {
+  getTransactions: [auth, validate(schemas.getTransactionsSchema)],
+  createTransaction: [auth, validate(schemas.createTransactionSchema)],
+  updateTransaction: [auth, validate(schemas.updateTransactionSchema)],
+  deleteTransaction: [auth, validate(schemas.deleteTransactionSchema)],
+};
 
-router.post("/details/all", auth, getAllValidation, getTransactionsController);
-router.post("/create", auth, createValidation, createTransactionController);
-router.patch("/update", auth, updateValidation, updateTransactionController);
-router.delete("/delete", auth, deleteValidation, deleteTransactionController);
+router.post("/all", middlewares.getTransactions, transactionController.getTransactions);
+router.post("/create", middlewares.createTransaction, transactionController.createTransaction);
+router.patch("/update", middlewares.updateTransaction, transactionController.updateTransaction);
+router.delete("/delete", middlewares.deleteTransaction, transactionController.deleteTransaction);
 
-export const transactionRoutes: Router = router;
+const transactionRoutes: Router = router;
+export default transactionRoutes;

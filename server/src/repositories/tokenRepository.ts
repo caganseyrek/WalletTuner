@@ -14,10 +14,7 @@ class TokenRepository {
    * @param FindByFiltersParams - Refresh token and the user ID that token belongs to.
    * @returns Details of the saved token object that belongs to given user ID.
    */
-  async findByFilters({
-    refreshToken,
-    belongsTo,
-  }: TokenTypes.FindByFiltersParams): Promise<TokenTypes.TokenDetails[]> {
+  async findByFilters({ refreshToken, belongsTo }: TokenTypes.FindByFiltersParams): Promise<TokenTypes.TokenDetails[]> {
     const tokens: TokenTypes.TokenDetails[] = await tokenModel
       .find({
         refreshToken: refreshToken,
@@ -33,10 +30,7 @@ class TokenRepository {
    * @returns Details of the new token object saved.
    * @throws AppError if token cannot be saved to the database.
    */
-  async saveNewToken({
-    currentUser,
-    refreshToken,
-  }: TokenTypes.NewTokenParams): Promise<TokenTypes.TokenDetails> {
+  async saveNewToken({ currentUser, refreshToken }: TokenTypes.NewTokenParams): Promise<TokenTypes.TokenDetails> {
     const newTokenObject = new tokenModel<TokenTypes.TokenDetails>({
       _id: new mongoose.Types.ObjectId(),
       belongsTo: currentUser,
@@ -56,9 +50,7 @@ class TokenRepository {
   }
 
   async clearExistingTokens({ currentUser }: TokenTypes.clearExistingTokensParams): Promise<void> {
-    const existingRefreshTokens: TokenTypes.TokenDetails[] = await tokenModel
-      .find({ belongsTo: currentUser })
-      .exec();
+    const existingRefreshTokens: TokenTypes.TokenDetails[] = await tokenModel.find({ belongsTo: currentUser }).exec();
     if (existingRefreshTokens.length >= 1) {
       existingRefreshTokens.forEach(async (token) => {
         try {

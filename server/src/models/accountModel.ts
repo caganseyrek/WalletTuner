@@ -2,7 +2,7 @@ import mongoose, { Model, Schema } from "mongoose";
 
 import AccountTypes from "@/types/account";
 
-const accountSchema: Schema = new Schema<AccountTypes.AccountDetails>({
+const accountSchema: Schema = new Schema<AccountTypes.Global.AccountDetails>({
   _id: mongoose.Schema.Types.ObjectId,
   belongsToUser: {
     type: mongoose.Schema.Types.ObjectId,
@@ -15,7 +15,7 @@ const accountSchema: Schema = new Schema<AccountTypes.AccountDetails>({
   totalExpense: { type: Number },
 });
 
-export default mongoose.model<AccountTypes.AccountDetails>(
+export default mongoose.model<AccountTypes.Global.AccountDetails>(
   "accountModel",
   accountSchema,
-) as Model<AccountTypes.AccountDetails>;
+) as Model<AccountTypes.Global.AccountDetails>;

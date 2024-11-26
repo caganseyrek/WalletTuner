@@ -1,24 +1,26 @@
 import express, { Router } from "express";
 
-import createAccountController from "@/controllers/account/createAccount";
-import deleteAccountController from "@/controllers/account/deleteAccount";
-import getAccountsController from "@/controllers/account/getAccounts";
-import updateAccountController from "@/controllers/account/updateAccount";
+import accountController from "@/controllers/accountController";
 
+import * as schemas from "@/middleware/validation/accountSchema";
 import auth from "@/middleware/auth";
-import validateAccount from "@/middleware/validation/validateAccount";
-import validateUser from "@/middleware/validation/validateUser";
+import validate from "@/middleware/validate";
+
+import { MiddlewareArray } from "@/types/global";
 
 const router: Router = express.Router();
 
-const getAllValidation = [validateUser];
-const createValidation = [validateUser];
-const updateValidation = [validateUser, validateAccount];
-const deleteValidation = [validateUser, validateAccount];
+const middlewares: MiddlewareArray = {
+  getAccounts: [auth, validate(schemas.getAccountSchema)],
+  createAccount: [auth, validate(schemas.createAccountSchema)],
+  updateAccount: [auth, validate(schemas.updateAccountSchema)],
+  deleteAccount: [auth, validate(schemas.deleteAccountSchema)],
+};
 
-router.post("/details/all", auth, getAllValidation, getAccountsController);
-router.post("/create", auth, createValidation, createAccountController);
-router.patch("/update", auth, updateValidation, updateAccountController);
-router.delete("/delete", auth, deleteValidation, deleteAccountController);
+router.post("/all", middlewares.getAccounts, accountController.getAccounts);
+router.post("/create", middlewares.createAccount, accountController.createAccount);
+router.patch("/update", middlewares.updateAccount, accountController.updateAccount);
+router.delete("/delete", middlewares.deleteAccount, accountController.deleteAccount);
 
-export const accountRoutes: Router = router;
+const accountRoutes: Router = router;
+export default accountRoutes;

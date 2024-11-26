@@ -1,15 +1,10 @@
 {
   "statusMessages": {
-    "notfound": "İstenilen kaynak mevcut değil.",
-    "badrequest": "İsteğiniz işlenirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.",
-    "internalerror": "Bir sunucu hatası oluştu. Lütfen daha sonra tekrar deneyin.",
+    "notFound": "İstenilen kaynak mevcut değil.",
+    "badRequest": "İsteğiniz işlenirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.",
+    "internalError": "Bir sunucu hatası oluştu. Lütfen daha sonra tekrar deneyin.",
     "unauthorized": "Bunu yapmaya yetkiniz yoktur.",
     "expiredToken": "Expired Token"
-  },
-  "middlewareMessages": {
-    "noAccountFound": "İstenilen hesap bulunamadı.",
-    "noTransactionFound": "İstenilen işlem bulunamadı.",
-    "invalidUserId": "Geçersiz kullanıcı ID. Lütfen tekrar giriş yapınız."
   },
   "account": {
     "success": {

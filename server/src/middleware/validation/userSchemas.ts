@@ -39,22 +39,8 @@ export const updateUserSchema: ZodSchema = z.object({
     "sv-SE",
     "en-IN",
   ]),
-  preferredCurrency: z.enum([
-    "USD",
-    "GBP",
-    "EUR",
-    "JPY",
-    "CNY",
-    "BRL",
-    "RUB",
-    "KRW",
-    "SAR",
-    "SEK",
-    "INR",
-  ]),
-  preferredCurrencyDisplay: z
-    .enum(["code", "name", "symbol", "narrowSymbol"])
-    .default("narrowSymbol"),
+  preferredCurrency: z.enum(["USD", "GBP", "EUR", "JPY", "CNY", "BRL", "RUB", "KRW", "SAR", "SEK", "INR"]),
+  preferredCurrencyDisplay: z.enum(["code", "name", "symbol", "narrowSymbol"]).default("narrowSymbol"),
 });
 
 export const deleteUserSchema: ZodSchema = z.object({

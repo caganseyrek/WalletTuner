@@ -1,15 +1,10 @@
 {
   "statusMessages": {
-    "notfound": "Requested resource is not available",
-    "badrequest": "There was an error processing your request, please try again.",
-    "internalerror": "There was a server error, please try again later.",
+    "notFound": "Requested resource is not available",
+    "badRequest": "There was an error processing your request, please try again.",
+    "internalError": "There was a server error, please try again later.",
     "unauthorized": "You do not have access to do this.",
     "expiredToken": "Expired Token"
-  },
-  "middleware": {
-    "noAccountsFound": "Requested account could not be found.",
-    "noTransactionFound": "Requested transaction could not be found.",
-    "invalidUserId": "UserId is invalid. Please re-login."
   },
   "account": {
     "success": {

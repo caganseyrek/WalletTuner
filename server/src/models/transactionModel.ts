@@ -1,7 +1,8 @@
-import { TransactionProps } from "@/shared/types";
 import mongoose, { Model, Schema } from "mongoose";
 
-const transactionSchema: Schema = new Schema<TransactionProps>({
+import TransactionTypes from "@/types/transactions";
+
+const transactionSchema: Schema = new Schema<TransactionTypes.Global.TransactionDetails>({
   _id: mongoose.Schema.Types.ObjectId,
   accountId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -19,7 +20,7 @@ const transactionSchema: Schema = new Schema<TransactionProps>({
   transactionValue: { type: Number },
 });
 
-export default mongoose.model<TransactionProps>(
+export default mongoose.model<TransactionTypes.Global.TransactionDetails>(
   "transactionModel",
   transactionSchema,
-) as Model<TransactionProps>;
+) as Model<TransactionTypes.Global.TransactionDetails>;

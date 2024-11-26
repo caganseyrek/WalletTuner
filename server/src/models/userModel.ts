@@ -1,7 +1,8 @@
-import { UserProps } from "@/shared/types";
 import mongoose, { Model, Schema } from "mongoose";
 
-const userSchema: Schema = new Schema<UserProps>({
+import UserTypes from "@/types/user";
+
+const userSchema: Schema = new Schema<UserTypes.Globals.UserDetailsWithSettings>({
   _id: mongoose.Schema.Types.ObjectId,
   name: { type: String },
   surname: { type: String },
@@ -12,4 +13,7 @@ const userSchema: Schema = new Schema<UserProps>({
   preferredCurrencyDisplay: { type: String, required: true },
 });
 
-export default mongoose.model<UserProps>("userModel", userSchema) as Model<UserProps>;
+export default mongoose.model<UserTypes.Globals.UserDetailsWithSettings>(
+  "userModel",
+  userSchema,
+) as Model<UserTypes.Globals.UserDetailsWithSettings>;

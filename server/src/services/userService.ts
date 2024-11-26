@@ -18,8 +18,8 @@ class UserService {
     this.tokenRepository = new TokenRepository();
   }
 
-  async loginUser({ email, password }: UserTypes.LoginParams): Promise<UserTypes.LoginDetails> {
-    const userExists: UserTypes.UserDetails[] | null = await this.userRepository.findByEmail({
+  async loginUser({ email, password }: UserTypes.Service.LoginUserParams): Promise<UserTypes.Globals.LoginDetails> {
+    const userExists: UserTypes.Globals.UserDetails[] | null = await this.userRepository.findByEmail({
       email: email,
     });
     if (!userExists) {
@@ -34,7 +34,7 @@ class UserService {
         messageKey: "statusMessages.internalError",
       });
     }
-    const userDetails: UserTypes.UserDetails = userExists[0];
+    const userDetails: UserTypes.Globals.UserDetails = userExists[0];
     const passwordMatch: boolean = await PasswordHelper.compare({
       enteredPassword: password,
       hashedPassword: userDetails.password,
@@ -67,8 +67,8 @@ class UserService {
     return await this.tokenRepository.clearExistingTokens({ currentUser: currentUser });
   }
 
-  async createUser({ name, surname, email, password }: UserTypes.RegisterParams) {
-    const existingUser: UserTypes.UserDetails[] = await this.userRepository.findByEmail({
+  async createUser({ name, surname, email, password }: UserTypes.Service.RegisterUserParams): Promise<void> {
+    const existingUser: UserTypes.Globals.UserDetails[] = await this.userRepository.findByEmail({
       email: email,
     });
     if (existingUser && existingUser.length > 0) {
@@ -84,7 +84,8 @@ class UserService {
       email: email,
       password: hashedPassword,
     };
-    return await this.userRepository.saveNewUser(newUserObject);
+    await this.userRepository.createNewUser(newUserObject);
+    return;
   }
 
   async updateUser({
@@ -96,8 +97,8 @@ class UserService {
     preferredFormat,
     preferredCurrency,
     preferredCurrencyDisplay,
-  }: UserTypes.UpdateUserParams): Promise<void> {
-    const userDetails: UserTypes.UserDetails | null = await this.userRepository.findById({
+  }: UserTypes.Service.UpdateUserParams): Promise<void> {
+    const userDetails: UserTypes.Globals.UserDetails | null = await this.userRepository.findById({
       currentUser: currentUser,
     });
     if (!userDetails) {
@@ -116,7 +117,7 @@ class UserService {
         messageKey: "user.error.passwordValidationFail",
       });
     }
-    const updatedUserDetails: Omit<UserTypes.UpdateUserParams, "password"> = {
+    const updatedUserDetails: Omit<UserTypes.Service.UpdateUserParams, "password"> = {
       currentUser: currentUser,
       name: name,
       surname: surname,
@@ -129,8 +130,8 @@ class UserService {
     return;
   }
 
-  async deleteUser({ currentUser, password }: UserTypes.DeleteUserParams): Promise<void> {
-    const userDetails: UserTypes.UserDetails | null = await this.userRepository.findById({
+  async deleteUser({ currentUser, password }: UserTypes.Service.DeleteUserParams): Promise<void> {
+    const userDetails: UserTypes.Globals.UserDetails | null = await this.userRepository.findById({
       currentUser: currentUser,
     });
     if (!userDetails) {
@@ -155,8 +156,8 @@ class UserService {
 
   async getUserSettings({
     currentUser,
-  }: UserTypes.GetUserSettingsParams): Promise<UserTypes.UserSettings> {
-    const userDetails: UserTypes.UserDetailsWithSettings | null =
+  }: UserTypes.Service.GetUserSettingsParams): Promise<UserTypes.Globals.UserSettings> {
+    const userDetails: UserTypes.Globals.UserDetailsWithSettings | null =
       await this.userRepository.findWithSettingsById({
         currentUser: currentUser,
       });

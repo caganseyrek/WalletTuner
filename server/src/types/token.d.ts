@@ -8,9 +8,8 @@ namespace TokenTypes {
   }
 
   export type FindByFiltersParams = Omit<TokenDetails, "_id">;
-  export type FindByUserIdParams = Omit<TokenDetails, "_id", "refreshToken">;
+  export type FindByUserIdParams = Omit<Omit<TokenDetails, "_id">, "refreshToken">;
   export type clearExistingTokensParams = Identifier;
-
   export type NewTokenParams = Identifier & { refreshToken: string };
 }
 

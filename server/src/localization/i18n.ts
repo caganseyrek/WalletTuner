@@ -16,12 +16,3 @@ i18next
     detection: { order: ["header"] },
     debug: false,
   });
-
-export const errorMessage = (
-  errorLocation: string,
-  errorPosition: string,
-  errorMessage?: unknown,
-  isMiddleware?: boolean,
-) => {
-  return `There was an error in '${errorLocation}' ${isMiddleware && "middleware"} at the ${errorPosition}${errorMessage && ": " + errorMessage}.`;
-};

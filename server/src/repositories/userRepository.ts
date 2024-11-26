@@ -14,8 +14,8 @@ class UserRepository {
    * @param FindByIdParams - The ID of the user to find.
    * @returns A user object if found, otherwise null.
    */
-  async findById({ currentUser }: UserTypes.FindByIdParams): Promise<UserTypes.UserDetails | null> {
-    const user: UserTypes.UserDetails = await userModel.findById(currentUser).exec();
+  async findById({ currentUser }: UserTypes.Repository.FindByIdParams): Promise<UserTypes.Globals.UserDetails | null> {
+    const user: UserTypes.Globals.UserDetails = await userModel.findById(currentUser).exec();
     return user;
   }
 
@@ -26,8 +26,8 @@ class UserRepository {
    */
   async findWithSettingsById({
     currentUser,
-  }: UserTypes.FindWithSettingsByIdParams): Promise<UserTypes.UserDetailsWithSettings | null> {
-    const user: UserTypes.UserDetailsWithSettings = await userModel.findById(currentUser).exec();
+  }: UserTypes.Repository.FindWithSettingsByIdParams): Promise<UserTypes.Globals.UserDetailsWithSettings | null> {
+    const user: UserTypes.Globals.UserDetailsWithSettings = await userModel.findById(currentUser).exec();
     return user;
   }
 
@@ -36,8 +36,8 @@ class UserRepository {
    * @param FindByEmailParams - The email to search for
    * @returns An array of user objects found, otherwise an empty array.
    */
-  async findByEmail({ email }: UserTypes.FindByEmailParams): Promise<UserTypes.UserDetails[]> {
-    const users: UserTypes.UserDetails[] = await userModel.find({ email: email }).exec();
+  async findByEmail({ email }: UserTypes.Repository.FindByEmailParams): Promise<UserTypes.Globals.UserDetails[]> {
+    const users: UserTypes.Globals.UserDetails[] = await userModel.find({ email: email }).exec();
     return users;
   }
 
@@ -46,13 +46,13 @@ class UserRepository {
    * @param UserDetailsWithSettings - Details of the new user.
    * @returns The saved user object.
    */
-  async saveNewUser({
+  async createNewUser({
     name,
     surname,
     email,
     password,
-  }: UserTypes.RegisterParams): Promise<UserTypes.UserDetails> {
-    const newUserObject = new userModel<UserTypes.UserDetailsWithSettings>({
+  }: UserTypes.Repository.CreateNewUserParams): Promise<UserTypes.Globals.UserDetails> {
+    const newUserObject = new userModel<UserTypes.Globals.UserDetailsWithSettings>({
       _id: new mongoose.Types.ObjectId(),
       name: name,
       surname: surname,
@@ -86,7 +86,7 @@ class UserRepository {
     preferredFormat,
     preferredCurrency,
     preferredCurrencyDisplay,
-  }: UserTypes.FindByIdAndUpdateUserParams): Promise<void> {
+  }: UserTypes.Repository.FindByIdAndUpdateParams): Promise<void> {
     const updateUser = await userModel.findByIdAndUpdate(currentUser, {
       name: name,
       surname: surname,
@@ -108,7 +108,7 @@ class UserRepository {
    * Deletes a user from the database.
    * @param currentUser - The ID of the user to delete.
    */
-  async deleteUser({ currentUser }: UserTypes.FindByIdAndDeleteUserParams): Promise<void> {
+  async deleteUser({ currentUser }: UserTypes.Repository.FindByIdAndDeleteParams): Promise<void> {
     const deleteUser = await userModel.findByIdAndDelete(currentUser).exec();
     if (!deleteUser) {
       throw new AppError({

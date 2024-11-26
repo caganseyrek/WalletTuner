@@ -13,9 +13,7 @@ class DbConnection {
       mongoose.connection.on("error", (error) =>
         logger.error(`Something went wrong with the database connection: ${error}`),
       );
-      mongoose.connection.once("open", () =>
-        logger.info("Successfully connected to the database."),
-      );
+      mongoose.connection.once("open", () => logger.info("Successfully connected to the database."));
       return this;
     } catch (error) {
       logger.error(`An error ocurred while connecting: ${error}`);

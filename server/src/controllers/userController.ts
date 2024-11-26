@@ -13,27 +13,29 @@ const userService = new UserService();
 
 async function loginUser(req: Request, res: Response, next: NextFunction) {
   try {
-    const { email, password }: UserTypes.LoginParams = req.body;
-    const loginInfo: UserTypes.LoginParams = {
+    const { email, password }: UserTypes.Controller.LoginUserParams = req.body;
+    const loginInfo: UserTypes.Controller.LoginUserParams = {
       email: email,
       password: password,
     };
-    const loginDetails: UserTypes.LoginDetails = await userService.loginUser(loginInfo);
+    const loginDetails: UserTypes.Globals.LoginDetails = await userService.loginUser(loginInfo);
     res.cookie("refreshToken", loginDetails.tokens.refreshToken, {
       domain: env.CLIENT_URL,
       httpOnly: true,
       maxAge: 60000 * 60 * 24 * 1,
       signed: true,
     });
-    return res.status(statusCodes.success).json({
-      isSuccess: true,
-      message: req.t("user.success.loginSuccessful"),
-      data: {
-        name: loginDetails.name,
-        currentUser: loginDetails.currentUser,
-        accessToken: loginDetails.tokens.accessToken,
-      },
-    });
+    return res.status(statusCodes.success).json(
+      generateResponse({
+        isSuccess: true,
+        message: req.t("user.success.loginSuccessful"),
+        data: {
+          name: loginDetails.name,
+          currentUser: loginDetails.currentUser,
+          accessToken: loginDetails.tokens.accessToken,
+        },
+      }),
+    );
   } catch (error) {
     next(error);
   }
@@ -41,7 +43,7 @@ async function loginUser(req: Request, res: Response, next: NextFunction) {
 
 async function logoutUser(req: Request, res: Response, next: NextFunction) {
   try {
-    const { currentUser }: UserTypes.LogoutParams = req.body;
+    const { currentUser }: UserTypes.Controller.LogoutUserParams = req.body;
     await userService.logoutUser({ currentUser: currentUser });
     res.clearCookie("refreshToken", { httpOnly: true, secure: true });
     return res.status(statusCodes.success).json(
@@ -58,8 +60,8 @@ async function logoutUser(req: Request, res: Response, next: NextFunction) {
 
 async function registerUser(req: Request, res: Response, next: NextFunction) {
   try {
-    const { name, surname, email, password }: UserTypes.RegisterParams = req.body;
-    const userDetails: UserTypes.RegisterParams = {
+    const { name, surname, email, password }: UserTypes.Controller.RegisterUserParams = req.body;
+    const userDetails: UserTypes.Controller.RegisterUserParams = {
       name: name,
       surname: surname,
       email: email,
@@ -89,8 +91,8 @@ async function updateUser(req: Request, res: Response, next: NextFunction) {
       preferredFormat,
       preferredCurrency,
       preferredCurrencyDisplay,
-    }: UserTypes.UpdateUserParams = req.body;
-    const updatedUserDetails: UserTypes.UpdateUserParams = {
+    }: UserTypes.Controller.UpdateUserParams = req.body;
+    const updatedUserDetails: UserTypes.Controller.UpdateUserParams = {
       currentUser: currentUser,
       name: name,
       surname: surname,
@@ -115,7 +117,7 @@ async function updateUser(req: Request, res: Response, next: NextFunction) {
 
 async function deleteUser(req: Request, res: Response, next: NextFunction) {
   try {
-    const { currentUser, password }: UserTypes.DeleteUserParams = req.body;
+    const { currentUser, password }: UserTypes.Controller.DeleteUserParams = req.body;
     await userService.deleteUser({ currentUser: currentUser, password: password });
     return res.status(statusCodes.success).json(
       generateResponse({
@@ -131,14 +133,14 @@ async function deleteUser(req: Request, res: Response, next: NextFunction) {
 
 async function getUserSettings(req: Request, res: Response, next: NextFunction) {
   try {
-    const { currentUser }: UserTypes.GetUserSettingsParams = req.body;
-    const userSettings: UserTypes.UserSettings = await userService.getUserSettings({
+    const { currentUser }: UserTypes.Controller.GetUserSettingsParams = req.body;
+    const userSettings: UserTypes.Globals.UserSettings = await userService.getUserSettings({
       currentUser: currentUser,
     });
     return res.status(statusCodes.success).json(
       generateResponse({
         isSuccess: true,
-        message: req.t("user.success.receivedUserSettings"),
+        message: "",
         data: {
           preferredFormat: userSettings.preferredFormat,
           preferredCurrency: userSettings.preferredCurrency,
