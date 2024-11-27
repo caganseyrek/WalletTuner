@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { controllers, methods, Requester, routes } from "@/shared/utils/requester";
+import { controllers, methods, Requester, routes } from "@/utils/requester";
 
 const useAccountQuery = (accountQueryData: AccountQueryRequestProps) => {
   const account = useQuery({
@@ -11,7 +11,7 @@ const useAccountQuery = (accountQueryData: AccountQueryRequestProps) => {
         method: methods.post,
         endpoint: {
           route: routes.account,
-          controller: controllers.getDetailsAll,
+          controller: controllers.getAll,
         },
         accessToken: accessToken,
         payload: requestData,

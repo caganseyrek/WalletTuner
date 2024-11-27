@@ -118,6 +118,7 @@ export class Requester {
   */
 }
 
+// FIXME
 export enum methods {
   post = "POST",
   patch = "PATCH",
@@ -135,8 +136,7 @@ export enum controllers {
   logout = "logout",
   register = "register",
   settings = "settings",
-  getDetailsAll = "details/all",
-  getDetailsByFilter = "details",
+  getAll = "all",
   create = "create",
   update = "update",
   delete = "delete",

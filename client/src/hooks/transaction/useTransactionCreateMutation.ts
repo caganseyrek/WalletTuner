@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { controllers, methods, Requester, routes } from "@/shared/utils/requester";
+import { controllers, methods, Requester, routes } from "@/utils/requester";
 
 const useTransactionCreateMutation = () => {
   const queryClient = useQueryClient();

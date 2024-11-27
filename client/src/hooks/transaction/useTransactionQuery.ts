@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { controllers, methods, Requester, routes } from "@/shared/utils/requester";
+import { controllers, methods, Requester, routes } from "@/utils/requester";
 
 const useTransactionQuery = (transactionQueryData: TransactionQueryRequestProps) => {
   const transaction = useQuery({
@@ -11,7 +11,7 @@ const useTransactionQuery = (transactionQueryData: TransactionQueryRequestProps)
         method: methods.post,
         endpoint: {
           route: routes.transaction,
-          controller: controllers.getDetailsAll,
+          controller: controllers.getAll,
         },
         accessToken: accessToken,
         payload: requestData,

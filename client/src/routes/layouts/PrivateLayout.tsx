@@ -26,7 +26,7 @@ import TranslatePopover from "@/components/TranslatePopover";
 import useAuthDetails from "@/hooks/useAuthDetails";
 import useLogoutMutation from "@/hooks/user/useLogoutMutation";
 
-import getGreeting from "@/shared/utils/greeter";
+import getGreeting from "@/utils/greeter";
 
 import {
   appBarStyles,
