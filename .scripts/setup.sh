@@ -1,5 +1,5 @@
 #!/bin/bash
-# "./setup help" for description about the usage.
+# "./setup help" for description about usage.
 
 SCRIPT_DIR="$(dirname "$(realpath "$0")")"
 
