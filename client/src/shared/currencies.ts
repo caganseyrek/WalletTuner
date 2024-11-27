@@ -5,7 +5,7 @@ export const supportedLocales: SupportedLocaleString[] = [
   "de-DE",
   "es-ES",
   "it-IT",
-  "ja-jp",
+  "ja-JP",
   "zh-CN",
   "ko-KR",
   "pt-BR",
