@@ -1,79 +1,72 @@
-import axios, { AxiosRequestConfig, RawAxiosRequestHeaders } from "axios";
+import GlobalTypes from "@/types/globals";
+import UtilTypes from "@/types/utils";
+import axios, {
+  AxiosError,
+  AxiosRequestConfig,
+  AxiosResponse,
+  RawAxiosRequestHeaders,
+} from "axios";
 import i18next from "i18next";
 
-// import i18next from "i18next";
-
-interface endpointProps {
-  route: string;
-  controller: string;
-}
-
-interface RequesterConfig {
-  baseURL?: string;
-  endpoint: endpointProps;
-  method: string;
-  headers?: RawAxiosRequestHeaders;
-  accessToken?: string;
-  currentUser?: string;
-  query?: Record<string, string>;
-  payload: object;
-}
-
 const BACKEND_URL = import.meta.env.VITE_APP_BACKEND_URL;
-// const TOKEN_ENDPOINT = import.meta.env.VITE_APP_TOKEN_ENDPOINT;
-// const IS_DEV = Boolean(import.meta.env.VITE_APP_IS_DEV);
-
 const POSSIBLE_STATUS_CODES = [200, 201, 400, 401, 404, 409, 500];
 
-export class Requester {
-  private baseURL: string = BACKEND_URL;
-  // private tokenEndpoint: string = TOKEN_ENDPOINT;
-  private endpoint: { route: string; controller: string };
+class Requester {
+  private protocol: string;
+  private baseURL: string = BACKEND_URL.replace(/\/$/, "");
+  private endpoint: UtilTypes.RequesterTypes.EndpointProps;
   private method: string;
-  private headers?: RawAxiosRequestHeaders;
-  private accessToken?: string;
-  // private currentUser?: string;
+  private contentType: string = "application/json";
+  private headers: RawAxiosRequestHeaders;
+  private accessToken: string;
+  private includeCookies: boolean;
   private query?: Record<string, string>;
   private payload: object;
+  private responseLanguage: string = i18next.language;
 
-  constructor({
-    endpoint,
-    method,
-    headers,
-    accessToken,
-    // currentUser,
-    query,
-    payload,
-  }: RequesterConfig) {
-    this.endpoint = endpoint;
-    this.method = method;
-    this.accessToken = accessToken;
+  constructor(requesterConfig: UtilTypes.RequesterTypes.RequesterConfig) {
+    this.protocol = requesterConfig.protocol ?? "http";
+    this.endpoint = requesterConfig.endpoint;
+    this.method = requesterConfig.method;
+    this.accessToken = requesterConfig.accessToken ?? "";
+    this.includeCookies = requesterConfig.includeCookies ?? false;
     this.headers = {
-      ...headers,
-      "Content-Type": "application/json",
-      ...(accessToken && { Authorization: `Bearer ${this.accessToken}` }),
-      "Accept-Language": i18next.language,
+      ...requesterConfig.headers,
+      "Content-Type": this.contentType,
+      ...(requesterConfig.accessToken && { Authorization: `Bearer ${this.accessToken}` }),
+      "Accept-Language": this.responseLanguage,
     };
-    // this.currentUser = currentUser;
-    this.payload = payload;
-    this.query = query;
+    this.payload = requesterConfig.payload;
+    this.query = requesterConfig.query;
   }
 
-  async send<TResponseData = null>(): Promise<BackendResponseProps<TResponseData>> {
-    let requestUrl = `${this.baseURL}${this.endpoint.route}/${this.endpoint.controller}`;
-    if (this.query) {
-      const queryString = new URLSearchParams(this.query).toString();
-      requestUrl += `?${queryString}`;
-    }
-
-    const axiosInstance = axios.create({
-      baseURL: requestUrl,
+  private generateEndpoint(): string {
+    let endpoint: string = "";
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    Object.entries(this.endpoint).forEach(([_key, value]) => {
+      const sanitizedValue = value.replace(/^\/|\/$/g, "");
+      endpoint += `/${sanitizedValue}`;
     });
+    return endpoint;
+  }
+
+  private generateURL(): string {
+    const urlString: string = `${this.protocol}://${this.baseURL}/`;
+    const endpointString: string = this.generateEndpoint();
+    const queryString: string = this.query ? new URLSearchParams(this.query).toString() : "";
+    return `${urlString}${endpointString}?${queryString}`;
+  }
+
+  async sendRequest<
+    TResponseData = null,
+    TRequestPayload = UtilTypes.RequesterTypes.RequesterConfig,
+  >(): Promise<GlobalTypes.BackendResponseParams<TResponseData>> {
+    const axiosInstance = axios.create({ baseURL: this.generateURL() });
     axiosInstance.interceptors.response.use(
-      (response) => {
+      (response: AxiosResponse<TResponseData, TRequestPayload>) => {
         return response;
       },
-      (error) => {
+      (error: AxiosError) => {
         if (error.response && POSSIBLE_STATUS_CODES.includes(error.response.status)) {
           return Promise.resolve(error.response.data);
         }
@@ -81,63 +74,21 @@ export class Requester {
     );
 
     const axiosConfig: AxiosRequestConfig = {
-      url: requestUrl,
+      url: this.generateURL(),
       method: this.method,
       headers: this.headers,
       data: this.payload,
+      withCredentials: this.includeCookies,
       validateStatus: function (status) {
         return POSSIBLE_STATUS_CODES.includes(status);
       },
     };
-    const response = await axiosInstance.request<BackendResponseProps<TResponseData>>(axiosConfig);
-    return response.data as BackendResponseProps<TResponseData>;
+    const response: AxiosResponse<TResponseData, TRequestPayload> = await axiosInstance.request<
+      GlobalTypes.BackendResponseParams<TResponseData>,
+      AxiosResponse<TResponseData, TRequestPayload>
+    >(axiosConfig);
+    return response.data as GlobalTypes.BackendResponseParams<TResponseData>;
   }
-
-  /*
-  FIXME
-  private async refresh(): Promise<string | null> {
-    try {
-      const requestUrl = this.baseURL + this.tokenEndpoint;
-      const axiosConfig: AxiosRequestConfig = {
-        url: requestUrl,
-        method: methods.post,
-        headers: { withCredentials: true },
-        data: { currentUser: this.currentUser },
-      };
-      const newToken = await axios(axiosConfig);
-      if (newToken.status === 200) {
-        this.accessToken = newToken.data.accessToken;
-        return newToken.data.accessToken;
-      }
-      return null;
-    } catch (error) {
-      IS_DEV && console.error(errorMessage(this.refresh.name, error));
-      return null;
-    }
-  }
-  */
 }
 
-// FIXME
-export enum methods {
-  post = "POST",
-  patch = "PATCH",
-  delete = "DELETE",
-}
-
-export enum routes {
-  user = "user",
-  transaction = "transaction",
-  account = "account",
-}
-
-export enum controllers {
-  login = "login",
-  logout = "logout",
-  register = "register",
-  settings = "settings",
-  getAll = "all",
-  create = "create",
-  update = "update",
-  delete = "delete",
-}
+export default Requester;
