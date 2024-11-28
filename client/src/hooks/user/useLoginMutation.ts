@@ -1,32 +1,33 @@
+import GlobalTypes from "@/types/globals";
+import UserTypes from "@/types/user";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { controllers, methods, Requester, routes } from "@/utils/requester";
+import Requester from "@/utils/requester";
 
 const useLoginMutation = () => {
   const queryClient = useQueryClient();
 
   const login = useMutation({
     mutationKey: ["loginMutation"],
-    mutationFn: async (loginData: LoginRequestProps) => {
+    mutationFn: async (loginData: UserTypes.Mutations.LoginRequestParams) => {
       const response = await new Requester({
-        method: methods.post,
-        endpoint: {
-          route: routes.user,
-          controller: controllers.login,
-        },
+        method: "POST",
+        endpoint: { route: "user", action: "login" },
         payload: loginData,
-      }).send<LoginResponseProps>();
+      }).sendRequest<UserTypes.Mutations.LoginResponseParams>();
 
       return response;
     },
-    onSuccess: (loginData: BackendResponseProps<LoginResponseProps>) => {
-      const authDetails: AuthDetailsProps = {
+    onSuccess: (
+      loginData: GlobalTypes.BackendResponseParams<UserTypes.Mutations.LoginResponseParams>,
+    ) => {
+      const authDetails: GlobalTypes.AuthDetailsParams = {
         accessToken: loginData.data?.accessToken,
         currentUser: loginData.data?.currentUser,
         currentEmail: loginData.data?.currentEmail,
         name: loginData.data?.name,
       };
-      queryClient.setQueryData<AuthDetailsProps>(["authDetails"], authDetails);
+      queryClient.setQueryData<GlobalTypes.AuthDetailsParams>(["authDetails"], authDetails);
     },
   });
 

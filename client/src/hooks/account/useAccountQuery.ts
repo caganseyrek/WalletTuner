@@ -1,21 +1,19 @@
+import AccountHooksTypes from "@/types/account";
 import { useQuery } from "@tanstack/react-query";
 
-import { controllers, methods, Requester, routes } from "@/utils/requester";
+import Requester from "@/utils/requester";
 
-const useAccountQuery = (accountQueryData: AccountQueryRequestProps) => {
+const useAccountQuery = (accountQueryData: AccountHooksTypes.Queries.RequestParams) => {
   const account = useQuery({
     queryKey: ["accountQuery", accountQueryData],
     queryFn: async () => {
       const { accessToken, ...requestData } = accountQueryData;
       const response = await new Requester({
-        method: methods.post,
-        endpoint: {
-          route: routes.account,
-          controller: controllers.getAll,
-        },
+        method: "POST",
+        endpoint: { route: "account", action: "all" },
         accessToken: accessToken,
         payload: requestData,
-      }).send<AccountQueryResponseProps[]>();
+      }).sendRequest<AccountHooksTypes.Queries.ResponseProps[]>();
 
       return response;
     },

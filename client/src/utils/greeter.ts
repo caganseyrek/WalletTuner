@@ -1,7 +1,7 @@
 import i18next from "i18next";
 
 function getGreeting(name: string): string {
-  const currentHour = new Date().getHours();
+  const currentHour: number = new Date().getHours();
   let greeting: string;
 
   if (currentHour >= 5 && currentHour < 12) {

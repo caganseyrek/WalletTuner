@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import ComponentTypes from "@/types/components";
 import { Add, Cancel, Delete, Edit, Save } from "@mui/icons-material";
 import { Box, Button } from "@mui/material";
 import {
@@ -8,7 +9,6 @@ import {
   GridActionsCellItem,
   GridColDef,
   GridEventListener,
-  GridPaginationModel,
   GridRowEditStopReasons,
   GridRowId,
   GridRowModel,
@@ -21,7 +21,6 @@ import {
   GridToolbarDensitySelector,
   GridToolbarQuickFilter,
 } from "@mui/x-data-grid";
-import { UseMutateAsyncFunction } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import lodash from "lodash";
@@ -32,17 +31,6 @@ import gridLocaleText from "@/localization/gridLocaleText";
 
 import Snackbar from "./Snackbar";
 
-interface DataGridProps<TNew, TUpdate, TDelete> {
-  rowsProp: GridRowsProp;
-  columnsProp: GridColDef[];
-  paginationModel?: GridPaginationModel;
-  dataCategory: string;
-  newDataObject: object;
-  newDataFunction: UseMutateAsyncFunction<BackendResponseProps, Error, TNew, unknown>;
-  updateDataFunction: UseMutateAsyncFunction<BackendResponseProps, Error, TUpdate, unknown>;
-  deleteDataFunction: UseMutateAsyncFunction<BackendResponseProps, Error, TDelete, unknown>;
-}
-
 const DataGrid = <TNew, TUpdate, TDelete>({
   rowsProp,
   columnsProp,
@@ -52,10 +40,10 @@ const DataGrid = <TNew, TUpdate, TDelete>({
   newDataFunction,
   updateDataFunction,
   deleteDataFunction,
-}: DataGridProps<TNew, TUpdate, TDelete>) => {
+}: ComponentTypes.DataGridProps<TNew, TUpdate, TDelete>) => {
   const { t } = useTranslation(["data_grid"]);
 
-  const [dataState, setDataState] = useState<DataStateProps>({
+  const [dataState, setDataState] = useState<ComponentTypes.DataStateProps>({
     snackbarState: { isOpen: false, message: "" },
     isLoading: false,
     isSuccess: false,

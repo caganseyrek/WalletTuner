@@ -1,13 +1,9 @@
 import { FC } from "react";
 import { useTranslation } from "react-i18next";
 
+import ComponentTypes from "@/types/components";
 import { ErrorOutline } from "@mui/icons-material";
 import { Box, CircularProgress, SxProps, Typography } from "@mui/material";
-
-interface GridOverlayProps {
-  type: "loading" | "error";
-  message?: string;
-}
 
 const GridOverlayStyles: SxProps = {
   width: "100%",
@@ -23,7 +19,7 @@ const IconStyles: SxProps = {
   height: "30px",
 };
 
-const GridOverlay: FC<GridOverlayProps> = ({ type, message }) => {
+const GridOverlay: FC<ComponentTypes.GridOverlayProps> = ({ type, message }) => {
   const { t } = useTranslation(["data_grid"]);
 
   return (

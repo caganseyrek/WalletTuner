@@ -1,4 +1,6 @@
-export const supportedLocales: SupportedLocaleString[] = [
+import UserTypes from "@/types/user";
+
+export const supportedLocales: UserTypes.Settings.SupportedLocalFormats[] = [
   "en-US",
   "en-GB",
   "fr-FR",

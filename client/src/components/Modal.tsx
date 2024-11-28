@@ -1,5 +1,4 @@
-import { ReactNode } from "react";
-
+import ComponentTypes from "@/types/components";
 import { Close } from "@mui/icons-material";
 import {
   Box,
@@ -10,13 +9,6 @@ import {
   SxProps,
   Typography,
 } from "@mui/material";
-
-interface ModalProps {
-  open: boolean;
-  onClose: () => void;
-  title: string;
-  children: ReactNode;
-}
 
 const ModalStyles: SxProps = {
   display: "flex",
@@ -43,7 +35,7 @@ const ModalBodyStyles: SxProps = {
   overflowY: "auto",
 };
 
-const Modal = ({ open, onClose, title, children }: ModalProps) => {
+const Modal = ({ open, onClose, title, children }: ComponentTypes.ModalProps) => {
   return (
     <MUI_Modal open={open} onClose={onClose} sx={ModalStyles}>
       <Paper sx={{ width: 896 }}>

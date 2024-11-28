@@ -1,23 +1,21 @@
+import TransactionTypes from "@/types/transaction";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { controllers, methods, Requester, routes } from "@/utils/requester";
+import Requester from "@/utils/requester";
 
 const useTransactionUpdateMutation = () => {
   const queryClient = useQueryClient();
 
   const updateTransaction = useMutation({
     mutationKey: ["updateTransactionMutation"],
-    mutationFn: async (transactionUpdateData: TransactionUpdateRequestProps) => {
+    mutationFn: async (transactionUpdateData: TransactionTypes.Mutations.UpdateRequestParams) => {
       const { accessToken, ...requestData } = transactionUpdateData;
       const response = await new Requester({
-        method: methods.patch,
-        endpoint: {
-          route: routes.transaction,
-          controller: controllers.update,
-        },
+        method: "PATCH",
+        endpoint: { route: "transaction", action: "update" },
         accessToken: accessToken,
         payload: requestData,
-      }).send();
+      }).sendRequest();
 
       return response;
     },

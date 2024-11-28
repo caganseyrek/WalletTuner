@@ -1,23 +1,21 @@
+import TransactionTypes from "@/types/transaction";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { controllers, methods, Requester, routes } from "@/utils/requester";
+import Requester from "@/utils/requester";
 
 const useTransactionDeleteMutation = () => {
   const queryClient = useQueryClient();
 
   const deleteTransaction = useMutation({
     mutationKey: ["deleteTransactionMutation"],
-    mutationFn: async (transactionDeleteData: TransactionDeleteRequestProps) => {
+    mutationFn: async (transactionDeleteData: TransactionTypes.Mutations.DeleteRequestParams) => {
       const { accessToken, ...requestData } = transactionDeleteData;
       const response = await new Requester({
-        method: methods.delete,
-        endpoint: {
-          route: routes.transaction,
-          controller: controllers.delete,
-        },
+        method: "DELETE",
+        endpoint: { route: "transaction", action: "delete" },
         accessToken: accessToken,
         payload: requestData,
-      }).send();
+      }).sendRequest();
 
       return response;
     },

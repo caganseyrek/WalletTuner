@@ -1,24 +1,25 @@
-declare interface AccountQueryRequestProps extends EssentialRequestProps {
-  accountId?: string;
+import GlobalTypes from "./globals";
+
+namespace AccountHooksTypes {
+  type AccountName = { accountName: string };
+
+  export namespace Mutations {
+    export type CreateRequestParams = GlobalTypes.EssentialRequestParams & AccountName;
+    export type UpdateRequestParams = GlobalTypes.EssentialRequestParams & AccountName;
+    export type DeleteRequestParams = GlobalTypes.EssentialRequestParams & { accountId: string };
+  }
+
+  export namespace Queries {
+    export type RequestParams = GlobalTypes.EssentialRequestParams & { accountId?: string };
+    export interface ResponseProps {
+      _id: string;
+      accountName: string;
+      createdAt: string;
+      balance: number;
+      totalIncome: number;
+      totalExpense: number;
+    }
+  }
 }
 
-declare interface AccountCreateRequestProps extends EssentialRequestProps {
-  accountName: string;
-}
-
-declare interface AccountUpdateRequestProps extends EssentialRequestProps {
-  accountName: string;
-}
-
-declare interface AccountDeleteRequestProps extends EssentialRequestProps {
-  accountId: string;
-}
-
-declare interface AccountQueryResponseProps {
-  _id: string;
-  accountName: string;
-  createdAt: string;
-  balance: number;
-  totalIncome: number;
-  totalExpense: number;
-}
+export default AccountHooksTypes;

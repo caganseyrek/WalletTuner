@@ -1,3 +1,4 @@
+import UserTypes from "@/types/user";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 function useSettings() {
@@ -5,7 +6,8 @@ function useSettings() {
 
   return useQuery({
     queryKey: ["userSettings"],
-    queryFn: () => queryClient.getQueryData<SettingsResponseProps>(["userSettings"]),
+    queryFn: () =>
+      queryClient.getQueryData<UserTypes.Settings.SettingsResponseProps>(["userSettings"]),
     initialData: {
       preferredFormat: "en-US",
       preferredCurrency: "USD",

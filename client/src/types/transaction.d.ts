@@ -1,31 +1,40 @@
-declare interface TransactionQueryRequestProps extends EssentialRequestProps {}
+import GlobalTypes from "./globals";
 
-declare interface TransactionCreateRequestProps extends EssentialRequestProps {
-  accountId: string;
-  transactionType: "inc" | "exp";
-  transactionDescription: string;
-  transactionDateTime: string;
-  transactionValue: number;
+namespace TransactionTypes {
+  export namespace Mutations {
+    export interface CreateRequestParams extends GlobalTypes.EssentialRequestParams {
+      accountId: string;
+      transactionType: "inc" | "exp";
+      transactionDescription: string;
+      transactionDateTime: string;
+      transactionValue: number;
+    }
+
+    export interface UpdateRequestParams extends GlobalTypes.EssentialRequestParams {
+      accountId: string;
+      transactionType: "inc" | "exp";
+      transactionDescription: string;
+      transactionDateTime: string;
+      transactionValue: number;
+    }
+
+    export interface DeleteRequestParams extends GlobalTypes.EssentialRequestParams {
+      transactionId: string;
+    }
+  }
+
+  export namespace Queries {
+    export type TransactionQueryRequestProps = GlobalTypes.EssentialRequestParams;
+    export interface TransactionQueryResponseProps {
+      _id: string;
+      accountId: string;
+      belongsToUser: string;
+      transactionType: "inc" | "exp";
+      transactionDescription: string;
+      transactionDateTime: string;
+      transactionValue: number;
+    }
+  }
 }
 
-declare interface TransactionUpdateRequestProps extends EssentialRequestProps {
-  accountId: string;
-  transactionType: "inc" | "exp";
-  transactionDescription: string;
-  transactionDateTime: string;
-  transactionValue: number;
-}
-
-declare interface TransactionDeleteRequestProps extends EssentialRequestProps {
-  transactionId: string;
-}
-
-declare interface TransactionQueryResponseProps {
-  _id: string;
-  accountId: string;
-  belongsToUser: string;
-  transactionType: "inc" | "exp";
-  transactionDescription: string;
-  transactionDateTime: string;
-  transactionValue: number;
-}
+export default TransactionTypes;

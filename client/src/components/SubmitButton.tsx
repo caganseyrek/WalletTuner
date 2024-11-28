@@ -1,13 +1,9 @@
 import { useTranslation } from "react-i18next";
 
+import ComponentTypes from "@/types/components";
 import { Button, CircularProgress } from "@mui/material";
 
-interface SubmitButtonProps {
-  isLoading: boolean;
-  isSuccess: boolean;
-}
-
-const SubmitButtonText = ({ isLoading }: Omit<SubmitButtonProps, "isSuccess">) => {
+const SubmitButtonText = ({ isLoading }: Omit<ComponentTypes.SubmitButtonProps, "isSuccess">) => {
   const { t } = useTranslation();
 
   if (isLoading) {
@@ -16,7 +12,7 @@ const SubmitButtonText = ({ isLoading }: Omit<SubmitButtonProps, "isSuccess">) =
   return t("forms.buttons.loginButton");
 };
 
-const SubmitButton = ({ isLoading, isSuccess }: SubmitButtonProps) => {
+const SubmitButton = ({ isLoading, isSuccess }: ComponentTypes.SubmitButtonProps) => {
   return (
     <Button
       variant="contained"

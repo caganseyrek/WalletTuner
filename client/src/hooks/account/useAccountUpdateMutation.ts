@@ -1,23 +1,21 @@
+import AccountHooksTypes from "@/types/account";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { controllers, methods, Requester, routes } from "@/utils/requester";
+import Requester from "@/utils/requester";
 
 const useAccountUpdateMutation = () => {
   const queryClient = useQueryClient();
 
   const accountUpdate = useMutation({
     mutationKey: ["updateAccountMutation"],
-    mutationFn: async (accountUpdateData: AccountUpdateRequestProps) => {
+    mutationFn: async (accountUpdateData: AccountHooksTypes.Mutations.UpdateRequestParams) => {
       const { accessToken, ...requestData } = accountUpdateData;
       const response = await new Requester({
-        method: methods.patch,
-        endpoint: {
-          route: routes.account,
-          controller: controllers.update,
-        },
+        method: "PATCH",
+        endpoint: { route: "account", action: "update" },
         accessToken: accessToken,
         payload: requestData,
-      }).send();
+      }).sendRequest();
 
       return response;
     },

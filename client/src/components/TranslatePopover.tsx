@@ -1,15 +1,10 @@
 import { FC } from "react";
 import { useTranslation } from "react-i18next";
 
+import ComponentTypes from "@/types/components";
 import { MenuItem, MenuList, Popover } from "@mui/material";
 
-/* eslint no-unused-vars: "off" */
-interface TranslatePopoverProps {
-  anchor: HTMLButtonElement | null;
-  setAnchor: (anchor: HTMLButtonElement | null) => void;
-}
-
-const TranslatePopover: FC<TranslatePopoverProps> = ({ anchor, setAnchor }) => {
+const TranslatePopover: FC<ComponentTypes.TranslatePopoverProps> = ({ anchor, setAnchor }) => {
   const { i18n } = useTranslation();
 
   return (

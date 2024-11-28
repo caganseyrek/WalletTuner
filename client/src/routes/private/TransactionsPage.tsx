@@ -1,5 +1,7 @@
 import { useTranslation } from "react-i18next";
 
+import PageTypes from "@/types/routes";
+import TransactionTypes from "@/types/transaction";
 import { GridColDef } from "@mui/x-data-grid";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
@@ -14,16 +16,6 @@ import useTransactionQuery from "@/hooks/transaction/useTransactionQuery";
 import useTransactionUpdateMutation from "@/hooks/transaction/useTransactionUpdateMutation";
 import useAuthDetails from "@/hooks/useAuthDetails";
 import useFormatter from "@/hooks/useFormatter";
-
-interface transactionDataRowProps {
-  id: number;
-  uniqueId: string;
-  accountId: string;
-  transactionType: "inc" | "exp";
-  transactionDescription: string;
-  transactionDateTime: string;
-  transactionValue: number;
-}
 
 const TransactionsPage = () => {
   const { data: authDetails } = useAuthDetails();
@@ -141,7 +133,7 @@ const TransactionsPage = () => {
     },
   ];
 
-  const transactionsNewDataObject: Omit<transactionDataRowProps, "id"> = {
+  const transactionsNewDataObject: Omit<PageTypes.TransactionDataRowProps, "id"> = {
     uniqueId: "",
     accountId: "",
     transactionType: "exp",
@@ -150,7 +142,7 @@ const TransactionsPage = () => {
     transactionValue: 0,
   };
 
-  const transactionDataRow: transactionDataRowProps[] = transactions.map(
+  const transactionDataRow: PageTypes.TransactionDataRowProps[] = transactions.map(
     (transactionData, index) => ({
       id: index + 1,
       uniqueId: transactionData._id,
@@ -164,9 +156,9 @@ const TransactionsPage = () => {
 
   return (
     <DataGrid<
-      TransactionCreateRequestProps,
-      TransactionUpdateRequestProps,
-      TransactionDeleteRequestProps
+      TransactionTypes.Mutations.CreateRequestParams,
+      TransactionTypes.Mutations.UpdateRequestParams,
+      TransactionTypes.Mutations.DeleteRequestParams
     >
       key={JSON.stringify(transactionDataRow)}
       rowsProp={transactionDataRow}

@@ -1,19 +1,17 @@
+import UserTypes from "@/types/user";
 import { useMutation } from "@tanstack/react-query";
 
-import { controllers, methods, Requester, routes } from "@/utils/requester";
+import Requester from "@/utils/requester";
 
 const useRegisterMutation = () => {
   const register = useMutation({
     mutationKey: ["registerMutation"],
-    mutationFn: async (registerData: RegisterRequestProps) => {
+    mutationFn: async (registerData: UserTypes.Mutations.RegisterRequestParams) => {
       const response = await new Requester({
-        method: methods.post,
-        endpoint: {
-          route: routes.user,
-          controller: controllers.register,
-        },
+        method: "POST",
+        endpoint: { route: "user", action: "register" },
         payload: registerData,
-      }).send();
+      }).sendRequest();
 
       return response;
     },

@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 
 import { LoginFormData, loginSchema } from "@/schemas/loginSchema";
+import ComponentTypes from "@/types/components";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Divider, TextField } from "@mui/material";
 
@@ -26,7 +27,7 @@ const LoginPage = () => {
   const { mutateAsync: settingsMutateAsync } = useSettingsMutation();
   const { mutateAsync: loginMutateAsync } = useLoginMutation();
 
-  const [dataState, setDataState] = useState<DataStateProps>({
+  const [dataState, setDataState] = useState<ComponentTypes.DataStateProps>({
     snackbarState: { isOpen: false, message: "" },
     isLoading: false,
     isSuccess: false,

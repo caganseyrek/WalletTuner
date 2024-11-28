@@ -1,23 +1,21 @@
+import AccountHooksTypes from "@/types/account";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { controllers, methods, Requester, routes } from "@/utils/requester";
+import Requester from "@/utils/requester";
 
 const useAccountCreateMutation = () => {
   const queryClient = useQueryClient();
 
   const accountCreate = useMutation({
     mutationKey: ["createAccountMutation"],
-    mutationFn: async (accountCreateData: AccountCreateRequestProps) => {
+    mutationFn: async (accountCreateData: AccountHooksTypes.Mutations.CreateRequestParams) => {
       const { accessToken, ...requestData } = accountCreateData;
       const response = await new Requester({
-        method: methods.post,
-        endpoint: {
-          route: routes.account,
-          controller: controllers.create,
-        },
+        method: "POST",
+        endpoint: { route: "account", action: "create" },
         accessToken: accessToken,
         payload: requestData,
-      }).send();
+      }).sendRequest();
 
       return response;
     },

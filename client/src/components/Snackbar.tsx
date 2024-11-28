@@ -1,14 +1,7 @@
-import { Dispatch, SetStateAction } from "react";
+import ComponentTypes from "@/types/components";
+import { Alert, Fade, Snackbar as SnackbarComponent } from "@mui/material";
 
-import { Alert, AlertColor, Fade, Snackbar as SnackbarComponent } from "@mui/material";
-
-interface SnackbarProps {
-  snackbarState: DataStateProps;
-  setSnackbarState: Dispatch<SetStateAction<DataStateProps>>;
-  severity: AlertColor;
-}
-
-const Snackbar = ({ snackbarState, setSnackbarState, severity }: SnackbarProps) => {
+const Snackbar = ({ snackbarState, setSnackbarState, severity }: ComponentTypes.SnackbarProps) => {
   return (
     <SnackbarComponent
       open={snackbarState.snackbarState?.isOpen}
@@ -18,7 +11,7 @@ const Snackbar = ({ snackbarState, setSnackbarState, severity }: SnackbarProps) 
         if (reason === "clickaway") {
           return;
         }
-        setSnackbarState((dataState: DataStateProps) => ({
+        setSnackbarState((dataState: ComponentTypes.DataStateProps) => ({
           ...dataState,
           snackbarState: {
             isOpen: false,

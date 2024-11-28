@@ -1,14 +1,12 @@
-import useSettings from "./useSettings";
+import HookTypes from "@/types/hook";
 
-interface useFormatterProps {
-  value: number;
-}
+import useSettings from "./useSettings";
 
 function useFormatter() {
   const { data: savedSettings } = useSettings();
 
   if (!savedSettings) {
-    return ({ value }: useFormatterProps) =>
+    return ({ value }: HookTypes.FormatterParams) =>
       new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "USD",
@@ -22,7 +20,7 @@ function useFormatter() {
   const currency = savedSettings.preferredCurrency;
   const currencyDisplayType = savedSettings.preferredCurrencyDisplay;
 
-  return ({ value }: useFormatterProps) =>
+  return ({ value }: HookTypes.FormatterParams) =>
     new Intl.NumberFormat([regionalFormat, "en-US"], {
       style: "currency",
       currency: currency,

@@ -1,14 +1,9 @@
-import { FC, MouseEventHandler, ReactNode } from "react";
+import { FC } from "react";
 
+import ComponentTypes from "@/types/components";
 import { IconButton, Tooltip } from "@mui/material";
 
-interface AppBarButtonProps {
-  tooltip: string;
-  icon: ReactNode;
-  onClick?: MouseEventHandler<HTMLButtonElement>;
-}
-
-const AppBarButton: FC<AppBarButtonProps> = ({ tooltip, icon, onClick }) => {
+const AppBarButton: FC<ComponentTypes.AppBarButtonProps> = ({ tooltip, icon, onClick }) => {
   return (
     <Tooltip title={tooltip}>
       <IconButton onClick={onClick}>{icon}</IconButton>

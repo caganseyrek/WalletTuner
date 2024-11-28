@@ -1,9 +1,11 @@
 import { useNavigate } from "react-router-dom";
 
+import ComponentTypes from "@/types/components";
+
 import useAuthDetails from "@/hooks/useAuthDetails";
 import useOnMountEffect from "@/hooks/useOnMountEffect";
 
-const AuthCheckProvider = ({ children }: AuthCheckProps) => {
+const AuthCheckProvider = ({ children }: ComponentTypes.AuthCheckProps) => {
   const navigate = useNavigate();
   const { data: authDetails } = useAuthDetails();
 

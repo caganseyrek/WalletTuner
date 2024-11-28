@@ -1,21 +1,21 @@
+import TransactionTypes from "@/types/transaction";
 import { useQuery } from "@tanstack/react-query";
 
-import { controllers, methods, Requester, routes } from "@/utils/requester";
+import Requester from "@/utils/requester";
 
-const useTransactionQuery = (transactionQueryData: TransactionQueryRequestProps) => {
+const useTransactionQuery = (
+  transactionQueryData: TransactionTypes.Queries.TransactionQueryRequestProps,
+) => {
   const transaction = useQuery({
     queryKey: ["transactionQuery", transactionQueryData],
     queryFn: async () => {
       const { accessToken, ...requestData } = transactionQueryData;
       const response = await new Requester({
-        method: methods.post,
-        endpoint: {
-          route: routes.transaction,
-          controller: controllers.getAll,
-        },
+        method: "PATCH",
+        endpoint: { route: "transaction", action: "all" },
         accessToken: accessToken,
         payload: requestData,
-      }).send<TransactionQueryResponseProps[]>();
+      }).sendRequest<TransactionTypes.Queries.TransactionQueryRequestProps[]>();
 
       return response;
     },

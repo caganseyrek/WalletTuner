@@ -1,5 +1,7 @@
 import { useTranslation } from "react-i18next";
 
+import AccountHooksTypes from "@/types/account";
+import PageTypes from "@/types/routes";
 import { GridColDef } from "@mui/x-data-grid";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
@@ -13,14 +15,6 @@ import useAccountQuery from "@/hooks/account/useAccountQuery";
 import useAccountUpdateMutation from "@/hooks/account/useAccountUpdateMutation";
 import useAuthDetails from "@/hooks/useAuthDetails";
 import useFormatter from "@/hooks/useFormatter";
-
-interface accountDataRowProps {
-  id: number;
-  uniqueId: string;
-  accountName: string;
-  balance: number;
-  createdAt: string;
-}
 
 const AccountsPage = () => {
   const { data: authDetails } = useAuthDetails();
@@ -99,14 +93,14 @@ const AccountsPage = () => {
     },
   ];
 
-  const accountsNewDataObject: Omit<accountDataRowProps, "id"> = {
+  const accountsNewDataObject: Omit<PageTypes.AccountDataRowParams, "id"> = {
     uniqueId: "",
     accountName: "",
     balance: 0,
     createdAt: "",
   };
 
-  const accountDataRow: accountDataRowProps[] = accounts.map((accountData, index) => ({
+  const accountDataRow: PageTypes.AccountDataRowParams[] = accounts.map((accountData, index) => ({
     id: index + 1,
     uniqueId: accountData._id,
     accountName: accountData.accountName,
@@ -115,7 +109,11 @@ const AccountsPage = () => {
   }));
 
   return (
-    <DataGrid<AccountCreateRequestProps, AccountUpdateRequestProps, AccountDeleteRequestProps>
+    <DataGrid<
+      AccountHooksTypes.Mutations.CreateRequestParams,
+      AccountHooksTypes.Mutations.UpdateRequestParams,
+      AccountHooksTypes.Mutations.DeleteRequestParams
+    >
       key={JSON.stringify(accountDataRow)} /* for reloading the data grid */
       rowsProp={accountDataRow}
       columnsProp={columns}

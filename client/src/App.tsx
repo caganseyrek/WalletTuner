@@ -10,9 +10,7 @@ import { darkColor, lightColor } from "./shared/globals.style";
 import Routes from "./Routes";
 
 const App = () => {
-  const IS_DEV = Boolean(import.meta.env.VITE_APP_IS_DEV);
-
-  const queryClient = new QueryClient({
+  const queryClient: QueryClient = new QueryClient({
     defaultOptions: {
       queries: { retry: 5, retryDelay: 2000 },
     },
@@ -56,7 +54,7 @@ const App = () => {
       <CssBaseline />
       <QueryClientProvider client={queryClient}>
         <LoadLanguage children={<Routes />} />
-        {IS_DEV ? <ReactQueryDevtools initialIsOpen={false} /> : null}
+        <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </ThemeProvider>
   );

@@ -1,11 +1,13 @@
 import { useTranslation } from "react-i18next";
 
+import ComponentTypes from "@/types/components";
+
 import useOnMountEffect from "@/hooks/useOnMountEffect";
 
 const supportedLanguages = ["en", "tr"];
 const defaultLanguage = "en";
 
-const LoadLanguage = ({ children }: LoadLanguageProps) => {
+const LoadLanguage = ({ children }: ComponentTypes.LoadLanguageProps) => {
   const { i18n } = useTranslation();
 
   useOnMountEffect(() => {

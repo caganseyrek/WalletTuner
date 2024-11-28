@@ -1,11 +1,7 @@
 import { FC } from "react";
 
+import ComponentTypes from "@/types/components";
 import { Box, SxProps, Typography } from "@mui/material";
-
-interface FormHeaderProps {
-  title: string;
-  subtitle: string;
-}
 
 const FormHeaderStyles: SxProps = {
   paddingTop: "10px",
@@ -18,7 +14,7 @@ const FormHeaderStyles: SxProps = {
   rowGap: "10px",
 };
 
-const FormHeader: FC<FormHeaderProps> = ({ title, subtitle }) => {
+const FormHeader: FC<ComponentTypes.FormHeaderProps> = ({ title, subtitle }) => {
   return (
     <Box sx={FormHeaderStyles}>
       <Typography variant="h3">{title}</Typography>

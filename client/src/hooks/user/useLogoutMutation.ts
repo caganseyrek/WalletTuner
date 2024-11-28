@@ -1,37 +1,36 @@
+import GlobalTypes from "@/types/globals";
+import UserTypes from "@/types/user";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { controllers, methods, Requester, routes } from "@/utils/requester";
+import Requester from "@/utils/requester";
 
 const useLogoutMutation = () => {
   const queryClient = useQueryClient();
 
   const logout = useMutation({
     mutationKey: ["logoutMutation"],
-    mutationFn: async (logoutData: LogoutRequestProps) => {
+    mutationFn: async (logoutData: UserTypes.Mutations.LogoutRequestParams) => {
       const { accessToken, ...requestData } = logoutData;
       const response = await new Requester({
-        method: methods.post,
-        endpoint: {
-          route: routes.user,
-          controller: controllers.logout,
-        },
-        headers: { withCredentials: true },
+        method: "POST",
+        endpoint: { route: "user", action: "logout" },
         accessToken: accessToken,
         payload: requestData,
-      }).send();
+        includeCookies: true,
+      }).sendRequest();
 
       return response;
     },
     onSuccess: () => {
       queryClient.resetQueries();
 
-      const emptyAuthDetails: AuthDetailsProps = {
+      const emptyAuthDetails: GlobalTypes.AuthDetailsParams = {
         accessToken: undefined,
         currentUser: undefined,
         currentEmail: undefined,
         name: undefined,
       };
-      queryClient.setQueryData<AuthDetailsProps>(["authDetails"], emptyAuthDetails);
+      queryClient.setQueryData<GlobalTypes.AuthDetailsParams>(["authDetails"], emptyAuthDetails);
     },
   });
 

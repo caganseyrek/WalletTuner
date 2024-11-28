@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Link as RouterLink } from "react-router-dom";
 
 import { RegisterFormData, registerSchema } from "@/schemas/registerSchema";
+import ComponentTypes from "@/types/components";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Divider, TextField } from "@mui/material";
 
@@ -22,7 +23,7 @@ const RegisterPage = () => {
 
   const { mutateAsync: registerMutateAsync } = useRegisterMutation();
 
-  const [dataState, setDataState] = useState<DataStateProps>({
+  const [dataState, setDataState] = useState<ComponentTypes.DataStateProps>({
     snackbarState: { isOpen: false, message: "" },
     isLoading: false,
     isSuccess: false,
