@@ -30,7 +30,7 @@ Flexible personal finance tracking app
    Client's .env file include variety of variables such as database uri and password, but server's .env file only needs strings of random characters for secrets. You can generate secrets for server's .env file by running the `generate_secrets` script.
 
    ```bash
-   ./server/config/generate_secrets.sh
+   ./server/.scripts/generate_secrets.sh
    ```
 
 ### Starting the Project
@@ -43,4 +43,4 @@ After setting everything up, you can start the project by running the `run` scri
 
 ## Documentation
 
-You can find the documentation on how to use the app and details about how it works at ~~https://caganseyrek.com/projects/WalletTuner/docs~~
+You can find the documentation on how to use the app and details about how it works at ~~https://caganseyrek.com/projects/WalletTuner~~
