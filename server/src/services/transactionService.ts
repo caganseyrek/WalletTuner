@@ -26,7 +26,7 @@ class TransactionService {
     if (!transactions) {
       throw new AppError({
         statusCode: statusCodes.notFound,
-        messageKey: "transaction.error.noTransactionsFound",
+        message: "transaction.error.noTransactionsFound",
       });
     }
     return transactions;
@@ -47,7 +47,7 @@ class TransactionService {
     if (!accountDetails) {
       throw new AppError({
         statusCode: statusCodes.internalServerError,
-        messageKey: "statusMessages.internalError",
+        message: "statusMessages.internalError",
       });
     }
     await this.transactionRepository.createTransaction({
@@ -95,7 +95,7 @@ class TransactionService {
     if (!currentTransactionDetails) {
       throw new AppError({
         statusCode: statusCodes.internalServerError,
-        messageKey: "statusMessages.internalError",
+        message: "statusMessages.internalError",
       });
     }
     const accountDetails: AccountTypes.Global.AccountDetails = await this.accountRepository.findAccountById({
@@ -105,7 +105,7 @@ class TransactionService {
     if (!accountDetails) {
       throw new AppError({
         statusCode: statusCodes.internalServerError,
-        messageKey: "statusMessages.internalError",
+        message: "statusMessages.internalError",
       });
     }
     const { newAccountBalance, newTotalIncome, newTotalExpense } = BalanceHelper.updateBalances({
@@ -147,7 +147,7 @@ class TransactionService {
     if (!transactionDetails) {
       throw new AppError({
         statusCode: statusCodes.internalServerError,
-        messageKey: "statusMessages.internalError",
+        message: "statusMessages.internalError",
       });
     }
     const accountDetails: AccountTypes.Global.AccountDetails = await this.accountRepository.findAccountById({
@@ -157,7 +157,7 @@ class TransactionService {
     if (!accountDetails) {
       throw new AppError({
         statusCode: statusCodes.internalServerError,
-        messageKey: "statusMessages.internalError",
+        message: "statusMessages.internalError",
       });
     }
     const { newAccountBalance, newTotalIncome, newTotalExpense } = BalanceHelper.subtractDeletedTransactionValue({

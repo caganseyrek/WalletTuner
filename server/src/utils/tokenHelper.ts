@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-import env from "@/config/env";
+import env from "@/utils/envHelper";
 
 import { TokenHelperTypes } from "@/types/utils";
 

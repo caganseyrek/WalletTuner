@@ -25,20 +25,21 @@ class AccountService {
     if (!accounts || accounts.length === 0) {
       throw new AppError({
         statusCode: statusCodes.notFound,
-        messageKey: "account.error.noAccountsFound",
+        message: "account.error.noAccountsFound",
       });
     }
     return accounts;
   }
 
   async createAccount({ currentUser, accountName }: AccountTypes.Services.CreateAccountParams): Promise<void> {
-    const doesAccountExists: AccountTypes.Global.AccountDetails[] = await this.accountRepository.findAccountByUserId({
+    const doesAccountExists: AccountTypes.Global.AccountDetails[] = await this.accountRepository.findAccountByName({
       currentUser: currentUser,
+      accountName: accountName,
     });
     if (doesAccountExists.length > 0) {
       throw new AppError({
         statusCode: statusCodes.conflict,
-        messageKey: "account.error.accountExists",
+        message: "account.error.accountExists",
       });
     }
     await this.accountRepository.createAccount({
@@ -60,7 +61,7 @@ class AccountService {
     if (doesAccountExists.length > 0) {
       throw new AppError({
         statusCode: statusCodes.conflict,
-        messageKey: "account.error.accountExists",
+        message: "account.error.accountExists",
       });
     }
     const currentAccountDetails: AccountTypes.Global.AccountDetails = await this.accountRepository.findAccountById({
@@ -70,7 +71,7 @@ class AccountService {
     if (!currentAccountDetails) {
       throw new AppError({
         statusCode: statusCodes.internalServerError,
-        messageKey: "statusMessages.internalError",
+        message: "statusMessages.internalError",
       });
     }
     await this.accountRepository.updateAccount({
@@ -87,14 +88,14 @@ class AccountService {
 
   async deleteAccount({ currentUser, accountId }: AccountTypes.Services.DeleteAccountParams): Promise<void> {
     const relatedTransactions: TransactionTypes.Global.TransactionDetails[] =
-      await this.transactionRepository.findTransactionByAccountId({
+      await this.transactionRepository.findTransactionsByAccountId({
         currentUser: currentUser,
         accountId: accountId,
       });
     if (relatedTransactions.length > 0) {
       throw new AppError({
         statusCode: statusCodes.conflict,
-        messageKey: "account.error.deleteTransactionsFirst",
+        message: "account.error.deleteTransactionsFirst",
       });
     }
     await this.accountRepository.deleteAccount({ currentUser: currentUser, accountId: accountId });

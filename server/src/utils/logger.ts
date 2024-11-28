@@ -8,7 +8,7 @@ const logger = winston.createLogger({
       return `[${timestamp}] ${level.toUpperCase()}: ${message}`;
     }),
   ),
-  transports: [new winston.transports.Console(), new winston.transports.File({ filename: "../../logs/debug.log" })],
+  transports: [new winston.transports.Console()],
 });
 
 export default logger;

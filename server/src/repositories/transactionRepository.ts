@@ -9,16 +9,16 @@ import statusCodes from "@/utils/statusCodes";
 import TransactionTypes from "@/types/transactions";
 
 class TransactionRepository {
-  async findTransactionByAccountId({
+  async findTransactionsByAccountId({
     currentUser,
     accountId,
-  }: TransactionTypes.Repository.FindTransactionByAccountIdParams): Promise<
+  }: TransactionTypes.Repository.FindTransactionsByAccountIdParams): Promise<
     TransactionTypes.Global.TransactionDetails[]
   > {
-    const transaction: TransactionTypes.Global.TransactionDetails[] = await transactionModel
-      .findOne({ belongsToUser: currentUser, accountId: accountId })
+    const transactions: TransactionTypes.Global.TransactionDetails[] = await transactionModel
+      .find({ belongsToUser: currentUser, accountId: accountId })
       .exec();
-    return transaction;
+    return transactions;
   }
 
   async findTransactionById({
@@ -65,7 +65,7 @@ class TransactionRepository {
       logger.error(`An error occured while saving a new transaction that belongs to user id ${belongsToUser}`);
       throw new AppError({
         statusCode: statusCodes.internalServerError,
-        messageKey: "statusMessages.internalError",
+        message: "statusMessages.internalError",
       });
     }
     return saveNewTransaction;
@@ -94,7 +94,7 @@ class TransactionRepository {
       logger.error(`An error occured while updating a transaction with id ${transactionId}`);
       throw new AppError({
         statusCode: statusCodes.internalServerError,
-        messageKey: "statusMessages.internalError",
+        message: "statusMessages.internalError",
       });
     }
     return;
@@ -111,7 +111,7 @@ class TransactionRepository {
       logger.error(`An error occured while deleting a transaction with id ${transactionId}`);
       throw new AppError({
         statusCode: statusCodes.internalServerError,
-        messageKey: "statusMessages.internalError",
+        message: "statusMessages.internalError",
       });
     }
     return;

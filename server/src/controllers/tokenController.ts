@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 
 import TokenService from "@/services/tokenService";
 
-import generateResponse from "@/utils/responseHandler";
+import ResponseHelper from "@/utils/responseHelper";
 import statusCodes from "@/utils/statusCodes";
 
 import TokenTypes from "@/types/token";
@@ -17,7 +17,7 @@ async function newAccessToken(req: Request, res: Response, next: NextFunction) {
       refreshToken: refreshToken,
     });
     return res.status(statusCodes.success).json(
-      generateResponse({
+      ResponseHelper.generateResponse({
         isSuccess: true,
         message: "",
         data: { accessToken: newAccessToken },

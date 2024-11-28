@@ -54,7 +54,7 @@ class AccountRepository {
       logger.error(`An error occured while saving a new account that belongs to user id ${currentUser}`);
       throw new AppError({
         statusCode: statusCodes.internalServerError,
-        messageKey: "statusMessages.internalError",
+        message: "statusMessages.internalError",
       });
     }
     return newAccountObject;
@@ -83,7 +83,7 @@ class AccountRepository {
       logger.error(`An error occured while updating a accounts with id ${accountId}`);
       throw new AppError({
         statusCode: statusCodes.internalServerError,
-        messageKey: "statusMessages.internalError",
+        message: "statusMessages.internalError",
       });
     }
     return;
@@ -95,7 +95,7 @@ class AccountRepository {
       logger.error(`An error occured while deleting a account with id ${accountId}`);
       throw new AppError({
         statusCode: statusCodes.internalServerError,
-        messageKey: "statusMessages.internalError",
+        message: "statusMessages.internalError",
       });
     }
     return;

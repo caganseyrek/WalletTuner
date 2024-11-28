@@ -2,10 +2,10 @@ import { NextFunction, Request, Response } from "express";
 
 import UserService from "@/services/userService";
 
-import generateResponse from "@/utils/responseHandler";
+import env from "@/utils/envHelper";
+import ResponseHelper from "@/utils/responseHelper";
 import statusCodes from "@/utils/statusCodes";
-
-import env from "@/config/env";
+import TranslationHelper from "@/utils/translationHelper";
 
 import UserTypes from "@/types/user";
 
@@ -20,15 +20,15 @@ async function loginUser(req: Request, res: Response, next: NextFunction) {
     };
     const loginDetails: UserTypes.Globals.LoginDetails = await userService.loginUser(loginInfo);
     res.cookie("refreshToken", loginDetails.tokens.refreshToken, {
-      domain: env.CLIENT_URL,
+      domain: new URL(env.CLIENT_URL).hostname,
       httpOnly: true,
       maxAge: 60000 * 60 * 24 * 1,
       signed: true,
     });
     return res.status(statusCodes.success).json(
-      generateResponse({
+      ResponseHelper.generateResponse({
         isSuccess: true,
-        message: req.t("user.success.loginSuccessful"),
+        message: TranslationHelper.translate(req, "user.success.loginSuccessful"),
         data: {
           name: loginDetails.name,
           currentUser: loginDetails.currentUser,
@@ -47,9 +47,9 @@ async function logoutUser(req: Request, res: Response, next: NextFunction) {
     await userService.logoutUser({ currentUser: currentUser });
     res.clearCookie("refreshToken", { httpOnly: true, secure: true });
     return res.status(statusCodes.success).json(
-      generateResponse({
+      ResponseHelper.generateResponse({
         isSuccess: true,
-        message: req.t("user.success.logoutSuccessful"),
+        message: TranslationHelper.translate(req, "user.success.logoutSuccessful"),
         data: null,
       }),
     );
@@ -69,9 +69,9 @@ async function registerUser(req: Request, res: Response, next: NextFunction) {
     };
     await userService.createUser(userDetails);
     return res.status(statusCodes.created).json(
-      generateResponse({
+      ResponseHelper.generateResponse({
         isSuccess: true,
-        message: req.t("user.success.registerSuccessful"),
+        message: TranslationHelper.translate(req, "user.success.registerSuccessful"),
         data: null,
       }),
     );
@@ -104,9 +104,9 @@ async function updateUser(req: Request, res: Response, next: NextFunction) {
     };
     await userService.updateUser(updatedUserDetails);
     return res.status(statusCodes.success).json(
-      generateResponse({
+      ResponseHelper.generateResponse({
         isSuccess: true,
-        message: req.t("user.success.updateSuccessful"),
+        message: TranslationHelper.translate(req, "user.success.updateSuccessful"),
         data: null,
       }),
     );
@@ -120,9 +120,9 @@ async function deleteUser(req: Request, res: Response, next: NextFunction) {
     const { currentUser, password }: UserTypes.Controller.DeleteUserParams = req.body;
     await userService.deleteUser({ currentUser: currentUser, password: password });
     return res.status(statusCodes.success).json(
-      generateResponse({
+      ResponseHelper.generateResponse({
         isSuccess: true,
-        message: req.t("user.success.deleteSuccessful"),
+        message: TranslationHelper.translate(req, "user.success.deleteSuccessful"),
         data: null,
       }),
     );
@@ -138,7 +138,7 @@ async function getUserSettings(req: Request, res: Response, next: NextFunction) 
       currentUser: currentUser,
     });
     return res.status(statusCodes.success).json(
-      generateResponse({
+      ResponseHelper.generateResponse({
         isSuccess: true,
         message: "",
         data: {

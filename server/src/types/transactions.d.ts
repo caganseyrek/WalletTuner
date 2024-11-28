@@ -14,7 +14,7 @@ namespace TransactionTypes {
     }
   }
   export namespace Repository {
-    export type FindTransactionByAccountIdParams = Identifier & Pick<Global.TransactionDetails, "accountId">;
+    export type FindTransactionsByAccountIdParams = Identifier & Pick<Global.TransactionDetails, "accountId">;
     export type FindTransactionByIdParams = Identifier & TransactionId;
     export type FindTransactionsByUserIdParams = Identifier;
     export type CreateTransactionParams = Omit<Global.TransactionDetails, "_id">;

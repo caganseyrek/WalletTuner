@@ -42,7 +42,7 @@ class TokenRepository {
       logger.error(`An error occured while saving a new token belongs to user ID ${currentUser}`);
       throw new AppError({
         statusCode: statusCodes.internalServerError,
-        messageKey: "statusMessages.internalError",
+        message: "statusMessages.internalError",
       });
     }
 
@@ -58,7 +58,7 @@ class TokenRepository {
         } catch {
           throw new AppError({
             statusCode: statusCodes.internalServerError,
-            messageKey: "statusMessages.internalError",
+            message: "statusMessages.internalError",
           });
         }
       });

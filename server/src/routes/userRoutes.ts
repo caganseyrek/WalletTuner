@@ -12,11 +12,11 @@ const router: Router = express.Router();
 
 const middlewares: MiddlewareArray = {
   login: [validate(schemas.loginUserSchema)],
-  logout: [auth, validate(schemas.identifierSchema)],
+  logout: [auth, validate(schemas.logoutSchema)],
   register: [validate(schemas.registerUserSchema)],
   update: [auth, validate(schemas.updateUserSchema)],
   delete: [auth, validate(schemas.deleteUserSchema)],
-  settings: [auth, validate(schemas.identifierSchema)],
+  settings: [auth, validate(schemas.getUserSettingsSchema)],
 };
 
 router.post("/login", middlewares.login, userController.loginUser);

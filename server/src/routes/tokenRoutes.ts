@@ -1,6 +1,6 @@
 import express, { Router } from "express";
 
-import newTokenController from "@/controllers/token/newToken";
+import tokenController from "@/controllers/tokenController";
 
 import * as schemas from "@/middleware/validation/tokenSchemas";
 import auth from "@/middleware/auth";
@@ -14,7 +14,7 @@ const middlewares: MiddlewareArray = {
   newToken: [auth, validate(schemas.newTokenSchema)],
 };
 
-router.post("/newtoken", middlewares.newToken, newTokenController);
+router.post("/newtoken", middlewares.newToken, tokenController.newAccessToken);
 
 const tokenRoutes: Router = router;
 export default tokenRoutes;

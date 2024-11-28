@@ -2,8 +2,9 @@ import { NextFunction, Request, Response } from "express";
 
 import AccountService from "@/services/accountService";
 
-import generateResponse from "@/utils/responseHandler";
+import ResponseHelper from "@/utils/responseHelper";
 import statusCodes from "@/utils/statusCodes";
+import TranslationHelper from "@/utils/translationHelper";
 
 import AccountTypes from "@/types/account";
 
@@ -16,7 +17,7 @@ async function getAccounts(req: Request, res: Response, next: NextFunction) {
       currentUser: currentUser,
     });
     return res.status(statusCodes.success).json(
-      generateResponse({
+      ResponseHelper.generateResponse({
         isSuccess: true,
         message: "",
         data: accounts,
@@ -35,9 +36,9 @@ async function createAccount(req: Request, res: Response, next: NextFunction) {
       accountName: accountName,
     });
     return res.status(statusCodes.created).json(
-      generateResponse({
+      ResponseHelper.generateResponse({
         isSuccess: true,
-        message: req.t("account.success.creationSuccessful"),
+        message: TranslationHelper.translate(req, "account.success.creationSuccessful"),
         data: null,
       }),
     );
@@ -55,9 +56,9 @@ async function updateAccount(req: Request, res: Response, next: NextFunction) {
       accountName: accountName,
     });
     return res.status(statusCodes.created).json(
-      generateResponse({
+      ResponseHelper.generateResponse({
         isSuccess: true,
-        message: req.t("account.success.updateSuccessful"),
+        message: TranslationHelper.translate(req, "account.success.updateSuccessful"),
         data: null,
       }),
     );
@@ -74,9 +75,9 @@ async function deleteAccount(req: Request, res: Response, next: NextFunction) {
       accountId: accountId,
     });
     return res.status(statusCodes.success).json(
-      generateResponse({
+      ResponseHelper.generateResponse({
         isSuccess: true,
-        message: req.t("account.success.deletionSuccessful"),
+        message: TranslationHelper.translate(req, "account.success.deletionSuccessful"),
         data: null,
       }),
     );

@@ -9,7 +9,7 @@ export const createTransactionSchema: ZodSchema = z.object({
   accountId: z.string().min(1),
   transactionType: z.enum(["inc", "exp"]),
   transactionDescription: z.string().min(1),
-  transactionDateTime: z.date(),
+  transactionDateTime: z.string().min(1),
   transactionValue: z.number().positive(),
 });
 
@@ -25,5 +25,5 @@ export const updateTransactionSchema: ZodSchema = z.object({
 
 export const deleteTransactionSchema: ZodSchema = z.object({
   currentUser: z.string().min(1),
-  accountId: z.string().min(1),
+  transactionId: z.string().min(1),
 });

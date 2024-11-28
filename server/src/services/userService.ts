@@ -25,13 +25,13 @@ class UserService {
     if (!userExists) {
       throw new AppError({
         statusCode: statusCodes.unauthorized,
-        messageKey: "user.error.wrongEmailOrPassword",
+        message: "user.error.wrongEmailOrPassword",
       });
     }
-    if (userExists.length > 0) {
+    if (userExists.length !== 1) {
       throw new AppError({
         statusCode: statusCodes.internalServerError,
-        messageKey: "statusMessages.internalError",
+        message: "statusMessages.internalError",
       });
     }
     const userDetails: UserTypes.Globals.UserDetails = userExists[0];
@@ -42,7 +42,7 @@ class UserService {
     if (!passwordMatch) {
       throw new AppError({
         statusCode: statusCodes.unauthorized,
-        messageKey: "user.error.wrongEmailOrPassword",
+        message: "user.error.wrongEmailOrPassword",
       });
     }
     await this.tokenRepository.clearExistingTokens({ currentUser: userDetails._id });
@@ -74,7 +74,7 @@ class UserService {
     if (existingUser && existingUser.length > 0) {
       throw new AppError({
         statusCode: statusCodes.conflict,
-        messageKey: "user.error.userExists",
+        message: "user.error.userExists",
       });
     }
     const hashedPassword = await PasswordHelper.hash({ password: password });
@@ -104,7 +104,7 @@ class UserService {
     if (!userDetails) {
       throw new AppError({
         statusCode: statusCodes.internalServerError,
-        messageKey: "statusMessages.internalError",
+        message: "statusMessages.internalError",
       });
     }
     const passwordMatch: boolean = await PasswordHelper.compare({
@@ -114,7 +114,7 @@ class UserService {
     if (!passwordMatch) {
       throw new AppError({
         statusCode: statusCodes.unauthorized,
-        messageKey: "user.error.passwordValidationFail",
+        message: "user.error.passwordValidationFail",
       });
     }
     const updatedUserDetails: Omit<UserTypes.Service.UpdateUserParams, "password"> = {
@@ -137,7 +137,7 @@ class UserService {
     if (!userDetails) {
       throw new AppError({
         statusCode: statusCodes.internalServerError,
-        messageKey: "statusMessages.internalServerError",
+        message: "statusMessages.internalServerError",
       });
     }
     const validatePassword: boolean = await PasswordHelper.compare({
@@ -147,7 +147,7 @@ class UserService {
     if (!validatePassword) {
       throw new AppError({
         statusCode: statusCodes.unauthorized,
-        messageKey: "user.error.passwordValidationFail",
+        message: "user.error.passwordValidationFail",
       });
     }
     await this.userRepository.deleteUser({ currentUser: currentUser });
@@ -164,7 +164,7 @@ class UserService {
     if (!userDetails) {
       throw new AppError({
         statusCode: statusCodes.internalServerError,
-        messageKey: "statusMessages.internalServerError",
+        message: "statusMessages.internalServerError",
       });
     }
     return {

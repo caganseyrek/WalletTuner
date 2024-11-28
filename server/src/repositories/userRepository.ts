@@ -68,7 +68,7 @@ class UserRepository {
       logger.error(`An error occured while saving a new user with email ${email}`);
       throw new AppError({
         statusCode: statusCodes.internalServerError,
-        messageKey: "statusMessages.internalError",
+        message: "statusMessages.internalError",
       });
     }
     return newUserObject;
@@ -98,7 +98,7 @@ class UserRepository {
     if (!updateUser) {
       throw new AppError({
         statusCode: statusCodes.internalServerError,
-        messageKey: "statusMessages.internalError",
+        message: "statusMessages.internalError",
       });
     }
     return;
@@ -113,7 +113,7 @@ class UserRepository {
     if (!deleteUser) {
       throw new AppError({
         statusCode: statusCodes.internalServerError,
-        messageKey: "statusMessages.internalError",
+        message: "statusMessages.internalError",
       });
     }
     return;

@@ -28,6 +28,19 @@ if (!parsedVars.success) {
   process.exit(1);
 }
 
-const env: ConfigTypes.EnvProps = parsedVars.data;
+const env: ConfigTypes.EnvProps = {
+  NODE_ENV: parsedVars.data.NODE_ENV,
+  SERVER_PORT: parsedVars.data.SERVER_PORT,
+  SECRETS: {
+    JWT_ACCESS: parsedVars.data.JWT_ACCESS_SECRET,
+    JWT_REFRESH: parsedVars.data.JWT_REFRESH_SECRET,
+    COOKIE: parsedVars.data.COOKIE_SECRET,
+  },
+  DATABASE: {
+    URI_START: parsedVars.data.DATABASE_URI_START,
+    URI_END: parsedVars.data.DATABASE_URI_END,
+  },
+  CLIENT_URL: parsedVars.data.CLIENT_URL,
+};
 
 export default env;

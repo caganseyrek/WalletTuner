@@ -1,26 +1,27 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 
 import AppError from "@/utils/errorHandler";
 import logger from "@/utils/logger";
-import generateResponse from "@/utils/responseHandler";
+import ResponseHelper from "@/utils/responseHelper";
 import statusCodes from "@/utils/statusCodes";
+import TranslationHelper from "@/utils/translationHelper";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function errorHandlerMiddleware(error: Error, req: Request, res: Response, _next: NextFunction) {
+function errorHandlerMiddleware(error: Error, req: Request, res: Response) {
   if (error instanceof AppError) {
+    logger.error(`An AppError occured: ${error.stack}`);
     return res.status(error.statusCode).json(
-      generateResponse({
+      ResponseHelper.generateResponse({
         isSuccess: false,
-        message: req.t(error.message),
+        message: TranslationHelper.translate(req, error.message),
         data: null,
       }),
     );
   } else {
-    logger.error(`An unknown error occured: ${error}`);
+    logger.error(`An unknown error occured: ${error.stack}`);
     return res.status(statusCodes.internalServerError).json(
-      generateResponse({
+      ResponseHelper.generateResponse({
         isSuccess: false,
-        message: req.t("statusMessages.internalError"),
+        message: TranslationHelper.translate(req, "statusMessages.internalError"),
         data: null,
       }),
     );

@@ -2,8 +2,9 @@ import { NextFunction, Request, Response } from "express";
 
 import TransactionService from "@/services/transactionService";
 
-import generateResponse from "@/utils/responseHandler";
+import ResponseHelper from "@/utils/responseHelper";
 import statusCodes from "@/utils/statusCodes";
+import TranslationHelper from "@/utils/translationHelper";
 
 import TransactionTypes from "@/types/transactions";
 
@@ -16,7 +17,7 @@ async function getTransactions(req: Request, res: Response, next: NextFunction) 
       currentUser: currentUser,
     });
     return res.status(statusCodes.success).json(
-      generateResponse({
+      ResponseHelper.generateResponse({
         isSuccess: true,
         message: "",
         data: transactions,
@@ -46,9 +47,9 @@ async function createTransaction(req: Request, res: Response, next: NextFunction
       transactionValue: transactionValue,
     });
     return res.status(statusCodes.created).json(
-      generateResponse({
+      ResponseHelper.generateResponse({
         isSuccess: true,
-        message: req.t("transaction.success.creationSuccessful"),
+        message: TranslationHelper.translate(req, "transaction.success.creationSuccessful"),
         data: null,
       }),
     );
@@ -78,9 +79,9 @@ async function updateTransaction(req: Request, res: Response, next: NextFunction
       transactionValue: transactionValue,
     });
     return res.status(statusCodes.success).json(
-      generateResponse({
+      ResponseHelper.generateResponse({
         isSuccess: true,
-        message: req.t("transaction.success.updateSuccessful"),
+        message: TranslationHelper.translate(req, "transaction.success.updateSuccessful"),
         data: null,
       }),
     );
@@ -97,9 +98,9 @@ async function deleteTransaction(req: Request, res: Response, next: NextFunction
       transactionId: transactionId,
     });
     return res.status(statusCodes.success).json(
-      generateResponse({
+      ResponseHelper.generateResponse({
         isSuccess: true,
-        message: req.t("transaction.success.deletionSuccessful"),
+        message: TranslationHelper.translate(req, "transaction.success.deletionSuccessful"),
         data: null,
       }),
     );

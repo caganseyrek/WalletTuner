@@ -1,6 +1,6 @@
 import { HelmetOptions } from "helmet";
 
-import env from "../config/env";
+import env from "./envHelper";
 
 const HELMET_OPTIONS: HelmetOptions = {
   xPoweredBy: false,

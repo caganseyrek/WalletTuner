@@ -5,8 +5,8 @@ import statusCodes from "./statusCodes";
 class AppError extends Error {
   statusCode: statusCodes;
 
-  constructor({ statusCode, messageKey }: AppErrorParams) {
-    super(messageKey);
+  constructor({ statusCode, message }: AppErrorParams) {
+    super(message);
     this.statusCode = statusCode;
     Error.captureStackTrace(this, this.constructor);
   }

@@ -21,7 +21,7 @@ class TokenService {
     if (!isTokenSaved) {
       throw new AppError({
         statusCode: statusCodes.unauthorized,
-        messageKey: "token.refreshTokenExpired",
+        message: "token.refreshTokenExpired",
       });
     }
     const isRefreshTokenValid = TokenHelper.verify({
@@ -31,7 +31,7 @@ class TokenService {
     if (!isRefreshTokenValid) {
       throw new AppError({
         statusCode: statusCodes.unauthorized,
-        messageKey: "token.refreshTokenExpired",
+        message: "token.refreshTokenExpired",
       });
     }
     await this.tokenRepository.clearExistingTokens({ currentUser: currentUser });

@@ -8,7 +8,7 @@ export interface Identifier {
 
 export interface AppErrorParams {
   statusCode: statusCodes;
-  messageKey: string;
+  message: string;
 }
 
 export interface MiddlewareArray {

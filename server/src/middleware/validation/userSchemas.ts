@@ -1,17 +1,17 @@
 import { z, ZodSchema } from "zod";
 
-export const identifierSchema: ZodSchema = z.object({
-  currentUser: z.string().email().min(1),
+export const loginUserSchema: ZodSchema = z.object({
+  email: z.string().email().min(1),
+  password: z.string().min(1),
+});
+
+export const logoutSchema: ZodSchema = z.object({
+  currentUser: z.string().min(1),
 });
 
 export const registerUserSchema: ZodSchema = z.object({
   name: z.string().min(1),
   surname: z.string().min(1),
-  email: z.string().email().min(1),
-  password: z.string().min(1),
-});
-
-export const loginUserSchema: ZodSchema = z.object({
   email: z.string().email().min(1),
   password: z.string().min(1),
 });
@@ -46,4 +46,8 @@ export const updateUserSchema: ZodSchema = z.object({
 export const deleteUserSchema: ZodSchema = z.object({
   currentUser: z.string().email().min(1),
   password: z.string().min(1),
+});
+
+export const getUserSettingsSchema: ZodSchema = z.object({
+  currentUser: z.string().min(1),
 });
