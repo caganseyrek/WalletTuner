@@ -37,7 +37,7 @@ module.exports = {
   },
   overrides: [
     {
-      files: ["src/shared/utils/requester.ts"],
+      files: ["src/utils/requester.ts"],
       rules: { "no-unused-vars": "off" },
     },
     {
