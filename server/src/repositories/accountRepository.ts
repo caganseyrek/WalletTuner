@@ -4,6 +4,7 @@ import accountModel from "@/models/accountModel";
 
 import AppError from "@/utils/errorHandler";
 import logger from "@/utils/logger";
+import Sanitizer from "@/utils/sanitizer";
 import statusCodes from "@/utils/statusCodes";
 
 import AccountTypes from "@/types/account";
@@ -13,9 +14,8 @@ class AccountRepository {
     currentUser,
     accountName,
   }: AccountTypes.Repository.FindAccountByNameParams): Promise<AccountTypes.Global.AccountDetails[]> {
-    const accounts: AccountTypes.Global.AccountDetails[] = await accountModel
-      .find({ belongsToUser: currentUser, accountName: accountName })
-      .exec();
+    const sanitizedQuery = Sanitizer.sanitizeQuery({ belongsToUser: currentUser, accountName: accountName });
+    const accounts: AccountTypes.Global.AccountDetails[] = await accountModel.find(sanitizedQuery).exec();
     return accounts;
   }
 
@@ -23,23 +23,21 @@ class AccountRepository {
     currentUser,
     accountId,
   }: AccountTypes.Repository.FindAccountByIdParams): Promise<AccountTypes.Global.AccountDetails> {
-    const accounts: AccountTypes.Global.AccountDetails = await accountModel
-      .findOne({ _id: accountId, belongsToUser: currentUser })
-      .exec();
+    const sanitizedQuery = Sanitizer.sanitizeQuery({ _id: accountId, belongsToUser: currentUser });
+    const accounts: AccountTypes.Global.AccountDetails = await accountModel.findOne(sanitizedQuery).exec();
     return accounts;
   }
 
   async findAccountByUserId({
     currentUser,
   }: AccountTypes.Repository.FindAccountByUserIdParams): Promise<AccountTypes.Global.AccountDetails[]> {
-    const accounts: AccountTypes.Global.AccountDetails[] = await accountModel
-      .find({ belongsToUser: currentUser })
-      .exec();
+    const sanitizedQuery = Sanitizer.sanitizeQuery({ belongsToUser: currentUser });
+    const accounts: AccountTypes.Global.AccountDetails[] = await accountModel.find(sanitizedQuery).exec();
     return accounts;
   }
 
   async createAccount({ currentUser, accountName }: AccountTypes.Repository.CreateAccountParams): Promise<void> {
-    const newAccountObject = new accountModel<AccountTypes.Global.AccountDetails>({
+    const sanitizedNewAccountObject = Sanitizer.sanitizeObject<AccountTypes.Global.AccountDetails>({
       _id: new mongoose.Types.ObjectId(),
       belongsToUser: currentUser,
       accountName: accountName,
@@ -49,6 +47,7 @@ class AccountRepository {
       totalExpense: 0,
     });
 
+    const newAccountObject = new accountModel<AccountTypes.Global.AccountDetails>(sanitizedNewAccountObject);
     const saveNewAccount = await newAccountObject.save();
     if (!saveNewAccount) {
       logger.error(`An error occured while saving a new account that belongs to user id ${currentUser}`);
@@ -69,16 +68,17 @@ class AccountRepository {
     totalIncome,
     totalExpense,
   }: AccountTypes.Repository.UpdateAccountParams): Promise<void> {
-    const updateAccount = await accountModel
-      .findByIdAndUpdate(accountId, {
-        belongsToUser: currentUser,
-        accountName: accountName,
-        createdAt: createdAt,
-        balance: balance,
-        totalIncome: totalIncome,
-        totalExpense: totalExpense,
-      })
-      .exec();
+    const sanitizedAccountId = Sanitizer.sanitizeValue(accountId);
+    const sanitizedAccountModel = Sanitizer.sanitizeObject<object>({
+      belongsToUser: currentUser,
+      accountName: accountName,
+      createdAt: createdAt,
+      balance: balance,
+      totalIncome: totalIncome,
+      totalExpense: totalExpense,
+    });
+
+    const updateAccount = await accountModel.findByIdAndUpdate(sanitizedAccountId, { ...sanitizedAccountModel }).exec();
     if (!updateAccount) {
       logger.error(`An error occured while updating a accounts with id ${accountId}`);
       throw new AppError({
@@ -90,7 +90,8 @@ class AccountRepository {
   }
 
   async deleteAccount({ currentUser, accountId }: AccountTypes.Repository.DeleteAccountParams): Promise<void> {
-    const deleteAccount = await accountModel.findOneAndDelete({ _id: accountId, belongsToUser: currentUser }).exec();
+    const sanitizedQuery = Sanitizer.sanitizeQuery({ _id: accountId, belongsToUser: currentUser });
+    const deleteAccount = await accountModel.findOneAndDelete(sanitizedQuery).exec();
     if (!deleteAccount) {
       logger.error(`An error occured while deleting a account with id ${accountId}`);
       throw new AppError({
