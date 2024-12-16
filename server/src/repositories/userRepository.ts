@@ -4,6 +4,7 @@ import userModel from "@/models/userModel";
 
 import AppError from "@/utils/errorHandler";
 import logger from "@/utils/logger";
+import Sanitizer from "@/utils/sanitizer";
 import statusCodes from "@/utils/statusCodes";
 
 import UserTypes from "@/types/user";
@@ -15,7 +16,8 @@ class UserRepository {
    * @returns A user object if found, otherwise null.
    */
   async findById({ currentUser }: UserTypes.Repository.FindByIdParams): Promise<UserTypes.Globals.UserDetails | null> {
-    const user: UserTypes.Globals.UserDetails = await userModel.findById(currentUser).exec();
+    const sanitizedQuery = Sanitizer.sanitizeValue(currentUser);
+    const user: UserTypes.Globals.UserDetails = await userModel.findById(sanitizedQuery).exec();
     return user;
   }
 
@@ -27,7 +29,8 @@ class UserRepository {
   async findWithSettingsById({
     currentUser,
   }: UserTypes.Repository.FindWithSettingsByIdParams): Promise<UserTypes.Globals.UserDetailsWithSettings | null> {
-    const user: UserTypes.Globals.UserDetailsWithSettings = await userModel.findById(currentUser).exec();
+    const sanitizedQuery = Sanitizer.sanitizeValue(currentUser);
+    const user: UserTypes.Globals.UserDetailsWithSettings = await userModel.findById(sanitizedQuery).exec();
     return user;
   }
 
@@ -37,7 +40,8 @@ class UserRepository {
    * @returns An array of user objects found, otherwise an empty array.
    */
   async findByEmail({ email }: UserTypes.Repository.FindByEmailParams): Promise<UserTypes.Globals.UserDetails[]> {
-    const users: UserTypes.Globals.UserDetails[] = await userModel.find({ email: email }).exec();
+    const sanitizedQuery = Sanitizer.sanitizeQuery({ email: email });
+    const users: UserTypes.Globals.UserDetails[] = await userModel.find(sanitizedQuery).exec();
     return users;
   }
 
@@ -52,7 +56,7 @@ class UserRepository {
     email,
     password,
   }: UserTypes.Repository.CreateNewUserParams): Promise<UserTypes.Globals.UserDetails> {
-    const newUserObject = new userModel<UserTypes.Globals.UserDetailsWithSettings>({
+    const sanitizedNewUserObject = Sanitizer.sanitizeObject<UserTypes.Globals.UserDetailsWithSettings>({
       _id: new mongoose.Types.ObjectId(),
       name: name,
       surname: surname,
@@ -62,7 +66,7 @@ class UserRepository {
       preferredCurrency: "USD",
       preferredCurrencyDisplay: "narrowSymbol",
     });
-
+    const newUserObject = new userModel<UserTypes.Globals.UserDetailsWithSettings>(sanitizedNewUserObject);
     const saveNewUser = await newUserObject.save();
     if (!saveNewUser) {
       logger.error(`An error occured while saving a new user with email ${email}`);
@@ -87,7 +91,8 @@ class UserRepository {
     preferredCurrency,
     preferredCurrencyDisplay,
   }: UserTypes.Repository.FindByIdAndUpdateParams): Promise<void> {
-    const updateUser = await userModel.findByIdAndUpdate(currentUser, {
+    const sanitizedUserId = Sanitizer.sanitizeValue(currentUser);
+    const sanitizedUserModel = Sanitizer.sanitizeObject<object>({
       name: name,
       surname: surname,
       email: email,
@@ -95,6 +100,7 @@ class UserRepository {
       preferredCurrency: preferredCurrency,
       preferredCurrencyDisplay: preferredCurrencyDisplay,
     });
+    const updateUser = await userModel.findByIdAndUpdate(sanitizedUserId, { ...sanitizedUserModel });
     if (!updateUser) {
       throw new AppError({
         statusCode: statusCodes.internalServerError,
@@ -109,7 +115,8 @@ class UserRepository {
    * @param currentUser - The ID of the user to delete.
    */
   async deleteUser({ currentUser }: UserTypes.Repository.FindByIdAndDeleteParams): Promise<void> {
-    const deleteUser = await userModel.findByIdAndDelete(currentUser).exec();
+    const sanitizedQuery = Sanitizer.sanitizeValue(currentUser);
+    const deleteUser = await userModel.findByIdAndDelete(sanitizedQuery).exec();
     if (!deleteUser) {
       throw new AppError({
         statusCode: statusCodes.internalServerError,

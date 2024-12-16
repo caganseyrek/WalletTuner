@@ -46,7 +46,6 @@ class AccountRepository {
       totalIncome: 0,
       totalExpense: 0,
     });
-
     const newAccountObject = new accountModel<AccountTypes.Global.AccountDetails>(sanitizedNewAccountObject);
     const saveNewAccount = await newAccountObject.save();
     if (!saveNewAccount) {
@@ -77,7 +76,6 @@ class AccountRepository {
       totalIncome: totalIncome,
       totalExpense: totalExpense,
     });
-
     const updateAccount = await accountModel.findByIdAndUpdate(sanitizedAccountId, { ...sanitizedAccountModel }).exec();
     if (!updateAccount) {
       logger.error(`An error occured while updating a accounts with id ${accountId}`);
