@@ -3,7 +3,7 @@ import cookieParser from "cookie-parser";
 import express, { Request, Response } from "express";
 import helmet from "helmet";
 import i18next from "i18next";
-import { handle as i18nextMiddlewareHandler } from "i18next-http-middleware";
+// import { handle as i18nextMiddlewareHandler } from "i18next-http-middleware";
 import mongoose from "mongoose";
 import morgan from "morgan";
 
@@ -34,7 +34,7 @@ app.use(morgan("dev"));
 app.use(cookieParser(env.SECRETS.COOKIE));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(i18nextMiddlewareHandler(i18next));
+// app.use(i18nextMiddlewareHandler(i18next));
 
 logger.info(`i18next init?: ${i18next.isInitialized}`);
 

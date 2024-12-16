@@ -3,9 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import Requester from "@/utils/requester";
 
-const useTransactionQuery = (
-  transactionQueryData: TransactionTypes.Queries.TransactionQueryRequestProps,
-) => {
+const useTransactionQuery = (transactionQueryData: TransactionTypes.Queries.TransactionQueryRequestProps) => {
   const transaction = useQuery({
     queryKey: ["transactionQuery", transactionQueryData],
     queryFn: async () => {
@@ -15,7 +13,7 @@ const useTransactionQuery = (
         endpoint: { route: "transaction", action: "all" },
         accessToken: accessToken,
         payload: requestData,
-      }).sendRequest<TransactionTypes.Queries.TransactionQueryRequestProps[]>();
+      }).sendRequest<TransactionTypes.Queries.TransactionQueryResponseProps[]>();
 
       return response;
     },

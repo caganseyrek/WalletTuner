@@ -18,9 +18,7 @@ const useLoginMutation = () => {
 
       return response;
     },
-    onSuccess: (
-      loginData: GlobalTypes.BackendResponseParams<UserTypes.Mutations.LoginResponseParams>,
-    ) => {
+    onSuccess: (loginData: GlobalTypes.BackendResponseParams<UserTypes.Mutations.LoginResponseParams>) => {
       const authDetails: GlobalTypes.AuthDetailsParams = {
         accessToken: loginData.data?.accessToken,
         currentUser: loginData.data?.currentUser,

@@ -12,10 +12,7 @@ const TranslatePopover: FC<ComponentTypes.TranslatePopoverProps> = ({ anchor, se
       open={Boolean(anchor)}
       anchorEl={anchor}
       onClose={() => setAnchor(null)}
-      anchorOrigin={{
-        vertical: "bottom",
-        horizontal: "left",
-      }}>
+      anchorOrigin={{ vertical: "bottom", horizontal: "left" }}>
       <MenuList>
         <MenuItem
           selected={i18n.language === "en" ? true : false}

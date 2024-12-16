@@ -22,11 +22,7 @@ const ErrorPage = () => {
           {t("errorPage.title")}
         </Typography>
         <Typography variant="body1">{t("errorPage.description")}</Typography>
-        <Button
-          variant="contained"
-          onClick={HandleReload}
-          startIcon={<Replay />}
-          sx={{ marginTop: 2 }}>
+        <Button variant="contained" onClick={HandleReload} startIcon={<Replay />} sx={{ marginTop: 2 }}>
           {t("errorPage.reload")}
         </Button>
       </Box>

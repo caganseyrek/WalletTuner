@@ -59,10 +59,7 @@ const RegisterPage = () => {
 
   return (
     <>
-      <FormHeader
-        title={t("forms.header.registerTitle")}
-        subtitle={t("forms.header.registerSubtitle")}
-      />
+      <FormHeader title={t("forms.header.registerTitle")} subtitle={t("forms.header.registerSubtitle")} />
       <form noValidate onSubmit={handleSubmit(RegisterFormSubmit)} style={FormBodyStyles}>
         <Controller
           name="name"

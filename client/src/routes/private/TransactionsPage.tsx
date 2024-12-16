@@ -33,8 +33,7 @@ const TransactionsPage = () => {
     accessToken: authDetails!.accessToken,
     currentUser: authDetails!.currentUser,
   };
-  const { data: transactionQueryData, isLoading: isTransactionLoading } =
-    useTransactionQuery(queryPayload);
+  const { data: transactionQueryData, isLoading: isTransactionLoading } = useTransactionQuery(queryPayload);
   const { data: accountQueryData, isLoading: isAccountLoading } = useAccountQuery(queryPayload);
 
   if (isAccountLoading || isTransactionLoading) {
@@ -52,12 +51,10 @@ const TransactionsPage = () => {
     return <GridOverlay type="error" message={transactionQueryData?.message} />;
   }
 
-  const availableAccounts: { uniqueId: string; accountName: string }[] = accounts.map(
-    (accountData) => ({
-      uniqueId: accountData._id,
-      accountName: accountData.accountName,
-    }),
-  );
+  const availableAccounts: { uniqueId: string; accountName: string }[] = accounts.map((accountData) => ({
+    uniqueId: accountData._id,
+    accountName: accountData.accountName,
+  }));
 
   const columns: GridColDef[] = [
     {
@@ -142,17 +139,15 @@ const TransactionsPage = () => {
     transactionValue: 0,
   };
 
-  const transactionDataRow: PageTypes.TransactionDataRowProps[] = transactions.map(
-    (transactionData, index) => ({
-      id: index + 1,
-      uniqueId: transactionData._id,
-      accountId: accounts.find((accountData) => accountData._id === transactionData.accountId)!._id,
-      transactionType: transactionData.transactionType,
-      transactionDescription: transactionData.transactionDescription,
-      transactionDateTime: transactionData.transactionDateTime,
-      transactionValue: transactionData.transactionValue,
-    }),
-  );
+  const transactionDataRow: PageTypes.TransactionDataRowProps[] = transactions.map((transactionData, index) => ({
+    id: index + 1,
+    uniqueId: transactionData._id,
+    accountId: accounts.find((accountData) => accountData._id === transactionData.accountId)!._id,
+    transactionType: transactionData.transactionType,
+    transactionDescription: transactionData.transactionDescription,
+    transactionDateTime: transactionData.transactionDateTime,
+    transactionValue: transactionData.transactionValue,
+  }));
 
   return (
     <DataGrid<

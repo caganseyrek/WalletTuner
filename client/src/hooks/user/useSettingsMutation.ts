@@ -20,9 +20,7 @@ const useSettingsMutation = () => {
 
       return response;
     },
-    onSuccess: (
-      settingsData: GlobalTypes.BackendResponseParams<UserTypes.Settings.SettingsResponseProps>,
-    ) => {
+    onSuccess: (settingsData: GlobalTypes.BackendResponseParams<UserTypes.Settings.SettingsResponseProps>) => {
       queryClient.setQueryData(["userSettings"], settingsData.data);
     },
   });

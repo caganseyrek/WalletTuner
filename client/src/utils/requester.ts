@@ -1,11 +1,6 @@
 import GlobalTypes from "@/types/globals";
 import UtilTypes from "@/types/utils";
-import axios, {
-  AxiosError,
-  AxiosRequestConfig,
-  AxiosResponse,
-  RawAxiosRequestHeaders,
-} from "axios";
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse, RawAxiosRequestHeaders } from "axios";
 import i18next from "i18next";
 
 const BACKEND_URL = import.meta.env.VITE_APP_BACKEND_URL;
@@ -51,16 +46,15 @@ class Requester {
   }
 
   private generateURL(): string {
-    const urlString: string = `${this.protocol}://${this.baseURL}/`;
+    const urlString: string = `${this.protocol}://${this.baseURL}`;
     const endpointString: string = this.generateEndpoint();
-    const queryString: string = this.query ? new URLSearchParams(this.query).toString() : "";
-    return `${urlString}${endpointString}?${queryString}`;
+    // const queryString: string = this.query ? new URLSearchParams(this.query).toString() : "";
+    return `${urlString}${endpointString}`;
   }
 
-  async sendRequest<
-    TResponseData = null,
-    TRequestPayload = UtilTypes.RequesterTypes.RequesterConfig,
-  >(): Promise<GlobalTypes.BackendResponseParams<TResponseData>> {
+  async sendRequest<TResponseData = null, TRequestPayload = UtilTypes.RequesterTypes.RequesterConfig>(): Promise<
+    GlobalTypes.BackendResponseParams<TResponseData>
+  > {
     const axiosInstance = axios.create({ baseURL: this.generateURL() });
     axiosInstance.interceptors.response.use(
       (response: AxiosResponse<TResponseData, TRequestPayload>) => {

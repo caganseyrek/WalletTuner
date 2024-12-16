@@ -6,8 +6,7 @@ function useSettings() {
 
   return useQuery({
     queryKey: ["userSettings"],
-    queryFn: () =>
-      queryClient.getQueryData<UserTypes.Settings.SettingsResponseProps>(["userSettings"]),
+    queryFn: () => queryClient.getQueryData<UserTypes.Settings.SettingsResponseProps>(["userSettings"]),
     initialData: {
       preferredFormat: "en-US",
       preferredCurrency: "USD",

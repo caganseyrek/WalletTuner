@@ -1,14 +1,6 @@
 import ComponentTypes from "@/types/components";
 import { Close } from "@mui/icons-material";
-import {
-  Box,
-  Divider,
-  IconButton,
-  Modal as MUI_Modal,
-  Paper,
-  SxProps,
-  Typography,
-} from "@mui/material";
+import { Box, Divider, IconButton, Modal as MUI_Modal, Paper, SxProps, Typography } from "@mui/material";
 
 const ModalStyles: SxProps = {
   display: "flex",

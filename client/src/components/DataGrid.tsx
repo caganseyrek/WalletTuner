@@ -270,12 +270,8 @@ const DataGrid = <TNew, TUpdate, TDelete>({
         onRowModesModelChange={handleRowModesModelChange}
         onRowEditStop={handleRowEditStop}
         processRowUpdate={processRowUpdate}
-        onProcessRowUpdateError={(error) => {
-          console.error(error);
-        }}
-        initialState={{
-          pagination: { paginationModel },
-        }}
+        onProcessRowUpdateError={(error) => console.error(error)}
+        initialState={{ pagination: { paginationModel } }}
         slots={{ toolbar: CustomToolbar as GridSlots["toolbar"] }}
         localeText={gridLocaleText}
       />
