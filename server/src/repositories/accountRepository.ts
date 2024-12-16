@@ -2,10 +2,10 @@ import mongoose from "mongoose";
 
 import accountModel from "@/models/accountModel";
 
-import AppError from "@/utils/errorHandler";
+import { AppError, statusCodes } from "@/helpers/responseHelper";
+
 import logger from "@/utils/logger";
 import Sanitizer from "@/utils/sanitizer";
-import statusCodes from "@/utils/statusCodes";
 
 import AccountTypes from "@/types/account";
 

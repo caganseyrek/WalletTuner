@@ -1,10 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 import { ZodSchema } from "zod";
 
+import ResponseHelper from "@/helpers/responseHelper";
+
 import logger from "@/utils/logger";
-import ResponseHelper from "@/utils/responseHelper";
-import statusCodes from "@/utils/statusCodes";
 import TranslationHelper from "@/utils/translationHelper";
+
+import statusCodes from "@/variables/statusCodes";
 
 function validate(schema: ZodSchema) {
   return (req: Request, res: Response, next: NextFunction) => {

@@ -1,8 +1,7 @@
 import AccountRepository from "@/repositories/accountRepository";
 import TransactionRepository from "@/repositories/transactionRepository";
 
-import AppError from "@/utils/errorHandler";
-import statusCodes from "@/utils/statusCodes";
+import { AppError, statusCodes } from "@/helpers/responseHelper";
 
 import AccountTypes from "@/types/account";
 import TransactionTypes from "@/types/transactions";

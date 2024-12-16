@@ -2,8 +2,7 @@ import { NextFunction, Request, Response } from "express";
 
 import TokenService from "@/services/tokenService";
 
-import ResponseHelper from "@/utils/responseHelper";
-import statusCodes from "@/utils/statusCodes";
+import { ResponseHelper, statusCodes } from "@/helpers/responseHelper";
 
 import TokenTypes from "@/types/token";
 

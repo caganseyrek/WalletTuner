@@ -2,10 +2,10 @@ import mongoose from "mongoose";
 
 import transactionModel from "@/models/transactionModel";
 
-import AppError from "@/utils/errorHandler";
+import { AppError, statusCodes } from "@/helpers/responseHelper";
+
 import logger from "@/utils/logger";
 import Sanitizer from "@/utils/sanitizer";
-import statusCodes from "@/utils/statusCodes";
 
 import TransactionTypes from "@/types/transactions";
 

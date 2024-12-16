@@ -1,10 +1,9 @@
 import TokenRepository from "@/repositories/tokenRepository";
 import UserRepository from "@/repositories/userRepository";
 
-import AppError from "@/utils/errorHandler";
-import PasswordHelper from "@/utils/passwordHelper";
-import statusCodes from "@/utils/statusCodes";
-import TokenHelper from "@/utils/tokenHelper";
+import PasswordHelper from "@/helpers/passwordHelper";
+import { AppError, statusCodes } from "@/helpers/responseHelper";
+import TokenHelper from "@/helpers/tokenHelper";
 
 import { Identifier } from "@/types/global";
 import UserTypes from "@/types/user";

@@ -8,13 +8,11 @@ import i18next from "i18next";
 import mongoose from "mongoose";
 import morgan from "morgan";
 
-import env from "./utils/envHelper";
-import AppError from "./utils/errorHandler";
-import HELMET_OPTIONS from "./utils/helmetOptions";
+import env from "./helpers/envHelper";
+import { AppError, ResponseHelper, statusCodes } from "./helpers/responseHelper";
+import TranslationHelper from "./helpers/translationHelper";
+
 import logger from "./utils/logger";
-import ResponseHelper from "./utils/responseHelper";
-import TranslationHelper from "./utils/translationHelper";
-import statusCodes from "@/utils/statusCodes";
 
 import errorHandlerMiddleware from "./middleware/error";
 
@@ -22,6 +20,8 @@ import accountRoutes from "./routes/accountRoutes";
 import tokenRoutes from "./routes/tokenRoutes";
 import transactionRoutes from "./routes/transactionRoutes";
 import userRoutes from "./routes/userRoutes";
+
+import HELMET_OPTIONS from "./constants/helmetOptions";
 
 // This project is NOT tested for production environments
 

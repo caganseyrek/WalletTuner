@@ -1,8 +1,7 @@
 import TokenRepository from "@/repositories/tokenRepository";
 
-import AppError from "@/utils/errorHandler";
-import statusCodes from "@/utils/statusCodes";
-import TokenHelper from "@/utils/tokenHelper";
+import { AppError, statusCodes } from "@/helpers/responseHelper";
+import TokenHelper from "@/helpers/tokenHelper";
 
 import TokenTypes from "@/types/token";
 

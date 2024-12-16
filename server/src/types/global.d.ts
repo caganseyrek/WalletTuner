@@ -1,4 +1,4 @@
-import statusCodes from "@/utils/statusCodes";
+import statusCodes from "@/variables/statusCodes";
 
 export interface Identifier {
   currentUser: string;

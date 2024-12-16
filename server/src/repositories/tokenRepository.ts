@@ -2,10 +2,10 @@ import mongoose from "mongoose";
 
 import tokenModel from "@/models/tokenModel";
 
-import AppError from "@/utils/errorHandler";
+import { AppError, statusCodes } from "@/helpers/responseHelper";
+
 import logger from "@/utils/logger";
 import Sanitizer from "@/utils/sanitizer";
-import statusCodes from "@/utils/statusCodes";
 
 import TokenTypes from "@/types/token";
 

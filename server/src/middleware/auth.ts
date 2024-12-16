@@ -1,9 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 
-import ResponseHelper from "@/utils/responseHelper";
-import statusCodes from "@/utils/statusCodes";
-import TokenHelper from "@/utils/tokenHelper";
+import ResponseHelper from "@/helpers/responseHelper";
+import TokenHelper from "@/helpers/tokenHelper";
+
 import TranslationHelper from "@/utils/translationHelper";
+
+import statusCodes from "@/variables/statusCodes";
 
 export default (req: Request, res: Response, next: NextFunction) => {
   const token: string | undefined = req.headers.authorization?.toString();

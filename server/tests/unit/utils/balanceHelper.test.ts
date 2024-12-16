@@ -1,6 +1,6 @@
 import { describe, expect, it } from "@jest/globals";
 
-import BalanceHelper from "@/utils/balanceHelper";
+import BalanceHelper from "@/helpers/balanceHelper";
 
 import { BalanceHelperTypes } from "@/types/utils";
 

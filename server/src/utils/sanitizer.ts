@@ -1,8 +1,8 @@
 import { Document, FilterQuery } from "mongoose";
 
-import AppError from "./errorHandler";
+import { AppError, statusCodes } from "@/helpers/responseHelper";
+
 import logger from "./logger";
-import statusCodes from "./statusCodes";
 
 class Sanitizer {
   private static _visitedObjects = new WeakSet<object>();

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "@jest/globals";
 
-import TokenHelper from "@/utils/tokenHelper";
+import TokenHelper from "@/helpers/tokenHelper";
 
 describe("TokenHelper Utility", () => {
   it("should sign a token with given payload and verify the token", () => {

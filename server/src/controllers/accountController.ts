@@ -2,9 +2,8 @@ import { NextFunction, Request, Response } from "express";
 
 import AccountService from "@/services/accountService";
 
-import ResponseHelper from "@/utils/responseHelper";
-import statusCodes from "@/utils/statusCodes";
-import TranslationHelper from "@/utils/translationHelper";
+import { ResponseHelper, statusCodes } from "@/helpers/responseHelper";
+import TranslationHelper from "@/helpers/translationHelper";
 
 import AccountTypes from "@/types/account";
 

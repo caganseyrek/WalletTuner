@@ -1,10 +1,12 @@
 import { Request, Response } from "express";
 
-import AppError from "@/utils/errorHandler";
+import ResponseHelper from "@/helpers/responseHelper";
+
+import AppError from "@/utils/appError";
 import logger from "@/utils/logger";
-import ResponseHelper from "@/utils/responseHelper";
-import statusCodes from "@/utils/statusCodes";
 import TranslationHelper from "@/utils/translationHelper";
+
+import statusCodes from "@/variables/statusCodes";
 
 function errorHandlerMiddleware(error: Error, req: Request, res: Response) {
   if (error instanceof AppError) {

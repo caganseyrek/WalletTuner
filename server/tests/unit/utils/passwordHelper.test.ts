@@ -1,6 +1,6 @@
 import { describe, expect, it } from "@jest/globals";
 
-import PasswordHelper from "@/utils/passwordHelper";
+import PasswordHelper from "@/helpers/passwordHelper";
 
 describe("PasswordHelper Utility", () => {
   it("should hash a password", async () => {

@@ -2,10 +2,9 @@ import { NextFunction, Request, Response } from "express";
 
 import UserService from "@/services/userService";
 
-import env from "@/utils/envHelper";
-import ResponseHelper from "@/utils/responseHelper";
-import statusCodes from "@/utils/statusCodes";
-import TranslationHelper from "@/utils/translationHelper";
+import env from "@/helpers/envHelper";
+import { ResponseHelper, statusCodes } from "@/helpers/responseHelper";
+import TranslationHelper from "@/helpers/translationHelper";
 
 import UserTypes from "@/types/user";
 
