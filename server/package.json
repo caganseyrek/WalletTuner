@@ -50,7 +50,7 @@
     "i18next-http-middleware": "^3.7.0",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
-    "mongoose": "^8.9.2",
+    "mongoose": "^8.9.3",
     "morgan": "^1.10.0",
     "randombytes": "^2.1.0",
     "winston": "^3.17.0",
