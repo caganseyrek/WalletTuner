@@ -59,7 +59,7 @@
   "devDependencies": {
     "@eslint/js": "^9.17.0",
     "@jest/globals": "^29.7.0",
-    "@trivago/prettier-plugin-sort-imports": "^4.3.0",
+    "@trivago/prettier-plugin-sort-imports": "^5.2.1",
     "@types/bcrypt": "^5.0.2",
     "@types/body-parser": "^1.19.5",
     "@types/cookie-parser": "^1.4.8",
