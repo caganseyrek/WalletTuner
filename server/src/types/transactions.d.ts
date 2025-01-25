@@ -1,43 +1,40 @@
-import { Identifier } from "./global";
+import { GlobalTypes } from "./globals";
 
 namespace TransactionTypes {
   type TransactionId = { transactionId: mongoose.Types.ObjectId };
-  export namespace Global {
-    export interface TransactionDetails {
-      _id: mongoose.Types.ObjectId;
-      accountId: mongoose.Types.ObjectId;
-      belongsToUser: mongoose.Types.ObjectId;
-      transactionType: "inc" | "exp";
-      transactionDescription: string;
-      transactionDateTime: string;
-      transactionValue: number;
-    }
+  type TransactionTypes = "inc" | "exp";
+  export interface TransactionObject {
+    _id: mongoose.Types.ObjectId;
+    accountId: mongoose.Types.ObjectId;
+    belongsToUser: mongoose.Types.ObjectId;
+    transactionType: TransactionTypes;
+    transactionDescription: string;
+    transactionDateTime: string;
+    transactionValue: number;
   }
   export namespace Repository {
-    export type FindTransactionsByAccountIdParams = Identifier & Pick<Global.TransactionDetails, "accountId">;
-    export type FindTransactionByIdParams = Identifier & TransactionId;
-    export type FindTransactionsByUserIdParams = Identifier;
-    export type CreateTransactionParams = Omit<Global.TransactionDetails, "_id">;
-    export type UpdateTransactionParams = Identifier &
-      Omit<Omit<Global.TransactionDetails, "_id">, "belongsToUser"> &
+    export type FindTransactionByIdParams = GlobalTypes.Identifiers & TransactionId;
+    export type FindTransactionsByAccountIdParams = GlobalTypes.Identifiers & Pick<TransactionObject, "accountId">;
+    export type FindTransactionsByUserIdParams = GlobalTypes.Identifiers;
+    export type CreateTransactionParams = Omit<TransactionObject, "_id">;
+    export type UpdateTransactionParams = GlobalTypes.Identifiers &
+      Omit<Omit<TransactionObject, "_id">, "belongsToUser"> &
       TransactionId;
-    export type DeleteTransactionParams = Identifier & TransactionId;
+    export type DeleteTransactionParams = GlobalTypes.Identifiers & TransactionId;
   }
   export namespace Service {
-    export type GetTransactionsParams = Identifier;
-    export type CreateTransactionParams = Identifier & Omit<Omit<Global.TransactionDetails, "_id">, "belongsToUser">;
-    export type UpdateTransactionParams = Identifier &
-      Omit<Omit<Global.TransactionDetails, "_id">, "belongsToUser"> &
+    export type GetTransactionsParams = GlobalTypes.Identifiers;
+    export type CreateTransactionParams = GlobalTypes.Identifiers &
+      Omit<Omit<TransactionObject, "_id">, "belongsToUser">;
+    export type UpdateTransactionParams = GlobalTypes.Identifiers &
+      Omit<Omit<TransactionObject, "_id">, "belongsToUser"> &
       TransactionId;
-    export type DeleteTransactionParams = Identifier & TransactionId;
+    export type DeleteTransactionParams = GlobalTypes.Identifiers & TransactionId;
   }
   export namespace Controller {
-    export type GetTransactionsParams = Identifier;
-    export type CreateTransactionParams = Identifier & Omit<Omit<Global.TransactionDetails, "_id">, "belongsToUser">;
-    export type UpdateTransactionParams = Identifier &
-      Omit<Omit<Global.TransactionDetails, "_id">, "belongsToUser"> &
-      TransactionId;
-    export type DeleteTransactionParams = Identifier & TransactionId;
+    export type CreateTransactionParams = Omit<Omit<TransactionObject, "_id">, "belongsToUser">;
+    export type UpdateTransactionParams = Omit<Omit<TransactionObject, "_id">, "belongsToUser"> & TransactionId;
+    export type DeleteTransactionParams = TransactionId;
   }
 }
 

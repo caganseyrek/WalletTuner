@@ -2,110 +2,125 @@ import { NextFunction, Request, Response } from "express";
 
 import TransactionService from "@/services/transactionService";
 
-import { ResponseHelper, statusCodes } from "@/helpers/responseHelper";
-import TranslationHelper from "@/helpers/translationHelper";
+import STATUS_CODES from "@/utils/constants/statusCodes";
+import ResponseHelper from "@/utils/helpers/responseHelper";
+import TokenHelper from "@/utils/helpers/tokenHelper";
 
 import TransactionTypes from "@/types/transactions";
 
-const transactionService = new TransactionService();
+class TransactionController {
+  private transactionService: TransactionService;
 
-async function getTransactions(req: Request, res: Response, next: NextFunction) {
-  try {
-    const { currentUser }: TransactionTypes.Controller.GetTransactionsParams = req.body;
-    const transactions = await transactionService.getTransactions({
-      currentUser: currentUser,
-    });
-    return res.status(statusCodes.success).json(
-      ResponseHelper.generateResponse({
-        isSuccess: true,
-        message: "",
-        data: transactions,
-      }),
-    );
-  } catch (error) {
-    next(error);
+  constructor() {
+    this.transactionService = new TransactionService();
+  }
+
+  public async getTransactions(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { accessToken } = req.cookies;
+      const userId: string = TokenHelper.extractUserId({ tokenValue: accessToken, tokenType: "access" });
+
+      const transactions = await this.transactionService.getTransactions({ userId: userId });
+
+      return res.status(STATUS_CODES.success.code).json(
+        ResponseHelper.generate({
+          isSuccess: true,
+          message: "",
+          data: transactions,
+        }),
+      );
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async createTransaction(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { accessToken } = req.cookies;
+      const userId: string = TokenHelper.extractUserId({ tokenValue: accessToken, tokenType: "access" });
+
+      const {
+        accountId,
+        transactionType,
+        transactionDescription,
+        transactionDateTime,
+        transactionValue,
+      }: TransactionTypes.Controller.CreateTransactionParams = req.body;
+      await this.transactionService.createTransaction({
+        userId: userId,
+        accountId: accountId,
+        transactionType: transactionType,
+        transactionDescription: transactionDescription,
+        transactionDateTime: transactionDateTime,
+        transactionValue: transactionValue,
+      });
+
+      return res.status(STATUS_CODES.created.code).json(
+        ResponseHelper.generate({
+          isSuccess: true,
+          message: "transaction.success.creationSuccessful",
+          data: null,
+        }),
+      );
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async updateTransaction(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { accessToken } = req.cookies;
+      const userId: string = TokenHelper.extractUserId({ tokenValue: accessToken, tokenType: "access" });
+
+      const {
+        accountId,
+        transactionId,
+        transactionType,
+        transactionDescription,
+        transactionDateTime,
+        transactionValue,
+      }: TransactionTypes.Controller.UpdateTransactionParams = req.body;
+      await this.transactionService.updateTransaction({
+        userId: userId,
+        accountId: accountId,
+        transactionId: transactionId,
+        transactionType: transactionType,
+        transactionDescription: transactionDescription,
+        transactionDateTime: transactionDateTime,
+        transactionValue: transactionValue,
+      });
+
+      return res.status(STATUS_CODES.success.code).json(
+        ResponseHelper.generate({
+          isSuccess: true,
+          message: "transaction.success.updateSuccessful",
+          data: null,
+        }),
+      );
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async deleteTransaction(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { accessToken } = req.cookies;
+      const userId: string = TokenHelper.extractUserId({ tokenValue: accessToken, tokenType: "access" });
+
+      const { transactionId }: TransactionTypes.Controller.DeleteTransactionParams = req.body;
+      await this.transactionService.deleteTransaction({ userId: userId, transactionId: transactionId });
+
+      return res.status(STATUS_CODES.success.code).json(
+        ResponseHelper.generate({
+          isSuccess: true,
+          message: "transaction.success.deletionSuccessful",
+          data: null,
+        }),
+      );
+    } catch (error) {
+      next(error);
+    }
   }
 }
 
-async function createTransaction(req: Request, res: Response, next: NextFunction) {
-  try {
-    const {
-      currentUser,
-      accountId,
-      transactionType,
-      transactionDescription,
-      transactionDateTime,
-      transactionValue,
-    }: TransactionTypes.Controller.CreateTransactionParams = req.body;
-    await transactionService.createTransaction({
-      currentUser: currentUser,
-      accountId: accountId,
-      transactionType: transactionType,
-      transactionDescription: transactionDescription,
-      transactionDateTime: transactionDateTime,
-      transactionValue: transactionValue,
-    });
-    return res.status(statusCodes.created).json(
-      ResponseHelper.generateResponse({
-        isSuccess: true,
-        message: TranslationHelper.translate(req, "transaction.success.creationSuccessful"),
-        data: null,
-      }),
-    );
-  } catch (error) {
-    next(error);
-  }
-}
-
-async function updateTransaction(req: Request, res: Response, next: NextFunction) {
-  try {
-    const {
-      currentUser,
-      accountId,
-      transactionId,
-      transactionType,
-      transactionDescription,
-      transactionDateTime,
-      transactionValue,
-    }: TransactionTypes.Controller.UpdateTransactionParams = req.body;
-    await transactionService.updateTransaction({
-      currentUser: currentUser,
-      accountId: accountId,
-      transactionId: transactionId,
-      transactionType: transactionType,
-      transactionDescription: transactionDescription,
-      transactionDateTime: transactionDateTime,
-      transactionValue: transactionValue,
-    });
-    return res.status(statusCodes.success).json(
-      ResponseHelper.generateResponse({
-        isSuccess: true,
-        message: TranslationHelper.translate(req, "transaction.success.updateSuccessful"),
-        data: null,
-      }),
-    );
-  } catch (error) {
-    next(error);
-  }
-}
-
-async function deleteTransaction(req: Request, res: Response, next: NextFunction) {
-  try {
-    const { currentUser, transactionId }: TransactionTypes.Controller.DeleteTransactionParams = req.body;
-    await transactionService.deleteTransaction({
-      currentUser: currentUser,
-      transactionId: transactionId,
-    });
-    return res.status(statusCodes.success).json(
-      ResponseHelper.generateResponse({
-        isSuccess: true,
-        message: TranslationHelper.translate(req, "transaction.success.deletionSuccessful"),
-        data: null,
-      }),
-    );
-  } catch (error) {
-    next(error);
-  }
-}
-
-export default { getTransactions, createTransaction, updateTransaction, deleteTransaction };
+export default TransactionController;

@@ -1,35 +1,32 @@
 import { NextFunction, Request, Response } from "express";
 
-import ResponseHelper from "@/helpers/responseHelper";
-import TokenHelper from "@/helpers/tokenHelper";
+import STATUS_CODES from "@/utils/constants/statusCodes";
+import ResponseHelper from "@/utils/helpers/responseHelper";
+import TokenHelper from "@/utils/helpers/tokenHelper";
 
-import TranslationHelper from "@/utils/translationHelper";
-
-import statusCodes from "@/variables/statusCodes";
-
-export default (req: Request, res: Response, next: NextFunction) => {
-  const token: string | undefined = req.headers.authorization?.toString();
-  if (token) {
+function auth(req: Request, res: Response, next: NextFunction) {
+  const { accessToken } = req.cookies;
+  if (accessToken) {
     try {
-      const tokenValue = token.split(" ")[1];
-      const decodedToken = TokenHelper.verify({ tokenValue: tokenValue, tokenType: "access" });
-      req.body.user = decodedToken;
+      TokenHelper.verify({ tokenValue: accessToken, tokenType: "access" });
       return next();
     } catch {
-      return res.status(statusCodes.unauthorized).json(
-        ResponseHelper.generateResponse({
+      return res.status(STATUS_CODES.unauthorized.code).json(
+        ResponseHelper.generate({
           isSuccess: false,
-          message: TranslationHelper.translate(req, "statusMessages.expiredToken"),
+          message: "statusMessages.expiredToken",
           data: null,
         }),
       );
     }
   }
-  return res.status(statusCodes.unauthorized).json(
-    ResponseHelper.generateResponse({
+  return res.status(STATUS_CODES.unauthorized.code).json(
+    ResponseHelper.generate({
       isSuccess: false,
-      message: TranslationHelper.translate(req, "statusMessages.unauthorized"),
+      message: "statusMessages.unauthorized",
       data: null,
     }),
   );
-};
+}
+
+export default auth;

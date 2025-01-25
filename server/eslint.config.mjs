@@ -1,13 +1,19 @@
-import pluginJs from "@eslint/js";
-import globals from "globals";
-import tseslint from "typescript-eslint";
+import { FlatCompat } from "@eslint/eslintrc";
+import { dirname } from "path";
+import { fileURLToPath } from "url";
 
-export default [
-  {
-    files: ["**/*.{js,mjs,cjs,ts}"],
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const compat = new FlatCompat({
+  baseDirectory: __dirname,
+});
+
+const eslintConfig = [
+  ...compat.config({
     rules: {
       "no-alert": "warn",
-      "no-console": ["warn", { allow: ["error"] }],
+      "no-console": "warn",
       "no-constant-condition": "error",
       "no-debugger": "error",
       "no-dupe-keys": "error",
@@ -30,8 +36,7 @@ export default [
       "no-multiple-empty-lines": ["error", { max: 2, maxEOF: 1 }],
       quotes: ["error", "double", { avoidEscape: true }],
     },
-  },
-  { languageOptions: { globals: globals.browser } },
-  pluginJs.configs.recommended,
-  ...tseslint.configs.recommended,
+  }),
 ];
+
+export default eslintConfig;

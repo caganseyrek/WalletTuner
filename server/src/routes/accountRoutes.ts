@@ -1,26 +1,30 @@
 import express, { Router } from "express";
 
-import accountController from "@/controllers/accountController";
+import AccountController from "@/controllers/accountController";
 
-import * as schemas from "@/middleware/validation/accountSchema";
+import schemas from "@/utils/schemas";
+
 import auth from "@/middleware/auth";
 import validate from "@/middleware/validate";
 
-import { MiddlewareArray } from "@/types/global";
+import { GlobalTypes } from "@/types/globals";
 
 const router: Router = express.Router();
 
-const middlewares: MiddlewareArray = {
-  getAccounts: [auth, validate(schemas.getAccountSchema)],
-  createAccount: [auth, validate(schemas.createAccountSchema)],
-  updateAccount: [auth, validate(schemas.updateAccountSchema)],
-  deleteAccount: [auth, validate(schemas.deleteAccountSchema)],
+const accountController: AccountController = new AccountController();
+
+const middlewares: GlobalTypes.MiddlewareArray = {
+  getAccounts: [auth],
+  createAccount: [auth, validate(schemas.account.createSchema)],
+  updateAccount: [auth, validate(schemas.account.updateSchema)],
+  deleteAccount: [auth, validate(schemas.account.deleteSchema)],
 };
 
-router.post("/all", middlewares.getAccounts, accountController.getAccounts);
-router.post("/create", middlewares.createAccount, accountController.createAccount);
-router.patch("/update", middlewares.updateAccount, accountController.updateAccount);
-router.delete("/delete", middlewares.deleteAccount, accountController.deleteAccount);
+router.get("/getAllAccounts", middlewares.getAccounts, accountController.getAccounts);
+router.post("/createAccount", middlewares.createAccount, accountController.createAccount);
+router.patch("/updateAccount", middlewares.updateAccount, accountController.updateAccount);
+router.delete("/deleteAccount", middlewares.deleteAccount, accountController.deleteAccount);
 
 const accountRoutes: Router = router;
+
 export default accountRoutes;

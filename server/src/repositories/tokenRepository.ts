@@ -2,63 +2,60 @@ import mongoose from "mongoose";
 
 import tokenModel from "@/models/tokenModel";
 
-import { AppError, statusCodes } from "@/helpers/responseHelper";
-
+import STATUS_CODES from "@/utils/constants/statusCodes";
+import AppError from "@/utils/helpers/errorHelper";
 import logger from "@/utils/logger";
 import Sanitizer from "@/utils/sanitizer";
 
 import TokenTypes from "@/types/token";
 
 class TokenRepository {
-  /**
-   * Finds all refresh tokens that belongs to specified user.
-   * @param FindByFiltersParams - Refresh token and the user ID that token belongs to.
-   * @returns Details of the saved token object that belongs to given user ID.
-   */
-  async findByFilters({ refreshToken, belongsTo }: TokenTypes.FindByFiltersParams): Promise<TokenTypes.TokenDetails[]> {
-    const sanitizedQuery = Sanitizer.sanitizeQuery({ refreshToken: refreshToken, belongsTo: belongsTo });
-    const tokens: TokenTypes.TokenDetails[] = await tokenModel.find(sanitizedQuery).exec();
+  async findTokensByUserId({
+    belongsTo,
+  }: TokenTypes.Repository.FindTokenByUserIdParams): Promise<TokenTypes.TokenObject[]> {
+    const sanitizedQuery = Sanitizer.sanitizeQuery({ belongsTo: belongsTo });
+    const tokens: TokenTypes.TokenObject[] = await tokenModel.find(sanitizedQuery).exec();
     return tokens;
   }
 
-  /**
-   * Saves a refresh token to the database.
-   * @param NewTokenProps - Refresh token and the user ID that token belongs to.
-   * @returns Details of the new token object saved.
-   * @throws AppError if token cannot be saved to the database.
-   */
-  async saveNewToken({ currentUser, refreshToken }: TokenTypes.NewTokenParams): Promise<TokenTypes.TokenDetails> {
-    const sanitizedNewTokenObject = Sanitizer.sanitizeObject<TokenTypes.TokenDetails>({
+  async findTokenByFilters({
+    belongsTo,
+    refreshToken,
+  }: TokenTypes.Repository.FindTokenByFiltersParams): Promise<TokenTypes.TokenObject[]> {
+    const sanitizedQuery = Sanitizer.sanitizeQuery({ refreshToken: refreshToken, belongsTo: belongsTo });
+    const tokens: TokenTypes.TokenObject[] = await tokenModel.find(sanitizedQuery).exec();
+    return tokens;
+  }
+
+  async saveNewToken({
+    userId,
+    refreshToken,
+  }: TokenTypes.Repository.SaveNewTokenParams): Promise<TokenTypes.TokenObject> {
+    const sanitizedNewTokenObject = Sanitizer.sanitizeObject<TokenTypes.TokenObject>({
       _id: new mongoose.Types.ObjectId(),
-      belongsTo: currentUser,
+      belongsTo: userId,
       refreshToken: refreshToken,
     });
-    const newTokenObject = new tokenModel<TokenTypes.TokenDetails>(sanitizedNewTokenObject);
+    const newTokenObject = new tokenModel<TokenTypes.TokenObject>(sanitizedNewTokenObject);
     const saveNewToken = await newTokenObject.save();
     if (!saveNewToken) {
-      logger.error(`An error occured while saving a new token belongs to user ID ${currentUser}`);
+      logger.error(`An error occured while saving a new token belongs to user ID ${userId}`);
       throw new AppError({
-        statusCode: statusCodes.internalServerError,
-        message: "statusMessages.internalError",
+        statusCode: STATUS_CODES.internalServerError.code,
+        message: STATUS_CODES.internalServerError.message,
       });
     }
     return newTokenObject;
   }
 
-  async clearExistingTokens({ currentUser }: TokenTypes.clearExistingTokensParams): Promise<void> {
-    const sanitizedQuery = Sanitizer.sanitizeQuery({ belongsTo: currentUser });
-    const existingRefreshTokens: TokenTypes.TokenDetails[] = await tokenModel.find(sanitizedQuery).exec();
-    if (existingRefreshTokens.length >= 1) {
-      existingRefreshTokens.forEach(async (token) => {
-        try {
-          const sanitizedQuery = Sanitizer.sanitizeValue(token._id);
-          await tokenModel.findByIdAndDelete(sanitizedQuery).exec();
-        } catch {
-          throw new AppError({
-            statusCode: statusCodes.internalServerError,
-            message: "statusMessages.internalError",
-          });
-        }
+  async deleteToken({ userId }: TokenTypes.Repository.DeleteTokenParams): Promise<void> {
+    const sanitizedQuery = Sanitizer.sanitizeObject<object>({ belongsTo: userId });
+    const deleteTokens = await tokenModel.findOneAndDelete(sanitizedQuery).exec();
+    if (!deleteTokens) {
+      logger.error(`An error occured while deleting a new token belongs to user ID ${userId}`);
+      throw new AppError({
+        statusCode: STATUS_CODES.internalServerError.code,
+        message: STATUS_CODES.internalServerError.message,
       });
     }
     return;

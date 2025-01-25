@@ -1,29 +1,26 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 
-import ResponseHelper from "@/helpers/responseHelper";
-
-import AppError from "@/utils/appError";
+import STATUS_CODES from "@/utils/constants/statusCodes";
+import AppError from "@/utils/helpers/errorHelper";
+import ResponseHelper from "@/utils/helpers/responseHelper";
 import logger from "@/utils/logger";
-import TranslationHelper from "@/utils/translationHelper";
 
-import statusCodes from "@/variables/statusCodes";
-
-function errorHandlerMiddleware(error: Error, req: Request, res: Response) {
+function errorHandlerMiddleware(error: Error, _req: Request, res: Response, _next: NextFunction) {
   if (error instanceof AppError) {
     logger.error(`An AppError occured: ${error.stack}`);
     return res.status(error.statusCode).json(
-      ResponseHelper.generateResponse({
+      ResponseHelper.generate({
         isSuccess: false,
-        message: TranslationHelper.translate(req, error.message),
+        message: error.message,
         data: null,
       }),
     );
   } else {
     logger.error(`An unknown error occured: ${error.stack}`);
-    return res.status(statusCodes.internalServerError).json(
-      ResponseHelper.generateResponse({
+    return res.status(STATUS_CODES.internalServerError.code).json(
+      ResponseHelper.generate({
         isSuccess: false,
-        message: TranslationHelper.translate(req, "statusMessages.internalError"),
+        message: "statusMessages.internalError",
         data: null,
       }),
     );

@@ -1,9 +1,10 @@
 import AccountRepository from "@/repositories/accountRepository";
 import TransactionRepository from "@/repositories/transactionRepository";
 
-import { AppError, statusCodes } from "@/helpers/responseHelper";
+import STATUS_CODES from "@/utils/constants/statusCodes";
+import AppError from "@/utils/helpers/errorHelper";
 
-import AccountTypes from "@/types/account";
+import AccountTypes from "@/types/accounts";
 import TransactionTypes from "@/types/transactions";
 
 class AccountService {
@@ -15,66 +16,57 @@ class AccountService {
     this.transactionRepository = new TransactionRepository();
   }
 
-  async getAccounts({
-    currentUser,
-  }: AccountTypes.Services.GetAccountsParams): Promise<AccountTypes.Global.AccountDetails[]> {
-    const accounts: AccountTypes.Global.AccountDetails[] = await this.accountRepository.findAccountByUserId({
-      currentUser: currentUser,
+  async getAccounts({ userId }: AccountTypes.Service.GetAccountsParams): Promise<AccountTypes.AccountObject[]> {
+    const accounts: AccountTypes.AccountObject[] = await this.accountRepository.findAccountByUserId({
+      userId: userId,
     });
     if (!accounts || accounts.length === 0) {
       throw new AppError({
-        statusCode: statusCodes.notFound,
+        statusCode: STATUS_CODES.notFound.code,
         message: "account.error.noAccountsFound",
       });
     }
     return accounts;
   }
 
-  async createAccount({ currentUser, accountName }: AccountTypes.Services.CreateAccountParams): Promise<void> {
-    const doesAccountExists: AccountTypes.Global.AccountDetails[] = await this.accountRepository.findAccountByName({
-      currentUser: currentUser,
+  async createAccount({ userId, accountName }: AccountTypes.Service.CreateAccountParams): Promise<void> {
+    const doesAccountExists: AccountTypes.AccountObject[] = await this.accountRepository.findAccountByName({
+      userId: userId,
       accountName: accountName,
     });
     if (doesAccountExists.length > 0) {
       throw new AppError({
-        statusCode: statusCodes.conflict,
+        statusCode: STATUS_CODES.conflict.code,
         message: "account.error.accountExists",
       });
     }
-    await this.accountRepository.createAccount({
-      currentUser: currentUser,
-      accountName: accountName,
-    });
+    await this.accountRepository.createAccount({ userId: userId, accountName: accountName });
     return;
   }
 
-  async updateAccount({
-    currentUser,
-    accountId,
-    accountName,
-  }: AccountTypes.Services.UpdateAccountParams): Promise<void> {
-    const doesAccountExists: AccountTypes.Global.AccountDetails[] = await this.accountRepository.findAccountByName({
-      currentUser: currentUser,
+  async updateAccount({ userId, accountId, accountName }: AccountTypes.Service.UpdateAccountParams): Promise<void> {
+    const doesAccountExists: AccountTypes.AccountObject[] = await this.accountRepository.findAccountByName({
+      userId: userId,
       accountName: accountName,
     });
     if (doesAccountExists.length > 0) {
       throw new AppError({
-        statusCode: statusCodes.conflict,
+        statusCode: STATUS_CODES.conflict.code,
         message: "account.error.accountExists",
       });
     }
-    const currentAccountDetails: AccountTypes.Global.AccountDetails = await this.accountRepository.findAccountById({
-      currentUser: currentUser,
+    const currentAccountDetails: AccountTypes.AccountObject = await this.accountRepository.findAccountById({
+      userId: userId,
       accountId: accountId,
     });
     if (!currentAccountDetails) {
       throw new AppError({
-        statusCode: statusCodes.internalServerError,
-        message: "statusMessages.internalError",
+        statusCode: STATUS_CODES.internalServerError.code,
+        message: STATUS_CODES.internalServerError.message,
       });
     }
     await this.accountRepository.updateAccount({
-      currentUser: currentUser,
+      userId: userId,
       accountId: currentAccountDetails._id,
       accountName: accountName,
       createdAt: currentAccountDetails.createdAt,
@@ -85,19 +77,16 @@ class AccountService {
     return;
   }
 
-  async deleteAccount({ currentUser, accountId }: AccountTypes.Services.DeleteAccountParams): Promise<void> {
-    const relatedTransactions: TransactionTypes.Global.TransactionDetails[] =
-      await this.transactionRepository.findTransactionsByAccountId({
-        currentUser: currentUser,
-        accountId: accountId,
-      });
+  async deleteAccount({ userId, accountId }: AccountTypes.Service.DeleteAccountParams): Promise<void> {
+    const relatedTransactions: TransactionTypes.TransactionObject[] =
+      await this.transactionRepository.findTransactionsByAccountId({ userId: userId, accountId: accountId });
     if (relatedTransactions.length > 0) {
       throw new AppError({
-        statusCode: statusCodes.conflict,
+        statusCode: STATUS_CODES.conflict.code,
         message: "account.error.deleteTransactionsFirst",
       });
     }
-    await this.accountRepository.deleteAccount({ currentUser: currentUser, accountId: accountId });
+    await this.accountRepository.deleteAccount({ userId: userId, accountId: accountId });
     return;
   }
 }

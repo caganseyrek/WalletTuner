@@ -1,7 +1,8 @@
 import { Document, FilterQuery } from "mongoose";
 
-import { AppError, statusCodes } from "@/helpers/responseHelper";
+import AppError from "./helpers/errorHelper";
 
+import STATUS_CODES from "./constants/statusCodes";
 import logger from "./logger";
 
 class Sanitizer {
@@ -28,7 +29,7 @@ class Sanitizer {
       if (this._visitedObjects.has(value)) {
         logger.error("Circular reference detected during sanitation.");
         throw new AppError({
-          statusCode: statusCodes.badRequest,
+          statusCode: STATUS_CODES.badRequest.code,
           message: "Couldn't validate request params.",
         });
       }
@@ -41,7 +42,7 @@ class Sanitizer {
     }
     logger.error(`Encountered invalid type '${typeof value}' with content: ${JSON.stringify(value)}`);
     throw new AppError({
-      statusCode: statusCodes.badRequest,
+      statusCode: STATUS_CODES.badRequest.code,
       message: "Couldn't validate request params.",
     });
   }

@@ -1,12 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { ZodSchema } from "zod";
 
-import ResponseHelper from "@/helpers/responseHelper";
-
+import STATUS_CODES from "@/utils/constants/statusCodes";
+import ResponseHelper from "@/utils/helpers/responseHelper";
 import logger from "@/utils/logger";
-import TranslationHelper from "@/utils/translationHelper";
-
-import statusCodes from "@/variables/statusCodes";
 
 function validate(schema: ZodSchema) {
   return (req: Request, res: Response, next: NextFunction) => {
@@ -14,10 +11,10 @@ function validate(schema: ZodSchema) {
 
     if (!validate.success) {
       logger.error(`Cannot validate request params from request to ${req.url}: ${validate.error.message}`);
-      return res.status(statusCodes.badRequest).json(
-        ResponseHelper.generateResponse({
+      return res.status(STATUS_CODES.badRequest.code).json(
+        ResponseHelper.generate({
           isSuccess: false,
-          message: TranslationHelper.translate(req, "statusMessages.badRequest"),
+          message: STATUS_CODES.badRequest.message,
           data: null,
         }),
       );

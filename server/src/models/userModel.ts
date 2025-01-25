@@ -2,7 +2,7 @@ import mongoose, { Model, Schema } from "mongoose";
 
 import UserTypes from "@/types/user";
 
-const userSchema: Schema = new Schema<UserTypes.Globals.UserDetailsWithSettings>({
+const userSchema: Schema = new Schema<UserTypes.Settings.UserWithSettingsObject>({
   _id: mongoose.Schema.Types.ObjectId,
   name: { type: String },
   surname: { type: String },
@@ -13,7 +13,7 @@ const userSchema: Schema = new Schema<UserTypes.Globals.UserDetailsWithSettings>
   preferredCurrencyDisplay: { type: String, required: true },
 });
 
-export default mongoose.model<UserTypes.Globals.UserDetailsWithSettings>(
+export default mongoose.model<UserTypes.Settings.UserWithSettingsObject>(
   "userModel",
   userSchema,
-) as Model<UserTypes.Globals.UserDetailsWithSettings>;
+) as Model<UserTypes.Settings.UserWithSettingsObject>;

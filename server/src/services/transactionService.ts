@@ -1,12 +1,13 @@
 import AccountRepository from "@/repositories/accountRepository";
 import TransactionRepository from "@/repositories/transactionRepository";
 
-import BalanceHelper from "@/helpers/balanceHelper";
-import { AppError, statusCodes } from "@/helpers/responseHelper";
+import STATUS_CODES from "@/utils/constants/statusCodes";
+import BalanceHelper from "@/utils/helpers/balanceHelper";
+import AppError from "@/utils/helpers/errorHelper";
 
-import AccountTypes from "@/types/account";
+import AccountTypes from "@/types/accounts";
 import TransactionTypes from "@/types/transactions";
-import { BalanceHelperTypes } from "@/types/utils";
+import { UtilsTypes } from "@/types/utils";
 
 class TransactionService {
   private transactionRepository: TransactionRepository;
@@ -18,13 +19,13 @@ class TransactionService {
   }
 
   async getTransactions({
-    currentUser,
-  }: TransactionTypes.Service.GetTransactionsParams): Promise<TransactionTypes.Global.TransactionDetails[]> {
-    const transactions: TransactionTypes.Global.TransactionDetails[] =
-      await this.transactionRepository.findTransactionsByUserId({ currentUser: currentUser });
+    userId,
+  }: TransactionTypes.Service.GetTransactionsParams): Promise<TransactionTypes.TransactionObject[]> {
+    const transactions: TransactionTypes.TransactionObject[] =
+      await this.transactionRepository.findTransactionsByUserId({ userId: userId });
     if (!transactions) {
       throw new AppError({
-        statusCode: statusCodes.notFound,
+        statusCode: STATUS_CODES.notFound.code,
         message: "transaction.error.noTransactionsFound",
       });
     }
@@ -32,32 +33,32 @@ class TransactionService {
   }
 
   async createTransaction({
-    currentUser,
+    userId,
     accountId,
     transactionType,
     transactionDescription,
     transactionDateTime,
     transactionValue,
   }: TransactionTypes.Service.CreateTransactionParams) {
-    const accountDetails: AccountTypes.Global.AccountDetails = await this.accountRepository.findAccountById({
-      currentUser: currentUser,
+    const accountDetails: AccountTypes.AccountObject = await this.accountRepository.findAccountById({
+      userId: userId,
       accountId: accountId,
     });
     if (!accountDetails) {
       throw new AppError({
-        statusCode: statusCodes.internalServerError,
-        message: "statusMessages.internalError",
+        statusCode: STATUS_CODES.internalServerError.code,
+        message: STATUS_CODES.internalServerError.message,
       });
     }
     await this.transactionRepository.createTransaction({
       accountId: accountId,
-      belongsToUser: currentUser,
+      belongsToUser: userId,
       transactionType: transactionType,
       transactionDescription: transactionDescription,
       transactionDateTime: transactionDateTime,
       transactionValue: transactionValue,
     });
-    const { newAccountBalance, newTotalIncome, newTotalExpense }: BalanceHelperTypes.UpdatedBalances =
+    const { newAccountBalance, newTotalIncome, newTotalExpense }: UtilsTypes.BalanceHelper.UpdatedBalancesParams =
       BalanceHelper.addNewTransactionValue({
         transactionType: transactionType,
         transactionValue: transactionValue,
@@ -66,7 +67,7 @@ class TransactionService {
         totalExpense: accountDetails.totalExpense,
       });
     await this.accountRepository.updateAccount({
-      currentUser: currentUser,
+      userId: userId,
       accountId: accountDetails._id,
       accountName: accountDetails.accountName,
       createdAt: accountDetails.createdAt,
@@ -78,7 +79,7 @@ class TransactionService {
   }
 
   async updateTransaction({
-    currentUser,
+    userId,
     accountId,
     transactionId,
     transactionType,
@@ -86,25 +87,25 @@ class TransactionService {
     transactionDateTime,
     transactionValue,
   }: TransactionTypes.Service.UpdateTransactionParams): Promise<void> {
-    const currentTransactionDetails: TransactionTypes.Global.TransactionDetails =
+    const currentTransactionDetails: TransactionTypes.TransactionObject =
       await this.transactionRepository.findTransactionById({
-        currentUser: currentUser,
+        userId: userId,
         transactionId: transactionId,
       });
     if (!currentTransactionDetails) {
       throw new AppError({
-        statusCode: statusCodes.internalServerError,
-        message: "statusMessages.internalError",
+        statusCode: STATUS_CODES.internalServerError.code,
+        message: STATUS_CODES.internalServerError.message,
       });
     }
-    const accountDetails: AccountTypes.Global.AccountDetails = await this.accountRepository.findAccountById({
+    const accountDetails: AccountTypes.AccountObject = await this.accountRepository.findAccountById({
       accountId: accountId,
-      currentUser: currentUser,
+      userId: userId,
     });
     if (!accountDetails) {
       throw new AppError({
-        statusCode: statusCodes.internalServerError,
-        message: "statusMessages.internalError",
+        statusCode: STATUS_CODES.internalServerError.code,
+        message: STATUS_CODES.internalServerError.message,
       });
     }
     const { newAccountBalance, newTotalIncome, newTotalExpense } = BalanceHelper.updateBalances({
@@ -117,7 +118,7 @@ class TransactionService {
       currentTotalExpense: accountDetails.totalExpense,
     });
     await this.accountRepository.updateAccount({
-      currentUser: currentUser,
+      userId: userId,
       accountId: accountDetails._id,
       accountName: accountDetails.accountName,
       createdAt: accountDetails.createdAt,
@@ -126,7 +127,7 @@ class TransactionService {
       totalExpense: newTotalExpense,
     });
     await this.transactionRepository.updateTransaction({
-      currentUser: currentUser,
+      userId: userId,
       transactionId: currentTransactionDetails._id,
       accountId: currentTransactionDetails.accountId,
       transactionType: transactionType,
@@ -137,26 +138,27 @@ class TransactionService {
     return;
   }
 
-  async deleteTransaction({ currentUser, transactionId }: TransactionTypes.Service.DeleteTransactionParams) {
-    const transactionDetails: TransactionTypes.Global.TransactionDetails =
-      await this.transactionRepository.findTransactionById({
-        currentUser: currentUser,
+  async deleteTransaction({ userId, transactionId }: TransactionTypes.Service.DeleteTransactionParams) {
+    const transactionDetails: TransactionTypes.TransactionObject = await this.transactionRepository.findTransactionById(
+      {
+        userId: userId,
         transactionId: transactionId,
-      });
+      },
+    );
     if (!transactionDetails) {
       throw new AppError({
-        statusCode: statusCodes.internalServerError,
-        message: "statusMessages.internalError",
+        statusCode: STATUS_CODES.internalServerError.code,
+        message: STATUS_CODES.internalServerError.message,
       });
     }
-    const accountDetails: AccountTypes.Global.AccountDetails = await this.accountRepository.findAccountById({
-      currentUser: currentUser,
+    const accountDetails: AccountTypes.AccountObject = await this.accountRepository.findAccountById({
+      userId: userId,
       accountId: transactionDetails.accountId,
     });
     if (!accountDetails) {
       throw new AppError({
-        statusCode: statusCodes.internalServerError,
-        message: "statusMessages.internalError",
+        statusCode: STATUS_CODES.internalServerError.code,
+        message: STATUS_CODES.internalServerError.message,
       });
     }
     const { newAccountBalance, newTotalIncome, newTotalExpense } = BalanceHelper.subtractDeletedTransactionValue({
@@ -167,7 +169,7 @@ class TransactionService {
       totalExpense: accountDetails.totalExpense,
     });
     await this.accountRepository.updateAccount({
-      currentUser: currentUser,
+      userId: userId,
       accountId: accountDetails._id,
       accountName: accountDetails.accountName,
       createdAt: accountDetails.createdAt,
@@ -176,7 +178,7 @@ class TransactionService {
       totalExpense: newTotalExpense,
     });
     await this.transactionRepository.deleteTransaction({
-      currentUser: currentUser,
+      userId: userId,
       transactionId: transactionId,
     });
     return;

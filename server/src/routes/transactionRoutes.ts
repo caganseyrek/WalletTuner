@@ -1,26 +1,30 @@
 import express, { Router } from "express";
 
-import transactionController from "@/controllers/transactionController";
+import TransactionController from "@/controllers/transactionController";
 
-import * as schemas from "@/middleware/validation/transactionSchema";
+import schemas from "@/utils/schemas";
+
 import auth from "@/middleware/auth";
 import validate from "@/middleware/validate";
 
-import { MiddlewareArray } from "@/types/global";
+import { GlobalTypes } from "@/types/globals";
 
 const router: Router = express.Router();
 
-const middlewares: MiddlewareArray = {
-  getTransactions: [auth, validate(schemas.getTransactionsSchema)],
-  createTransaction: [auth, validate(schemas.createTransactionSchema)],
-  updateTransaction: [auth, validate(schemas.updateTransactionSchema)],
-  deleteTransaction: [auth, validate(schemas.deleteTransactionSchema)],
+const transactionController: TransactionController = new TransactionController();
+
+const middlewares: GlobalTypes.MiddlewareArray = {
+  getTransactions: [auth],
+  createTransaction: [auth, validate(schemas.transaction.createSchema)],
+  updateTransaction: [auth, validate(schemas.transaction.updateSchema)],
+  deleteTransaction: [auth, validate(schemas.transaction.deleteSchema)],
 };
 
-router.post("/all", middlewares.getTransactions, transactionController.getTransactions);
-router.post("/create", middlewares.createTransaction, transactionController.createTransaction);
-router.patch("/update", middlewares.updateTransaction, transactionController.updateTransaction);
-router.delete("/delete", middlewares.deleteTransaction, transactionController.deleteTransaction);
+router.post("/getAllTransactions", middlewares.getTransactions, transactionController.getTransactions);
+router.post("/createTransactions", middlewares.createTransaction, transactionController.createTransaction);
+router.patch("/updateTransactions", middlewares.updateTransaction, transactionController.updateTransaction);
+router.delete("/deleteTransactions", middlewares.deleteTransaction, transactionController.deleteTransaction);
 
 const transactionRoutes: Router = router;
+
 export default transactionRoutes;
