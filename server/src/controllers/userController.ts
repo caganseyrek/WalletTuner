@@ -28,7 +28,7 @@ class UserController {
         ResponseHelper.generate({
           isSuccess: true,
           message: "user.success.loginSuccessful",
-          data: { name: loginDetails.name },
+          data: { fullName: loginDetails.fullName },
         }),
       );
     } catch (error) {
@@ -57,10 +57,9 @@ class UserController {
 
   public async registerUser(req: Request, res: Response, next: NextFunction) {
     try {
-      const { name, surname, email, password }: UserTypes.Controller.RegisterUserParams = req.body;
+      const { fullName, email, password }: UserTypes.Controller.RegisterUserParams = req.body;
       const userDetails: UserTypes.Controller.RegisterUserParams = {
-        name: name,
-        surname: surname,
+        fullName: fullName,
         email: email,
         password: password,
       };
@@ -85,9 +84,8 @@ class UserController {
       const userId: string = TokenHelper.extractUserId({ tokenValue: accessToken, tokenType: "access" });
 
       const {
-        name,
-        surname,
         email,
+        fullName,
         password,
         preferredFormat,
         preferredCurrency,
@@ -95,8 +93,7 @@ class UserController {
       }: UserTypes.Controller.UpdateUserParams = req.body;
       const updatedUserDetails: UserTypes.Controller.UpdateUserParams = {
         userId: userId,
-        name: name,
-        surname: surname,
+        fullName: fullName,
         email: email,
         password: password,
         preferredFormat: preferredFormat,

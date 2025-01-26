@@ -2,9 +2,9 @@
 
 SCRIPT_DIR="$(dirname "$(realpath "$0")")"
 
-ROOT_PATH="$SCRIPT_DIR/.."
-CLIENT_PATH="$SCRIPT_DIR/client"
-SERVER_PATH="$SCRIPT_DIR/server"
+ROOT_PATH="$SCRIPT_DIR"
+CLIENT_PATH="$SCRIPT_DIR/../client"
+SERVER_PATH="$SCRIPT_DIR/../server"
 
 pnpm concurrently -k \
   -n "client,server" \

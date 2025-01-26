@@ -1,6 +1,8 @@
-import TransactionTypes from "@/types/transaction";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { EasyRequester } from "easy-requester";
+
+import { EasyRequester } from "@/lib/EasyRequester/src";
+
+import TransactionTypes from "@/types/transaction";
 
 const useTransactionCreateMutation = () => {
   const queryClient = useQueryClient();
@@ -8,13 +10,15 @@ const useTransactionCreateMutation = () => {
   const createTransaction = useMutation({
     mutationKey: ["createTransactionMutation"],
     mutationFn: async (transactionCreateData: TransactionTypes.Mutations.CreateRequestParams) => {
-      const { accessToken, ...requestData } = transactionCreateData;
       const response = await new EasyRequester()
         .setConfig({
-          method: "POST",
-          endpoint: { route: "transaction", action: "create" },
-          accessToken: accessToken,
-          payload: requestData,
+          requestConfig: {
+            method: "POST",
+            baseURL: process.env.NEXT_PUBLIC_BACKEND_URL!,
+            endpoint: { route: "transaction", action: "createTransaction" },
+            payload: transactionCreateData,
+            includeCookies: true,
+          },
         })
         .sendRequest();
       return response;

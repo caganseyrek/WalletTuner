@@ -1,5 +1,6 @@
-import UserTypes from "@/types/user";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+
+import UserTypes from "@/types/user";
 
 function useSettings() {
   const queryClient = useQueryClient();

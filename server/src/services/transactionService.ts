@@ -18,7 +18,7 @@ class TransactionService {
     this.accountRepository = new AccountRepository();
   }
 
-  async getTransactions({
+  public async getTransactions({
     userId,
   }: TransactionTypes.Service.GetTransactionsParams): Promise<TransactionTypes.TransactionObject[]> {
     const transactions: TransactionTypes.TransactionObject[] =
@@ -32,7 +32,7 @@ class TransactionService {
     return transactions;
   }
 
-  async createTransaction({
+  public async createTransaction({
     userId,
     accountId,
     transactionType,
@@ -78,7 +78,7 @@ class TransactionService {
     return;
   }
 
-  async updateTransaction({
+  public async updateTransaction({
     userId,
     accountId,
     transactionId,
@@ -138,7 +138,7 @@ class TransactionService {
     return;
   }
 
-  async deleteTransaction({ userId, transactionId }: TransactionTypes.Service.DeleteTransactionParams) {
+  public async deleteTransaction({ userId, transactionId }: TransactionTypes.Service.DeleteTransactionParams) {
     const transactionDetails: TransactionTypes.TransactionObject = await this.transactionRepository.findTransactionById(
       {
         userId: userId,

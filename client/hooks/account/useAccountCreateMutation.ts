@@ -1,6 +1,8 @@
-import AccountHooksTypes from "@/types/account";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { EasyRequester } from "easy-requester";
+
+import { EasyRequester } from "@/lib/EasyRequester/src";
+
+import AccountHooksTypes from "@/types/account";
 
 const useAccountCreateMutation = () => {
   const queryClient = useQueryClient();
@@ -8,13 +10,15 @@ const useAccountCreateMutation = () => {
   const accountCreate = useMutation({
     mutationKey: ["createAccountMutation"],
     mutationFn: async (accountCreateData: AccountHooksTypes.Mutations.CreateRequestParams) => {
-      const { accessToken, ...requestData } = accountCreateData;
       const response = await new EasyRequester()
         .setConfig({
-          method: "POST",
-          endpoint: { route: "account", action: "create" },
-          accessToken: accessToken,
-          payload: requestData,
+          requestConfig: {
+            method: "POST",
+            baseURL: process.env.NEXT_PUBLIC_BACKEND_URL!,
+            endpoint: { route: "account", action: "createAccount" },
+            payload: accountCreateData,
+            includeCookies: true,
+          },
         })
         .sendRequest();
       return response;

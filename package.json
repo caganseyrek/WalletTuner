@@ -5,5 +5,13 @@
   },
   "scripts": {
     "prepare": "husky"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "bcrypt",
+      "@scarf/scarf",
+      "esbuild",
+      "sharp"
+    ]
   }
 }

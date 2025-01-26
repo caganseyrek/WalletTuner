@@ -5,7 +5,7 @@ import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
-import "@/shared/globals.css";
+import "@/styles/globals.css";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -20,9 +20,15 @@ const RootLayout = ({ children }: LayoutProps) => {
 
   return (
     <html>
-      <QueryClientProvider client={queryClient}>
-        <body>{children}</body>
-      </QueryClientProvider>
+      <head>
+        <link rel="icon" href="/images/favicon.png" sizes="any" />
+      </head>
+      <body>
+        <QueryClientProvider client={queryClient}>
+          {children}
+          <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
+      </body>
     </html>
   );
 };

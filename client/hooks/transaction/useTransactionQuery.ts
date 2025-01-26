@@ -1,21 +1,27 @@
+import { useQuery } from "@tanstack/react-query";
+
+import { TransactionObject } from "@/components/columns/TransactionColumns";
+
+import { EasyRequester } from "@/lib/EasyRequester/src";
+
 import GlobalTypes from "@/types/globals";
 import TransactionTypes from "@/types/transaction";
-import { useQuery } from "@tanstack/react-query";
-import { EasyRequester } from "easy-requester";
 
 const useTransactionQuery = (transactionQueryData: TransactionTypes.Queries.TransactionQueryRequestProps) => {
   const transactions = useQuery({
     queryKey: ["transactionQuery", transactionQueryData],
     queryFn: async () => {
-      const { accessToken, ...requestData } = transactionQueryData;
       const response = await new EasyRequester()
         .setConfig({
-          method: "PATCH",
-          endpoint: { route: "transaction", action: "all" },
-          accessToken: accessToken,
-          payload: requestData,
+          requestConfig: {
+            method: "PATCH",
+            baseURL: process.env.NEXT_PUBLIC_BACKEND_URL!,
+            endpoint: { route: "transaction", action: "getAllTransactions" },
+            payload: transactionQueryData,
+            includeCookies: true,
+          },
         })
-        .sendRequest<GlobalTypes.BackendResponseParams<TransactionTypes.Queries.TransactionQueryResponseProps[]>>();
+        .sendRequest<GlobalTypes.BackendResponseParams<TransactionObject[]>>();
       return response;
     },
   });

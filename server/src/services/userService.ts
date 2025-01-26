@@ -21,7 +21,11 @@ class UserService {
     this.tokenRepository = new TokenRepository();
   }
 
-  async loginUser({ response, email, password }: UserTypes.LoginUserParams): Promise<UserTypes.LoginDetailsObject> {
+  public async loginUser({
+    response,
+    email,
+    password,
+  }: UserTypes.LoginUserParams): Promise<UserTypes.LoginDetailsObject> {
     const userExists: UserTypes.UserObject[] | null = await this.userRepository.findByEmail({ email: email });
     if (!userExists || userExists.length !== 1) {
       throw new AppError({
@@ -62,17 +66,17 @@ class UserService {
       maxAge: 60000 * 60 * 24 * 1,
       signed: true,
     });
-    return { name: userDetails.name };
+    return { fullName: userDetails.fullName };
   }
 
-  async logoutUser({ response, userId }: UserTypes.LogoutUserParams): Promise<void> {
+  public async logoutUser({ response, userId }: UserTypes.LogoutUserParams): Promise<void> {
     response.clearCookie("accessToken");
     response.clearCookie("refreshToken");
     await this.clearExistingTokensByUserId({ userId: userId });
     return;
   }
 
-  async createUser({ name, surname, email, password }: UserTypes.Service.RegisterUserParams): Promise<void> {
+  public async createUser({ fullName, email, password }: UserTypes.Service.RegisterUserParams): Promise<void> {
     const existingUser: UserTypes.UserObject[] = await this.userRepository.findByEmail({
       email: email,
     });
@@ -84,8 +88,7 @@ class UserService {
     }
     const hashedPassword = await PasswordHelper.hash({ password: password });
     const newUserObject = {
-      name: name,
-      surname: surname,
+      fullName: fullName,
       email: email,
       password: hashedPassword,
     };
@@ -93,10 +96,9 @@ class UserService {
     return;
   }
 
-  async updateUser({
+  public async updateUser({
     userId,
-    name,
-    surname,
+    fullName,
     email,
     password,
     preferredFormat,
@@ -124,8 +126,7 @@ class UserService {
     }
     const updatedUserDetails: Omit<UserTypes.Service.UpdateUserParams, "password"> = {
       userId: userId,
-      name: name,
-      surname: surname,
+      fullName: fullName,
       email: email,
       preferredFormat: preferredFormat,
       preferredCurrency: preferredCurrency,
@@ -135,7 +136,7 @@ class UserService {
     return;
   }
 
-  async deleteUser({ userId, password }: UserTypes.Service.DeleteUserParams): Promise<void> {
+  public async deleteUser({ userId, password }: UserTypes.Service.DeleteUserParams): Promise<void> {
     const userDetails: UserTypes.UserObject | null = await this.userRepository.findById({
       userId: userId,
     });
@@ -159,7 +160,7 @@ class UserService {
     return;
   }
 
-  async getUserSettings({
+  public async getUserSettings({
     userId,
   }: UserTypes.Service.GetUserSettingsParams): Promise<UserTypes.Settings.UserSettingsObject> {
     const userDetails: UserTypes.Settings.UserWithSettingsObject | null =
@@ -179,7 +180,7 @@ class UserService {
     };
   }
 
-  async newAccessToken({ response, userId, refreshToken }: TokenTypes.NewTokenParams): Promise<void> {
+  public async newAccessToken({ response, userId, refreshToken }: TokenTypes.NewTokenParams): Promise<void> {
     const isTokenSaved = await this.tokenRepository.findTokenByFilters({
       belongsTo: new mongoose.Types.ObjectId(userId),
       refreshToken: refreshToken,

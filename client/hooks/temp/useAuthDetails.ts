@@ -1,5 +1,6 @@
-import GlobalTypes from "@/types/globals";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+
+import GlobalTypes from "@/types/globals";
 
 const useAuthDetails = () => {
   const queryClient = useQueryClient();
@@ -8,9 +9,7 @@ const useAuthDetails = () => {
     queryKey: ["authDetails"],
     queryFn: () => queryClient.getQueryData<GlobalTypes.AuthDetailsParams>(["authDetails"]),
     initialData: {
-      accessToken: undefined,
-      currentUser: undefined,
-      currentEmail: undefined,
+      email: undefined,
       name: undefined,
     },
     enabled: false,

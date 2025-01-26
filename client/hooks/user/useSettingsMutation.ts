@@ -1,7 +1,9 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+import { EasyRequester } from "@/lib/EasyRequester/src";
+
 import GlobalTypes from "@/types/globals";
 import UserTypes from "@/types/user";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { EasyRequester, EasyRequesterConfig } from "easy-requester";
 
 const useSettingsMutation = () => {
   const queryClient = useQueryClient();
@@ -11,10 +13,13 @@ const useSettingsMutation = () => {
     mutationFn: async () => {
       const response = await new EasyRequester()
         .setConfig({
-          method: "POST",
-          endpoint: { route: "user", action: "settings" },
-          includeCookies: true,
-        } as EasyRequesterConfig)
+          requestConfig: {
+            method: "POST",
+            baseURL: process.env.NEXT_PUBLIC_BACKEND_URL!,
+            endpoint: { route: "user", action: "settings" },
+            includeCookies: true,
+          },
+        })
         .sendRequest<GlobalTypes.BackendResponseParams<UserTypes.Settings.SettingsResponseProps>>();
       return response;
     },

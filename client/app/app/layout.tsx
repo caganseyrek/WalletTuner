@@ -1,17 +1,20 @@
 import React from "react";
 
 import LayoutSidebar from "@/components/LayoutSidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 
 interface LayoutProps {
   children: React.ReactNode;
 }
 
 const RootLayout = ({ children }: LayoutProps) => {
+  // check for auth
+
   return (
-    <>
+    <SidebarProvider>
       <LayoutSidebar />
-      {children}
-    </>
+      <main className="w-[calc(100vw-256px)]">{children}</main>
+    </SidebarProvider>
   );
 };
 

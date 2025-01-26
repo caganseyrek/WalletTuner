@@ -1,6 +1,8 @@
-import TransactionTypes from "@/types/transaction";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { EasyRequester } from "easy-requester";
+
+import { EasyRequester } from "@/lib/EasyRequester/src";
+
+import TransactionTypes from "@/types/transaction";
 
 const useTransactionDeleteMutation = () => {
   const queryClient = useQueryClient();
@@ -8,13 +10,15 @@ const useTransactionDeleteMutation = () => {
   const deleteTransaction = useMutation({
     mutationKey: ["deleteTransactionMutation"],
     mutationFn: async (transactionDeleteData: TransactionTypes.Mutations.DeleteRequestParams) => {
-      const { accessToken, ...requestData } = transactionDeleteData;
       const response = await new EasyRequester()
         .setConfig({
-          method: "DELETE",
-          endpoint: { route: "transaction", action: "delete" },
-          accessToken: accessToken,
-          payload: requestData,
+          requestConfig: {
+            method: "DELETE",
+            baseURL: process.env.NEXT_PUBLIC_BACKEND_URL!,
+            endpoint: { route: "transaction", action: "deleteTransaction" },
+            payload: transactionDeleteData,
+            includeCookies: true,
+          },
         })
         .sendRequest();
       return response;

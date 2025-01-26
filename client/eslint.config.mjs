@@ -13,7 +13,6 @@ const eslintConfig = [
   ...compat.config({
     extends: ["next/core-web-vitals", "next/typescript"],
     rules: {
-      "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
       "no-alert": "warn",
       "no-console": ["warn", { allow: ["error"] }],
       "no-constant-condition": "error",

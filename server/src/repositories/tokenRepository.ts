@@ -10,7 +10,7 @@ import Sanitizer from "@/utils/sanitizer";
 import TokenTypes from "@/types/token";
 
 class TokenRepository {
-  async findTokensByUserId({
+  public async findTokensByUserId({
     belongsTo,
   }: TokenTypes.Repository.FindTokenByUserIdParams): Promise<TokenTypes.TokenObject[]> {
     const sanitizedQuery = Sanitizer.sanitizeQuery({ belongsTo: belongsTo });
@@ -18,7 +18,7 @@ class TokenRepository {
     return tokens;
   }
 
-  async findTokenByFilters({
+  public async findTokenByFilters({
     belongsTo,
     refreshToken,
   }: TokenTypes.Repository.FindTokenByFiltersParams): Promise<TokenTypes.TokenObject[]> {
@@ -27,7 +27,7 @@ class TokenRepository {
     return tokens;
   }
 
-  async saveNewToken({
+  public async saveNewToken({
     userId,
     refreshToken,
   }: TokenTypes.Repository.SaveNewTokenParams): Promise<TokenTypes.TokenObject> {
@@ -48,7 +48,7 @@ class TokenRepository {
     return newTokenObject;
   }
 
-  async deleteToken({ userId }: TokenTypes.Repository.DeleteTokenParams): Promise<void> {
+  public async deleteToken({ userId }: TokenTypes.Repository.DeleteTokenParams): Promise<void> {
     const sanitizedQuery = Sanitizer.sanitizeObject<object>({ belongsTo: userId });
     const deleteTokens = await tokenModel.findOneAndDelete(sanitizedQuery).exec();
     if (!deleteTokens) {

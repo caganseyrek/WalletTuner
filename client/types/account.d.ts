@@ -1,24 +1,16 @@
-import GlobalTypes from "./globals";
-
 namespace AccountHooksTypes {
   type AccountName = { accountName: string };
+  type AccountId = { accountId: string };
+  type MaybeAccountId = { accountId?: string };
 
   export namespace Mutations {
-    export type CreateRequestParams = GlobalTypes.EssentialRequestParams & AccountName;
-    export type UpdateRequestParams = GlobalTypes.EssentialRequestParams & AccountName;
-    export type DeleteRequestParams = GlobalTypes.EssentialRequestParams & { accountId: string };
+    export type CreateRequestParams = AccountName;
+    export type UpdateRequestParams = AccountName;
+    export type DeleteRequestParams = AccountId;
   }
 
   export namespace Queries {
-    export type RequestParams = GlobalTypes.EssentialRequestParams & { accountId?: string };
-    export interface ResponseProps {
-      _id: string;
-      accountName: string;
-      createdAt: string;
-      balance: number;
-      totalIncome: number;
-      totalExpense: number;
-    }
+    export type RequestParams = MaybeAccountId;
   }
 }
 

@@ -1,39 +1,25 @@
 import GlobalTypes from "./globals";
 
 namespace TransactionTypes {
+  export type TransactionType = "inc" | "exp";
+  type TransactionId = { transactionId: string };
+  type MaybeTransactionId = { transactionId?: string };
+  interface Transaction {
+    accountId: string;
+    transactionType: TransactionType;
+    transactionDescription: string;
+    transactionDateTime: string;
+    transactionValue: number;
+  }
+
   export namespace Mutations {
-    export interface CreateRequestParams extends GlobalTypes.EssentialRequestParams {
-      accountId: string;
-      transactionType: "inc" | "exp";
-      transactionDescription: string;
-      transactionDateTime: string;
-      transactionValue: number;
-    }
-
-    export interface UpdateRequestParams extends GlobalTypes.EssentialRequestParams {
-      accountId: string;
-      transactionType: "inc" | "exp";
-      transactionDescription: string;
-      transactionDateTime: string;
-      transactionValue: number;
-    }
-
-    export interface DeleteRequestParams extends GlobalTypes.EssentialRequestParams {
-      transactionId: string;
-    }
+    export type CreateRequestParams = Transaction;
+    export type UpdateRequestParams = TransactionId & Transaction;
+    export type DeleteRequestParams = TransactionId;
   }
 
   export namespace Queries {
-    export type TransactionQueryRequestProps = GlobalTypes.EssentialRequestParams;
-    export interface TransactionQueryResponseProps {
-      _id: string;
-      accountId: string;
-      belongsToUser: string;
-      transactionType: "inc" | "exp";
-      transactionDescription: string;
-      transactionDateTime: string;
-      transactionValue: number;
-    }
+    export type TransactionQueryRequestProps = MaybeTransactionId;
   }
 }
 

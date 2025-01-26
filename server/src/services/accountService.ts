@@ -16,7 +16,7 @@ class AccountService {
     this.transactionRepository = new TransactionRepository();
   }
 
-  async getAccounts({ userId }: AccountTypes.Service.GetAccountsParams): Promise<AccountTypes.AccountObject[]> {
+  public async getAccounts({ userId }: AccountTypes.Service.GetAccountsParams): Promise<AccountTypes.AccountObject[]> {
     const accounts: AccountTypes.AccountObject[] = await this.accountRepository.findAccountByUserId({
       userId: userId,
     });
@@ -29,7 +29,7 @@ class AccountService {
     return accounts;
   }
 
-  async createAccount({ userId, accountName }: AccountTypes.Service.CreateAccountParams): Promise<void> {
+  public async createAccount({ userId, accountName }: AccountTypes.Service.CreateAccountParams): Promise<void> {
     const doesAccountExists: AccountTypes.AccountObject[] = await this.accountRepository.findAccountByName({
       userId: userId,
       accountName: accountName,
@@ -44,7 +44,7 @@ class AccountService {
     return;
   }
 
-  async updateAccount({ userId, accountId, accountName }: AccountTypes.Service.UpdateAccountParams): Promise<void> {
+  public async updateAccount({ userId, accountId, accountName }: AccountTypes.Service.UpdateAccountParams): Promise<void> {
     const doesAccountExists: AccountTypes.AccountObject[] = await this.accountRepository.findAccountByName({
       userId: userId,
       accountName: accountName,
@@ -77,7 +77,7 @@ class AccountService {
     return;
   }
 
-  async deleteAccount({ userId, accountId }: AccountTypes.Service.DeleteAccountParams): Promise<void> {
+  public async deleteAccount({ userId, accountId }: AccountTypes.Service.DeleteAccountParams): Promise<void> {
     const relatedTransactions: TransactionTypes.TransactionObject[] =
       await this.transactionRepository.findTransactionsByAccountId({ userId: userId, accountId: accountId });
     if (relatedTransactions.length > 0) {

@@ -1,74 +1,179 @@
 "use client";
 
-import React from "react";
+import React, { ForwardRefExoticComponent, ReactNode, RefAttributes } from "react";
 
-import { BadgeEuro, BookText, ChartArea, CircleUserRound, Command, SquareTerminal } from "lucide-react";
 import Link from "next/link";
 
-import { Button } from "./ui/button";
-import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "./ui/command";
+import {
+  BadgeEuro,
+  BookText,
+  ChartArea,
+  ChevronUp,
+  CircleUserRound,
+  CodeXml,
+  FileJson2,
+  LogOut,
+  LucideProps,
+  MessageSquareMore,
+  NotebookTabs,
+  Settings,
+} from "lucide-react";
 
-const menuLinks = [
+import useLogoutMutation from "@/hooks/user/useLogoutMutation";
+
+import Icon from "./Icon";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "./ui/sidebar";
+
+const menuLinks: {
+  key: string;
+  title: string;
+  items: {
+    key: string;
+    title: string;
+    url: string;
+    icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>;
+  }[];
+}[] = [
   {
+    key: "sidebar_application",
     title: "Application",
     items: [
       {
+        key: "sidebar_application_accounts",
         title: "Accounts",
-        url: "#",
-        icon: CircleUserRound,
+        url: "/app/accounts",
+        icon: NotebookTabs,
       },
       {
+        key: "sidebar_application_transactions",
         title: "Transactions",
-        url: "#",
+        url: "/app/transactions",
         icon: BadgeEuro,
       },
       {
+        key: "sidebar_application_graphs",
         title: "Graphs",
-        url: "#",
+        url: "/app/graphs",
         icon: ChartArea,
       },
     ],
   },
   {
+    key: "sidebar_user",
+    title: "User",
+    items: [
+      {
+        key: "sidebar_user_details",
+        title: "User Details",
+        url: "/app/user",
+        icon: CircleUserRound,
+      },
+      {
+        key: "sidebar_user_settings",
+        title: "Settings",
+        url: "/app/settings",
+        icon: Settings,
+      },
+    ],
+  },
+  {
+    key: "sidebar_external",
     title: "External",
     items: [
       {
-        title: "Shortcuts",
-        url: "#",
-        icon: Command,
+        key: "sidebar_external_docs",
+        title: "Documentation",
+        url: "/docs",
+        icon: BookText,
       },
       {
-        title: "Documentation",
-        url: "#",
-        icon: BookText,
+        key: "sidebar_external_dev_docs",
+        title: "Developer Docs",
+        url: "/docs/developers",
+        icon: FileJson2,
+      },
+      {
+        key: "sidebar_external_repo",
+        title: "Repository",
+        url: "https://github.com/caganseyrek/WalletTuner",
+        icon: CodeXml,
+      },
+      {
+        key: "sidebar_external_feedback",
+        title: "Feedback",
+        url: "https://github.com/caganseyrek/WalletTuner/issues",
+        icon: MessageSquareMore,
       },
     ],
   },
 ];
 
 const LayoutSidebar = () => {
-  const [isCommandOpen, setIsCommandOpen] = React.useState(false);
+  const logout = useLogoutMutation();
 
   return (
-    <aside className="flex flex-col p-[15px] w-[260px] h-[100vh] gap-y-[30px] bg-accent border-r">
-      <div className="flex flex-col gap-y-[15px]">
-        <h2 className="text-2xl font-bold px-[10px]">WalletTuner</h2>
-      </div>
-      {menuLinks.map((section) => (
-        <div key={section.title} className="flex flex-col w-[100%] gap-y-[5px]">
-          <span className="text-muted-foreground text-sm font-semibold tracking-tight px-[10px] pb-[5px]">
-            {section.title}
-          </span>
-          {section.items.map((link) => (
-            <Button key={link.title} variant="ghost" className="items-center justify-start hover:bg-border">
-              <link.icon />
-              <Link href={link.url}>{link.title}</Link>
-            </Button>
-          ))}
-        </div>
-      ))}
-      <div></div>
-    </aside>
+    <Sidebar>
+      <SidebarHeader className="flex flex-row items-center justify-start gap-2 px-4 pt-3">
+        <Icon className="w-[28px]" />
+        <h1 className="text-xl font-semibold tracking-tight">WalletTuner</h1>
+      </SidebarHeader>
+      <SidebarContent>
+        {menuLinks.map((section) => (
+          <SidebarGroup key={section.key}>
+            <SidebarGroupLabel>{section.title}</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {section.items.map((item) => (
+                  <SidebarMenuItem key={item.key}>
+                    <SidebarMenuButton asChild>
+                      <Link href={item.url} target={section.title === "External" ? "_blank" : "_self"}>
+                        <item.icon />
+                        <span>{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        ))}
+      </SidebarContent>
+      <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <SidebarMenuButton className="h-auto">
+                  <div className="flex flex-col">
+                    <b>Çağan Seyrek</b>
+                    <span>caganseyrek@outlook.com.tr</span>
+                  </div>
+                  <ChevronUp className="ml-auto" />
+                </SidebarMenuButton>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent side="top" className="w-[--radix-popper-anchor-width]">
+                <DropdownMenuItem onClick={() => logout.mutateAsync()}>
+                  <LogOut />
+                  <span>Log Out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
+    </Sidebar>
   );
 };
 

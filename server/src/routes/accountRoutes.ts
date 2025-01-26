@@ -2,10 +2,7 @@ import express, { Router } from "express";
 
 import AccountController from "@/controllers/accountController";
 
-import schemas from "@/utils/schemas";
-
 import auth from "@/middleware/auth";
-import validate from "@/middleware/validate";
 
 import { GlobalTypes } from "@/types/globals";
 
@@ -15,9 +12,9 @@ const accountController: AccountController = new AccountController();
 
 const middlewares: GlobalTypes.MiddlewareArray = {
   getAccounts: [auth],
-  createAccount: [auth, validate(schemas.account.createSchema)],
-  updateAccount: [auth, validate(schemas.account.updateSchema)],
-  deleteAccount: [auth, validate(schemas.account.deleteSchema)],
+  createAccount: [auth],
+  updateAccount: [auth],
+  deleteAccount: [auth],
 };
 
 router.get("/getAllAccounts", middlewares.getAccounts, accountController.getAccounts);

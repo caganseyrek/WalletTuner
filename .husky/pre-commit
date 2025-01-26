@@ -1,2 +1,0 @@
-pnpm --filter {client} exec lint-staged
-pnpm --filter {server} exec lint-staged

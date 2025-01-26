@@ -4,8 +4,7 @@ import UserTypes from "@/types/user";
 
 const userSchema: Schema = new Schema<UserTypes.Settings.UserWithSettingsObject>({
   _id: mongoose.Schema.Types.ObjectId,
-  name: { type: String },
-  surname: { type: String },
+  fullName: { type: String, required: true },
   email: { type: String, unique: true, required: true },
   password: { type: String, required: true },
   preferredFormat: { type: String, required: true },

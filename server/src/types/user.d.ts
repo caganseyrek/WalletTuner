@@ -4,13 +4,12 @@ import { SupportedCurrencies, SupportedDisplayType, SupportedLocaleString } from
 namespace UserTypes {
   export interface UserObject {
     _id: mongoose.Types.ObjectId;
-    name: string;
-    surname: string;
+    fullName: string;
     email: string;
     password: string;
   }
   export interface LoginDetailsObject {
-    name: string;
+    fullName: string;
   }
   export type LoginUserParams = GlobalTypes.ServerResponse & Pick<UserObject, "email"> & Pick<UserObject, "password">;
   export type LogoutUserParams = GlobalTypes.Identifiers & GlobalTypes.ServerResponse;

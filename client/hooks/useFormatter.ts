@@ -1,12 +1,11 @@
-import HookTypes from "@/types/hook";
-
 import useSettings from "./temp/useSettings";
+import GlobalTypes from "@/types/globals";
 
 function useFormatter() {
   const { data: savedSettings } = useSettings();
 
   if (!savedSettings) {
-    return ({ value }: HookTypes.FormatterParams) =>
+    return ({ value }: GlobalTypes.FormatterParams) =>
       new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "USD",
@@ -20,7 +19,7 @@ function useFormatter() {
   const currency = savedSettings.preferredCurrency;
   const currencyDisplayType = savedSettings.preferredCurrencyDisplay;
 
-  return ({ value }: HookTypes.FormatterParams) =>
+  return ({ value }: GlobalTypes.FormatterParams) =>
     new Intl.NumberFormat([regionalFormat, "en-US"], {
       style: "currency",
       currency: currency,

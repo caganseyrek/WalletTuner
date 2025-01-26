@@ -32,15 +32,12 @@ const schemas = {
       password: z.string().nonempty(),
     }),
     registerSchema: z.object({
-      name: z.string().nonempty(),
-      surname: z.string().nonempty(),
+      fullName: z.string().nonempty(),
       email: z.string().email().nonempty(),
       password: z.string().nonempty(),
     }),
-
     updateSchema: z.object({
-      name: z.string().nonempty(),
-      surname: z.string().nonempty(),
+      fullName: z.string().nonempty(),
       email: z.string().email().nonempty(),
       password: z.string().nonempty(),
       preferredFormat: z.enum([

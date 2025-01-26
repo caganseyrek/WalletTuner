@@ -7,16 +7,11 @@ namespace UserTypes {
       password: string;
     }
     export interface LoginResponseParams {
-      message: string;
-      accessToken: string;
-      currentUser: string;
-      currentEmail: string;
       name: string;
     }
     export type LogoutRequestParams = GlobalTypes.EssentialRequestParams;
     export interface RegisterRequestParams {
-      name: string;
-      surname: string;
+      fullName: string;
       email: string;
       password: string;
     }

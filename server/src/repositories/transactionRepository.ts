@@ -10,7 +10,7 @@ import Sanitizer from "@/utils/sanitizer";
 import TransactionTypes from "@/types/transactions";
 
 class TransactionRepository {
-  async findTransactionById({
+  public async findTransactionById({
     userId,
     transactionId,
   }: TransactionTypes.Repository.FindTransactionByIdParams): Promise<TransactionTypes.TransactionObject> {
@@ -19,7 +19,7 @@ class TransactionRepository {
     return transaction;
   }
 
-  async findTransactionsByAccountId({
+  public async findTransactionsByAccountId({
     userId,
     accountId,
   }: TransactionTypes.Repository.FindTransactionsByAccountIdParams): Promise<TransactionTypes.TransactionObject[]> {
@@ -28,7 +28,7 @@ class TransactionRepository {
     return transactions;
   }
 
-  async findTransactionsByUserId({
+  public async findTransactionsByUserId({
     userId,
   }: TransactionTypes.Repository.FindTransactionsByUserIdParams): Promise<TransactionTypes.TransactionObject[]> {
     const sanitizedQuery = Sanitizer.sanitizeQuery({ belongsToUser: userId });
@@ -36,7 +36,7 @@ class TransactionRepository {
     return transactions;
   }
 
-  async createTransaction({
+  public async createTransaction({
     belongsToUser,
     accountId,
     transactionType,
@@ -67,7 +67,7 @@ class TransactionRepository {
     return saveNewTransaction;
   }
 
-  async updateTransaction({
+  public async updateTransaction({
     userId,
     accountId,
     transactionId,
@@ -98,7 +98,7 @@ class TransactionRepository {
     return;
   }
 
-  async deleteTransaction({
+  public async deleteTransaction({
     userId,
     transactionId,
   }: TransactionTypes.Repository.DeleteTransactionParams): Promise<void> {

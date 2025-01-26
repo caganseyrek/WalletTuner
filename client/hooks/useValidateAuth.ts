@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { EasyRequester } from "easy-requester";
+
+import { EasyRequester } from "@/lib/EasyRequester/src";
 
 const useValidateAuth = () => {
   const validate = useQuery({
@@ -7,8 +8,12 @@ const useValidateAuth = () => {
     queryFn: async () => {
       const response = await new EasyRequester()
         .setConfig({
-          method: "GET",
-          endpoint: { route: "user", action: "validate" },
+          requestConfig: {
+            method: "GET",
+            baseURL: process.env.NEXT_PUBLIC_BACKEND_URL!,
+            endpoint: { route: "user", action: "auth/validate" },
+            includeCookies: true,
+          },
         })
         .sendRequest();
       return response;

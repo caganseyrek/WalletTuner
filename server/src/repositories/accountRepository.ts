@@ -10,7 +10,7 @@ import Sanitizer from "@/utils/sanitizer";
 import AccountTypes from "@/types/accounts";
 
 class AccountRepository {
-  async findAccountByName({
+  public async findAccountByName({
     userId,
     accountName,
   }: AccountTypes.Repository.FindAccountByNameParams): Promise<AccountTypes.AccountObject[]> {
@@ -19,7 +19,7 @@ class AccountRepository {
     return accounts;
   }
 
-  async findAccountById({
+  public async findAccountById({
     userId,
     accountId,
   }: AccountTypes.Repository.FindAccountByIdParams): Promise<AccountTypes.AccountObject> {
@@ -28,7 +28,7 @@ class AccountRepository {
     return accounts;
   }
 
-  async findAccountByUserId({
+  public async findAccountByUserId({
     userId,
   }: AccountTypes.Repository.FindAccountByUserIdParams): Promise<AccountTypes.AccountObject[]> {
     const sanitizedQuery = Sanitizer.sanitizeQuery({ belongsToUser: userId });
@@ -36,7 +36,7 @@ class AccountRepository {
     return accounts;
   }
 
-  async createAccount({ userId, accountName }: AccountTypes.Repository.CreateAccountParams): Promise<void> {
+  public async createAccount({ userId, accountName }: AccountTypes.Repository.CreateAccountParams): Promise<void> {
     const sanitizedNewAccountObject = Sanitizer.sanitizeObject<AccountTypes.AccountObject>({
       _id: new mongoose.Types.ObjectId(),
       belongsToUser: userId,
@@ -58,7 +58,7 @@ class AccountRepository {
     return newAccountObject;
   }
 
-  async updateAccount({
+  public async updateAccount({
     userId,
     accountId,
     accountName,
@@ -87,7 +87,7 @@ class AccountRepository {
     return;
   }
 
-  async deleteAccount({ userId, accountId }: AccountTypes.Repository.DeleteAccountParams): Promise<void> {
+  public async deleteAccount({ userId, accountId }: AccountTypes.Repository.DeleteAccountParams): Promise<void> {
     const sanitizedQuery = Sanitizer.sanitizeQuery({ _id: accountId, belongsToUser: userId });
     const deleteAccount = await accountModel.findOneAndDelete(sanitizedQuery).exec();
     if (!deleteAccount) {

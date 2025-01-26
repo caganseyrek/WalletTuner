@@ -1,33 +1,30 @@
-import GlobalTypes from "@/types/globals";
-import UserTypes from "@/types/user";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { EasyRequester } from "easy-requester";
+
+import { EasyRequester } from "@/lib/EasyRequester/src";
+
+import GlobalTypes from "@/types/globals";
 
 const useLogoutMutation = () => {
   const queryClient = useQueryClient();
 
   const logout = useMutation({
     mutationKey: ["logoutMutation"],
-    mutationFn: async (logoutData: UserTypes.Mutations.LogoutRequestParams) => {
-      const { accessToken, ...requestData } = logoutData;
+    mutationFn: async () => {
       const response = await new EasyRequester()
         .setConfig({
-          method: "POST",
-          endpoint: { route: "user", action: "logout" },
-          payload: requestData,
-          includeCookies: true,
+          requestConfig: {
+            method: "POST",
+            baseURL: process.env.NEXT_PUBLIC_BACKEND_URL!,
+            endpoint: { route: "user", action: "auth/logout" },
+            includeCookies: true,
+          },
         })
         .sendRequest();
       return response;
     },
     onSuccess: () => {
       queryClient.resetQueries();
-      const emptyAuthDetails: GlobalTypes.AuthDetailsParams = {
-        accessToken: undefined,
-        currentUser: undefined,
-        currentEmail: undefined,
-        name: undefined,
-      };
+      const emptyAuthDetails: GlobalTypes.AuthDetailsParams = { email: undefined, name: undefined };
       queryClient.setQueryData<GlobalTypes.AuthDetailsParams>(["authDetails"], emptyAuthDetails);
     },
   });
