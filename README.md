@@ -14,7 +14,6 @@ Before running the application, ensure you have the following installed:
 
 - Node.js (v20.14 or higher)
 - pnpm (v9.15.0 or higher)
-- Docker and Docker Compose (Optional)
 
 Also if you want to use the provided scripts, ensure your system supports running Bash scripts (e.g., Linux, macOS, or Windows Subsystem for Linux).
 

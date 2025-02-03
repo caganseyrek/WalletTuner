@@ -1,0 +1,37 @@
+{
+  "name": "easy-requester",
+  "version": "2.6.6",
+  "description": "A custom and flexible HTTP requester",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "keywords": [
+    "typescript",
+    "http-requester",
+    "fetch-api"
+  ],
+  "author": "Çağan Seyrek",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/caganseyrek/EasyRequester/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/caganseyrek/EasyRequester.git"
+  },
+  "homepage": "https://github.com/caganseyrek/EasyRequester",
+  "scripts": {
+    "build": "tsc -b",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.6",
+    "@wallettuner/eslint-config": "workspace:*",
+    "@wallettuner/ts-config": "workspace:*",
+    "eslint": "^9.18.0",
+    "prettier": "^3.4.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
+  }
+}

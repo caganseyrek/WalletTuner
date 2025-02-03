@@ -1,0 +1,15 @@
+{
+  "extends": "@wallettuner/ts-config/base.tsconfig.json",
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "rootDir": "src",
+    "baseUrl": "src",
+    "paths": {
+      "@/*": ["./*"]
+    },
+    "outDir": "dist",
+    "typeRoots": ["./node_modules/@types"]
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
+}

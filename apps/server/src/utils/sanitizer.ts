@@ -1,0 +1,57 @@
+import { Document, FilterQuery } from "mongoose";
+
+import logger from "./logger";
+import { AppError } from "@/app/error";
+import STATUS_CODES from "@/constants/statusCodes";
+
+class Sanitizer {
+  private static _visitedObjects = new WeakSet<object>();
+
+  public static sanitizeQuery<TData extends Document>(query: FilterQuery<TData>): FilterQuery<TData> {
+    return this._sanitize(query) as FilterQuery<TData>;
+  }
+
+  public static sanitize(object: unknown): unknown {
+    return this._sanitize(object);
+  }
+
+  private static _sanitize(value: unknown): unknown {
+    if (typeof value === "string") {
+      return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    } else if (Array.isArray(value)) {
+      return value.map((e) => this._sanitize(e));
+    } else if (value && typeof value === "object") {
+      if (this._visitedObjects.has(value)) {
+        logger.error("Circular reference detected during sanitation.");
+        throw new AppError({
+          statusCode: STATUS_CODES.badRequest.code,
+          message: "Couldn't validate request params.",
+        });
+      }
+      this._visitedObjects.add(value);
+      return this._sanitizeObject(value as Record<string, unknown>);
+    } else if (typeof value === "number" || typeof value === "boolean") {
+      return value;
+    } else if (value === null) {
+      return null;
+    }
+    logger.error(`Encountered invalid type '${typeof value}' with content: ${JSON.stringify(value)}`);
+    throw new AppError({
+      statusCode: STATUS_CODES.badRequest.code,
+      message: "Couldn't validate request params.",
+    });
+  }
+
+  private static _sanitizeObject(obj: Record<string, unknown>): Record<string, unknown> {
+    const sanitizedObject: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(obj)) {
+      if (key.startsWith("$")) {
+        continue;
+      }
+      sanitizedObject[key] = this._sanitize(value);
+    }
+    return sanitizedObject;
+  }
+}
+
+export default Sanitizer;
