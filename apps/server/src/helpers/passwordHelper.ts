@@ -1,15 +1,13 @@
 import { compare, genSalt, hash } from "bcrypt";
 
-import { UtilsTypes } from "@/types/utils";
-
 class PasswordHelper {
-  static async hash({ password }: UtilsTypes.PasswordHelper.HashParams) {
+  static async hash(password: string): Promise<string> {
     const salt: string = await genSalt(10);
     return await hash(password, salt);
   }
 
-  static async compare({ enteredPassword, hashedPassword }: UtilsTypes.PasswordHelper.CompareParams) {
-    return await compare(enteredPassword, hashedPassword);
+  static async compare(password: string, hash: string): Promise<boolean> {
+    return await compare(password, hash);
   }
 }
 

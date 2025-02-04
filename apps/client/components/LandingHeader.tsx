@@ -4,11 +4,8 @@ import Link from "next/link";
 
 import { ExternalLink } from "lucide-react";
 
-import LinkedButton from "@/components/LinkedButton";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-
 import Icon from "./Icon";
+import LinkedButton from "./LinkedButton";
 
 const LandingHeader = () => {
   return (

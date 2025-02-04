@@ -9,13 +9,11 @@
   "plugins": ["@trivago/prettier-plugin-sort-imports"],
   "importOrder": [
     "<THIRD_PARTY_MODULES>",
-    "^(?:[./@]*controllers)(/.*|$)",
-    "^(?:[./@]*services)(/.*|$)",
-    "^(?:[./@]*repositories)(/.*|$)",
-    "^(?:[./@]*models)(/.*|$)",
-    "^(?:[./@]*middleware)(/.*|$)",
+    "^(?:[./@]*app)(/.*|$)",
+    "^(?:[./@]*resources)(/.*|$)",
     "^(?:[./@]*utils)(/.*|$)",
     "^(?:[./@]*routes)(/.*|$)",
+    "^(?:[./@]*constants)(/.*|$)",
     "^(?:[./@]*types)(/.*|$)",
     "^(?:[./@]*)(/.*|$)"
   ],

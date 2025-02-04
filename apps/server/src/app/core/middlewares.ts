@@ -1,14 +1,18 @@
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import express from "express";
+import { auth } from "express-oauth2-jwt-bearer";
 import rateLimit, { RateLimitRequestHandler } from "express-rate-limit";
 import helmet from "helmet";
 import morgan from "morgan";
 
-import config from "../config";
-import { AppError, errorHandler } from "../error";
 import HELMET_OPTIONS from "@/constants/helmetOptions";
-import STATUS_CODES from "@/constants/statusCodes";
+
+import config from "../config";
+import { RateLimitError } from "../error";
+import Auth from "../middleware/auth";
+import errorHandler from "../middleware/errorHandler";
+import IDCheck from "../middleware/idCheck";
 
 class Middlewares {
   /**
@@ -30,10 +34,7 @@ class Middlewares {
       standardHeaders: "draft-8",
       legacyHeaders: false,
       handler: () => {
-        throw new AppError({
-          statusCode: STATUS_CODES.tooManyRequests.code,
-          message: STATUS_CODES.tooManyRequests.message,
-        });
+        throw new RateLimitError();
       },
     });
     app.use(rateLimiter);
@@ -43,7 +44,15 @@ class Middlewares {
     app.use(bodyParser.urlencoded({ extended: false }));
     app.use(bodyParser.json());
     app.use(errorHandler);
-
+    app.use(
+      auth({
+        issuerBaseURL: config.AUTH0.ISSUER_BASE_URL,
+        audience: config.AUTH0.AUDIENCE,
+        tokenSigningAlg: "RS256",
+      }),
+    );
+    app.use(Auth.check);
+    app.use(IDCheck.check);
     return app;
   }
 }

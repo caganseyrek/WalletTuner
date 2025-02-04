@@ -1,8 +1,9 @@
 import express, { NextFunction, Request, Response } from "express";
 
+import ResponseHelper from "@/app/response";
+
 import logger from "@/utils/logger";
 
-import ResponseHelper from "@/app/response";
 import STATUS_CODES from "@/constants/statusCodes";
 
 /**
@@ -20,6 +21,7 @@ class Handlers {
    * @returns {express.Application} The modified Express application with the said middlewares applied.
    */
   public static apply(app: express.Application): express.Application {
+    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
     app.use((_req: Request, res: Response, _next: NextFunction) => {
       res.status(STATUS_CODES.notFound.code).json(
         ResponseHelper.response({
@@ -30,6 +32,7 @@ class Handlers {
       );
     });
 
+    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
     app.use((error: Error, _req: Request, res: Response, _next: NextFunction) => {
       logger.error(`An error ocurred: ${error}`);
       res.status(STATUS_CODES.internalServerError.code).json(

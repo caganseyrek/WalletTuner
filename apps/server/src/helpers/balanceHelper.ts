@@ -1,38 +1,82 @@
-import { UtilsTypes } from "@/types/utils";
+export type TransactionType = "income" | "expense";
 
+export interface CurrentBalanceParams {
+  originalAmount: number;
+  updatedAmount: number;
+  originalType: TransactionType;
+  updatedType: TransactionType;
+  currentBalance: number;
+  currentTotalIncome: number;
+  currentTotalExpense: number;
+}
+
+export interface TransactionDetailsParams {
+  type: TransactionType;
+  amount: number;
+  balance: number;
+  totalIncome: number;
+  totalExpense: number;
+}
+
+export interface UpdatedBalanceProps {
+  newAccountBalance: number;
+  newTotalIncome: number;
+  newTotalExpense: number;
+}
+
+/**
+ * Helper class for calculating balance updates when transactions are created, updated, or deleted.
+ */
 class BalanceHelper {
-  static updateBalances({
-    originalTransactionType,
-    updatedTransactionType,
-    originalTransactionValue,
-    updatedTransactionValue,
-    currentBalance,
-    currentTotalIncome,
-    currentTotalExpense,
-  }: UtilsTypes.BalanceHelper.UpdateBalanceParams): UtilsTypes.BalanceHelper.UpdatedBalancesParams {
-    let newAccountBalance = currentBalance;
-    newAccountBalance -= updatedTransactionType === "inc" ? originalTransactionValue : -originalTransactionValue;
-    newAccountBalance += updatedTransactionType === "inc" ? updatedTransactionValue : -updatedTransactionValue;
+  /**
+   * Handles balance updates when a new transaction is created.
+   *
+   * @param {TransactionDetailsParams} params - The parameters for the new transaction.
+   * @returns {UpdatedBalanceProps} The updated balance, total income, and total expenses.
+   */
+  public static transactionCreated(params: TransactionDetailsParams): UpdatedBalanceProps {
+    const newAccountBalance: number = params.balance + (params.type === "income" ? params.amount : -params.amount);
+    const newTotalIncome: number = params.type === "income" ? params.totalIncome + params.amount : params.totalIncome;
+    const newTotalExpense: number =
+      params.type === "expense" ? params.totalExpense + params.amount : params.totalExpense;
 
-    let newTotalIncome = currentTotalIncome;
-    let newTotalExpense = currentTotalExpense;
-    const currentTransactionVal = originalTransactionValue;
+    return {
+      newAccountBalance,
+      newTotalIncome,
+      newTotalExpense,
+    };
+  }
 
-    if (originalTransactionType === updatedTransactionType) {
-      if (updatedTransactionType === "inc") {
-        newTotalIncome += updatedTransactionValue - currentTransactionVal;
+  /**
+   * Handles balance updates when an existing transaction is updated.
+   *
+   * @param {CurrentBalanceParams} params - The parameters for the updated transaction.
+   * @returns {UpdatedBalanceProps} The updated balance, total income, and total expenses.
+   */
+  public static transactionUpdated(params: CurrentBalanceParams): UpdatedBalanceProps {
+    let newAccountBalance = params.currentBalance;
+    newAccountBalance -= params.updatedType === "income" ? params.originalAmount : -params.originalAmount;
+    newAccountBalance += params.updatedType === "income" ? params.updatedAmount : -params.updatedAmount;
+
+    let newTotalIncome = params.currentTotalIncome;
+    let newTotalExpense = params.currentTotalExpense;
+    const currentTransactionVal = params.originalAmount;
+
+    if (params.originalType === params.updatedType) {
+      if (params.updatedType === "income") {
+        newTotalIncome += params.updatedAmount - currentTransactionVal;
       }
-      if (updatedTransactionType === "exp") {
-        newTotalExpense += updatedTransactionValue - currentTransactionVal;
+      if (params.updatedType === "expense") {
+        newTotalExpense += params.updatedAmount - currentTransactionVal;
       }
     } else {
-      if (originalTransactionType === "exp" && updatedTransactionType === "inc") {
+      if (params.originalType === "expense" && params.updatedType === "income") {
         newTotalExpense -= currentTransactionVal;
-        newTotalIncome += updatedTransactionValue;
+        newTotalIncome += params.updatedAmount;
       }
-      if (originalTransactionType === "inc" && updatedTransactionType === "exp") {
+      if (params.originalType === "income" && params.updatedType === "expense") {
         newTotalIncome -= currentTransactionVal;
-        newTotalExpense += updatedTransactionValue;
+        newTotalExpense += params.updatedAmount;
       }
     }
     return {
@@ -42,39 +86,22 @@ class BalanceHelper {
     };
   }
 
-  static subtractDeletedTransactionValue({
-    transactionType,
-    transactionValue,
-    balance,
-    totalIncome,
-    totalExpense,
-  }: UtilsTypes.BalanceHelper.TransactionDetailsParams): UtilsTypes.BalanceHelper.UpdatedBalancesParams {
-    const newAccountBalance: number = balance - (transactionType === "inc" ? transactionValue : -transactionValue);
-    const newTotalIncome: number = transactionType === "inc" ? totalIncome - transactionValue : totalIncome;
-    const newTotalExpense: number = transactionType === "exp" ? totalExpense - transactionValue : totalExpense;
+  /**
+   * Handles balance updates when an existing transaction is deleted.
+   *
+   * @param {TransactionDetailsParams} params - The parameters for the deleted transaction.
+   * @returns {UpdatedBalanceProps} The updated balance, total income, and total expenses.
+   */
+  static transactionDeleted(params: TransactionDetailsParams): UpdatedBalanceProps {
+    const newAccountBalance: number = params.balance - (params.type === "income" ? params.amount : -params.amount);
+    const newTotalIncome: number = params.type === "income" ? params.totalIncome - params.amount : params.totalIncome;
+    const newTotalExpense: number =
+      params.type === "expense" ? params.totalExpense - params.amount : params.totalExpense;
 
     return {
       newAccountBalance: newAccountBalance,
       newTotalIncome: newTotalIncome,
       newTotalExpense: newTotalExpense,
-    };
-  }
-
-  static addNewTransactionValue({
-    transactionType,
-    transactionValue,
-    balance,
-    totalIncome,
-    totalExpense,
-  }: UtilsTypes.BalanceHelper.TransactionDetailsParams): UtilsTypes.BalanceHelper.UpdatedBalancesParams {
-    const newAccountBalance: number = balance + (transactionType === "inc" ? transactionValue : -transactionValue);
-    const newTotalIncome: number = transactionType === "inc" ? totalIncome + transactionValue : totalIncome;
-    const newTotalExpense: number = transactionType === "exp" ? totalExpense + transactionValue : totalExpense;
-
-    return {
-      newAccountBalance,
-      newTotalIncome,
-      newTotalExpense,
     };
   }
 }

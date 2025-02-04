@@ -39,7 +39,6 @@ class HttpServer {
     this.server = app.listen(config.SERVER_PORT, () => {
       logger.info(`Server started at port ${config.SERVER_PORT}`);
     });
-
     process.on("SIGTERM", async () => await this.gracefulShutdown());
     process.on("SIGINT", async () => await this.gracefulShutdown());
   }

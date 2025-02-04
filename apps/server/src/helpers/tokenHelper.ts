@@ -1,38 +1,40 @@
+import { UnauthorizedError } from "express-oauth2-jwt-bearer";
 import jwt from "jsonwebtoken";
-
-import { UtilsTypes } from "@/types/utils";
 
 import config from "@/app/config";
 
+type TokenType = "access" | "refresh";
+
+interface TokenHelperParams {
+  type: TokenType;
+  token: string;
+}
+
 class TokenHelper {
-  static generate({ payload, tokenType }: UtilsTypes.TokenHelper.GenerateParams): string {
-    return jwt.sign(
-      { data: payload },
-      tokenType === "access" ? config.SECRETS.JWT_ACCESS : config.SECRETS.JWT_REFRESH,
-      {
-        expiresIn: tokenType === "access" ? "15min" : "1 day",
-      },
-    );
+  private static getSecret(tokenType: TokenType): string {
+    return tokenType === "access" ? config.SECRETS.JWT_ACCESS : config.SECRETS.JWT_REFRESH;
   }
 
-  static verify({ tokenValue, tokenType }: UtilsTypes.TokenHelper.VerifyParams): jwt.JwtPayload | string {
-    try {
-      return jwt.verify(tokenValue, tokenType === "access" ? config.SECRETS.JWT_ACCESS : config.SECRETS.JWT_REFRESH);
-    } catch {
-      return "";
+  public static generate({ type, token: payload }: TokenHelperParams): string {
+    return jwt.sign({ data: payload }, this.getSecret(type), {
+      expiresIn: type === "access" ? "15min" : "2 day",
+    });
+  }
+
+  public static getUserId({ type, token }: TokenHelperParams): string {
+    const payload: jwt.JwtPayload | string = jwt.verify(token, this.getSecret(type));
+    if (typeof payload === "object" && payload.data) {
+      return String(payload.data);
+    } else {
+      throw new UnauthorizedError();
     }
   }
 
-  static extractUserId({ tokenValue, tokenType }: UtilsTypes.TokenHelper.VerifyParams): string {
+  public static verify({ type, token }: TokenHelperParams): void {
     try {
-      const payload: jwt.JwtPayload | string = this.verify({ tokenValue: tokenValue, tokenType: tokenType });
-      const payloadData: string = payload.split("&");
-      if (payloadData.length !== 2) {
-        return "";
-      }
-      return payloadData[0];
+      this.getUserId({ type: type, token: token });
     } catch {
-      return "";
+      throw new UnauthorizedError();
     }
   }
 }

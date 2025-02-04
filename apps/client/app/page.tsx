@@ -1,8 +1,8 @@
 import React from "react";
 
-import Footer from "@/components/Footer";
-import LandingHeader from "@/components/LandingHeader";
-import LinkedButton from "@/components/LinkedButton";
+import Footer from "../components/Footer";
+import LandingHeader from "../components/LandingHeader";
+import LinkedButton from "../components/LinkedButton";
 
 const RootPage = () => {
   return (

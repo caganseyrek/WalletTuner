@@ -1,0 +1,31 @@
+import { Globals } from "@/globals";
+
+export namespace Account {
+  export interface AccountProps {
+    _id: mongoose.Types.ObjectId;
+    user_id: mongoose.Types.ObjectId;
+    name: string;
+    balance: number;
+    total_income: number;
+    total_expense: number;
+    created_at: string;
+  }
+  export namespace Controller {
+    export type CreateProps = Pick<AccountProps, "name">;
+    export type UpdateProps = Pick<AccountProps, "_id"> & Pick<AccountProps, "name">;
+    export type DeleteProps = Pick<AccountProps, "_id">;
+  }
+  export namespace Service {
+    export type CreateProps = Globals.IdentifierProps & Controller.CreateProps;
+    export type UpdateProps = Globals.IdentifierProps & Controller.UpdateProps;
+    export type DeleteProps = Globals.IdentifierProps & Controller.DeleteProps;
+  }
+  export namespace Repository {
+    export type CreateProps = Globals.IdentifierProps & Controller.CreateProps;
+    export type UpdateProps = Globals.IdentifierProps & AccountProps;
+    export type DeleteProps = Globals.IdentifierProps & Controller.DeleteProps;
+  }
+  export type FindByNameProps = Globals.IdentifierProps & Pick<AccountProps, "name">;
+  export type FindByIdProps = Globals.IdentifierProps & Pick<AccountProps, "_id">;
+  export type FindByUserIdProps = Globals.IdentifierProps;
+}
