@@ -7,6 +7,7 @@ dayjs.extend(customParseFormat);
 dayjs.extend(utc);
 
 export const createSchema = z.object({
+  user_id: z.string().nonempty(),
   account_id: z.string().nonempty(),
   name: z.string().nonempty(),
   target_amount: z.number().nonnegative(),
@@ -22,6 +23,7 @@ export const createSchema = z.object({
 });
 
 export const updateSchema = z.object({
+  user_id: z.string().nonempty(),
   _id: z.string().nonempty(),
   account_id: z.string().nonempty(),
   name: z.string().nonempty(),
@@ -38,6 +40,7 @@ export const updateSchema = z.object({
 });
 
 export const deleteSchema = z.object({
+  user_id: z.string().nonempty(),
   _id: z.string().nonempty(),
 });
 

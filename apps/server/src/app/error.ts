@@ -5,9 +5,19 @@ interface AppErrorProps {
   message: string;
 }
 
+/**
+ * Base class for custom application errors.
+ */
 export class AppError extends Error {
   statusCode: number;
 
+  /**
+   * Creates a new application error instance.
+   *
+   * @param {AppErrorProps} params - Error properties.
+   * @param {number} params.statusCode - HTTP status code for the error.
+   * @param {string} params.message - Descriptive error message.
+   */
   constructor({ statusCode, message }: AppErrorProps) {
     super(message);
     this.statusCode = statusCode;
@@ -15,6 +25,9 @@ export class AppError extends Error {
   }
 }
 
+/**
+ * Represents a 400 Bad Request error.
+ */
 export class BadRequestError extends AppError {
   constructor() {
     super({
@@ -24,6 +37,9 @@ export class BadRequestError extends AppError {
   }
 }
 
+/**
+ * Represents a 500 Internal Server Error.
+ */
 export class InternalError extends AppError {
   constructor() {
     super({
@@ -33,6 +49,9 @@ export class InternalError extends AppError {
   }
 }
 
+/**
+ * Represents a 404 Not Found error.
+ */
 export class NotFoundError extends AppError {
   constructor() {
     super({
@@ -42,6 +61,9 @@ export class NotFoundError extends AppError {
   }
 }
 
+/**
+ * Represents a 401 Unauthorized error.
+ */
 export class UnauthorizedError extends AppError {
   constructor() {
     super({
@@ -51,6 +73,9 @@ export class UnauthorizedError extends AppError {
   }
 }
 
+/**
+ * Represents a 429 Too Many Requests error (Rate Limiting).
+ */
 export class RateLimitError extends AppError {
   constructor() {
     super({

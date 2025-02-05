@@ -1,10 +1,10 @@
 import express, { NextFunction, Request, Response } from "express";
 
-import ResponseHelper from "@/app/response";
-
 import logger from "@/utils/logger";
 
 import STATUS_CODES from "@/constants/statusCodes";
+
+import ResponseHelper from "@/helpers/responseHelper";
 
 /**
  * Class for handling global middlewares for the Express application.
@@ -24,7 +24,7 @@ class Handlers {
     // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
     app.use((_req: Request, res: Response, _next: NextFunction) => {
       res.status(STATUS_CODES.notFound.code).json(
-        ResponseHelper.response({
+        ResponseHelper.createResponse({
           isSuccess: false,
           responseMessage: STATUS_CODES.notFound.message,
           data: null,
@@ -36,7 +36,7 @@ class Handlers {
     app.use((error: Error, _req: Request, res: Response, _next: NextFunction) => {
       logger.error(`An error ocurred: ${error}`);
       res.status(STATUS_CODES.internalServerError.code).json(
-        ResponseHelper.response({
+        ResponseHelper.createResponse({
           isSuccess: false,
           responseMessage: STATUS_CODES.internalServerError.message,
           data: null,

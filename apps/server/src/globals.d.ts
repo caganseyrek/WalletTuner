@@ -1,6 +1,8 @@
+import mongoose from "mongoose";
+
 export namespace Globals {
   export interface IdentifierProps {
-    user_id: string;
+    user_id: mongoose.Types.ObjectId;
   }
   export interface ResponseProps {
     isSuccess: boolean;
@@ -8,9 +10,7 @@ export namespace Globals {
     data: object | null;
   }
   export interface MiddlewareArray {
-    create: Array;
-    update: Array;
-    delete: Array;
+    [route: string]: Array;
   }
   export interface UserIdCookie {
     user_id: string;

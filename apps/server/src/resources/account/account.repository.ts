@@ -52,7 +52,6 @@ class AccountRepository {
       logger.error(`An error occured while saving a new account that belongs to user id ${params.user_id}`);
       throw new InternalError();
     }
-    return;
   }
 
   public async updateAccount(params: Account.Repository.UpdateProps): Promise<void> {
@@ -64,13 +63,12 @@ class AccountRepository {
       total_income: params.total_income,
       total_expense: params.total_expense,
       created_at: params.created_at,
-    }) as Account.AccountProps;
+    });
     const updateAccount = await accountModel.findByIdAndUpdate(sanitizedAccountId, { ...sanitizedAccountModel }).exec();
     if (!updateAccount) {
       logger.error(`An error occured while updating an account with id ${params._id}`);
       throw new InternalError();
     }
-    return;
   }
 
   public async deleteAccount(params: Account.Repository.DeleteProps): Promise<void> {
@@ -83,7 +81,6 @@ class AccountRepository {
       logger.error(`An error occured while deleting an account with id ${params._id}`);
       throw new InternalError();
     }
-    return;
   }
 }
 

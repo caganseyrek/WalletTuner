@@ -1,12 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 
-import ResponseHelper from "@/app/response";
-
 import OverviewService from "@/resources/overview/overview.service";
 
 import STATUS_CODES from "@/constants/statusCodes";
 
 import { Overview } from "./overview.types";
+import ResponseHelper from "@/helpers/responseHelper";
 
 class OverviewController {
   private overviewService: OverviewService;
@@ -17,12 +16,10 @@ class OverviewController {
 
   public async getOverviews(req: Request, res: Response, next: NextFunction) {
     try {
-      const user_id: string = req.cookies.user_id;
-      const overview: Overview.OverviewProps = await this.overviewService.getOverview({
-        user_id: user_id,
-      });
+      const params: Overview.FindByUserIdProps = req.body;
+      const overview: Overview.OverviewProps = await this.overviewService.getOverview({ user_id: params.user_id });
       return res.status(STATUS_CODES.success.code).json(
-        ResponseHelper.response({
+        ResponseHelper.createResponse({
           isSuccess: true,
           responseMessage: "",
           data: overview,

@@ -1,10 +1,10 @@
 import express from "express";
 import { IncomingMessage, Server, ServerResponse } from "http";
+import mongoose from "mongoose";
 
 import logger from "../../utils/logger";
 
 import config from "../config";
-import Database from "./database";
 
 /**
  * Class for managing the HTTP server and handling graceful shutdown.
@@ -22,7 +22,7 @@ class HttpServer {
   private static async gracefulShutdown(): Promise<void> {
     try {
       this.server.close();
-      await Database.disconnect();
+      await mongoose.disconnect();
     } catch (error) {
       logger.error(`An error ocurred while shutting down the server: ${error}`);
       process.exit(1);

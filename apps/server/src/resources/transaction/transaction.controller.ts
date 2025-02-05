@@ -1,11 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 
-import ResponseHelper from "@/app/response";
-
 import STATUS_CODES from "@/constants/statusCodes";
 
 import TransactionService from "./transaction.service";
 import { Transaction } from "./transaction.types";
+import ResponseHelper from "@/helpers/responseHelper";
 
 class TransactionController {
   private transactionService: TransactionService;
@@ -16,12 +15,10 @@ class TransactionController {
 
   public async getTransactions(req: Request, res: Response, next: NextFunction) {
     try {
-      const user_id: string = req.cookies.user_id;
-      const transactions = await this.transactionService.getTransactions({
-        user_id: user_id,
-      });
+      const params: Transaction.FindByUserIdProps = req.body;
+      const transactions = await this.transactionService.getTransactions({ user_id: params.user_id });
       return res.status(STATUS_CODES.success.code).json(
-        ResponseHelper.response({
+        ResponseHelper.createResponse({
           isSuccess: true,
           responseMessage: "",
           data: transactions,
@@ -34,10 +31,9 @@ class TransactionController {
 
   public async createTransaction(req: Request, res: Response, next: NextFunction) {
     try {
-      const user_id: string = req.cookies.user_id;
       const params: Transaction.Controller.CreateProps = req.body;
       await this.transactionService.createTransaction({
-        user_id: user_id,
+        user_id: params.user_id,
         account_id: params.account_id,
         type: params.type,
         amount: params.amount,
@@ -45,7 +41,7 @@ class TransactionController {
         note: params.note,
       });
       return res.status(STATUS_CODES.created.code).json(
-        ResponseHelper.response({
+        ResponseHelper.createResponse({
           isSuccess: true,
           responseMessage: "",
           data: null,
@@ -58,11 +54,10 @@ class TransactionController {
 
   public async updateTransaction(req: Request, res: Response, next: NextFunction) {
     try {
-      const user_id: string = req.cookies.user_id;
       const params: Transaction.Controller.UpdateProps = req.body;
       await this.transactionService.updateTransaction({
         _id: params._id,
-        user_id: user_id,
+        user_id: params.user_id,
         account_id: params.account_id,
         type: params.type,
         amount: params.amount,
@@ -70,7 +65,7 @@ class TransactionController {
         note: params.note,
       });
       return res.status(STATUS_CODES.success.code).json(
-        ResponseHelper.response({
+        ResponseHelper.createResponse({
           isSuccess: true,
           responseMessage: "",
           data: null,
@@ -83,11 +78,10 @@ class TransactionController {
 
   public async deleteTransaction(req: Request, res: Response, next: NextFunction) {
     try {
-      const user_id: string = req.cookies.user_id;
       const params: Transaction.Controller.DeleteProps = req.body;
-      await this.transactionService.deleteTransaction({ _id: params._id, user_id: user_id });
+      await this.transactionService.deleteTransaction({ _id: params._id, user_id: params.user_id });
       return res.status(STATUS_CODES.success.code).json(
-        ResponseHelper.response({
+        ResponseHelper.createResponse({
           isSuccess: true,
           responseMessage: "",
           data: null,

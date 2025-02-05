@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 import { InternalError } from "@/app/error";
 
-import userModel from "@/resources/user/user.model";
+import userModel from "@/resources/auth/user/user.model";
 
 import logger from "@/utils/logger";
 import Sanitizer from "@/utils/sanitizer";
@@ -19,7 +19,7 @@ class UserRepository {
   public async findByEmail(params: User.FindByEmailProps): Promise<User.UserProps> {
     const sanitizedQuery = Sanitizer.sanitizeQuery<User.FindByEmailProps>({ email: params.email });
     const users: User.UserProps[] = await userModel.find(sanitizedQuery).exec();
-    if (users.length > 0) {
+    if (users.length > 0 || users.length !== 0) {
       throw new InternalError();
     }
     return users[0];
@@ -30,7 +30,7 @@ class UserRepository {
       _id: new mongoose.Types.ObjectId(),
       full_name: params.full_name,
       email: params.email,
-      password_hash: params.password_hash,
+      password: params.password,
       created_at: params.created_at,
     });
     const newUserObject = new userModel<User.UserProps>(sanitizedNewUserObject);
@@ -39,7 +39,6 @@ class UserRepository {
       logger.error(`An error occured while saving a new user that belongs to user id ${sanitizedNewUserObject._id}`);
       throw new InternalError();
     }
-    return saveNewUser;
   }
 
   public async updateUser(params: User.Repository.UpdateProps): Promise<void> {

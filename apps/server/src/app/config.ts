@@ -15,10 +15,6 @@ export interface ConfigProps {
     JWT_REFRESH: string;
     COOKIE: string;
   };
-  AUTH0: {
-    ISSUER_BASE_URL: string;
-    AUDIENCE: string;
-  };
 }
 
 dotenv.config();
@@ -34,8 +30,6 @@ const configSchema: ZodSchema = z.object({
   JWT_ACCESS_SECRET: z.string().nonempty(),
   JWT_REFRESH_SECRET: z.string().nonempty(),
   COOKIE_SECRET: z.string().nonempty(),
-  AUTH0_ISSUER_BASE_URL: z.string().url(),
-  AUTH0_AUDIENCE: z.string().url(),
 });
 
 const parsedConfig = configSchema.safeParse(process.env);
@@ -45,6 +39,9 @@ if (!parsedConfig.success || parsedConfig.error) {
   process.exit(1);
 }
 
+/**
+ * Application configuration object.
+ */
 const config: ConfigProps = {
   NODE_ENV: parsedConfig.data.NODE_ENV,
   SERVER_PORT: parsedConfig.data.SERVER_PORT,
@@ -54,10 +51,6 @@ const config: ConfigProps = {
     JWT_ACCESS: parsedConfig.data.JWT_ACCESS_SECRET,
     JWT_REFRESH: parsedConfig.data.JWT_REFRESH_SECRET,
     COOKIE: parsedConfig.data.COOKIE_SECRET,
-  },
-  AUTH0: {
-    ISSUER_BASE_URL: parsedConfig.data.AUTH0_ISSUER_BASE_URL,
-    AUDIENCE: parsedConfig.data.AUTH0_ISSUER_BASE_URL,
   },
 };
 

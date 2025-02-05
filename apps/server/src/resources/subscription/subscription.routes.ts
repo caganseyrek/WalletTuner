@@ -5,6 +5,7 @@ import SubscriptionController from "@/resources/subscription/subscription.contro
 import Validator from "@/utils/validator";
 
 import { Globals } from "@/globals";
+import Auth from "@/middleware/auth";
 import {
   createSchema,
   CreateSchemaParams,
@@ -19,12 +20,13 @@ const router: Router = express.Router();
 const subscriptionController: SubscriptionController = new SubscriptionController();
 
 const middlewares: Globals.MiddlewareArray = {
-  create: [Validator.validateRequestBody<CreateSchemaParams>(createSchema)],
-  update: [Validator.validateRequestBody<UpdateSchemaParams>(updateSchema)],
-  delete: [Validator.validateRequestBody<DeleteSchemaParams>(deleteSchema)],
+  get: [Auth.check],
+  create: [Auth.check, Validator.validateRequestBody<CreateSchemaParams>(createSchema)],
+  update: [Auth.check, Validator.validateRequestBody<UpdateSchemaParams>(updateSchema)],
+  delete: [Auth.check, Validator.validateRequestBody<DeleteSchemaParams>(deleteSchema)],
 };
 
-router.get("/getSubscriptions", subscriptionController.getSubscriptions);
+router.get("/getSubscriptions", middlewares.get, subscriptionController.getSubscriptions);
 router.post("/createSubscription", middlewares.create, subscriptionController.createSubscription);
 router.patch("/updateSubscription", middlewares.update, subscriptionController.updateSubscription);
 router.delete("/deleteSubscription", middlewares.delete, subscriptionController.deleteSubscription);

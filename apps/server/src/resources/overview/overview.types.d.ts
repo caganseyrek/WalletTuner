@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+
 import { Milestone } from "../milestone/milestone.types";
 import { Subscription } from "../subscription/subscription.types";
 import { Globals } from "@/globals";

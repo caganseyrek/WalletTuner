@@ -1,11 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 
-import ResponseHelper from "@/app/response";
-
 import STATUS_CODES from "@/constants/statusCodes";
 
 import MilestoneService from "./milestone.service";
 import { Milestone } from "./milestone.types";
+import ResponseHelper from "@/helpers/responseHelper";
 
 class MilestoneController {
   private milestoneService: MilestoneService;
@@ -16,10 +15,10 @@ class MilestoneController {
 
   public async getMilestones(req: Request, res: Response, next: NextFunction) {
     try {
-      const user_id: string = req.cookies.user_id;
-      const milestones = await this.milestoneService.getMilestones({ user_id: user_id });
+      const params: Milestone.FindByUserIdProps = req.body;
+      const milestones = await this.milestoneService.getMilestones({ user_id: params.user_id });
       return res.status(STATUS_CODES.success.code).json(
-        ResponseHelper.response({
+        ResponseHelper.createResponse({
           isSuccess: true,
           responseMessage: "",
           data: milestones,
@@ -32,10 +31,9 @@ class MilestoneController {
 
   public async createMilestone(req: Request, res: Response, next: NextFunction) {
     try {
-      const user_id: string = req.cookies.user_id;
       const params: Milestone.Controller.CreateProps = req.body;
       await this.milestoneService.createMilestone({
-        user_id: user_id,
+        user_id: params.user_id,
         account_id: params.account_id,
         name: params.name,
         target_amount: params.target_amount,
@@ -44,7 +42,7 @@ class MilestoneController {
         status: params.status,
       });
       return res.status(STATUS_CODES.created.code).json(
-        ResponseHelper.response({
+        ResponseHelper.createResponse({
           isSuccess: true,
           responseMessage: "",
           data: null,
@@ -57,11 +55,10 @@ class MilestoneController {
 
   public async updateMilestone(req: Request, res: Response, next: NextFunction) {
     try {
-      const user_id: string = req.cookies.user_id;
       const params: Milestone.Controller.UpdateProps = req.body;
       await this.milestoneService.updateMilestone({
         _id: params._id,
-        user_id: user_id,
+        user_id: params.user_id,
         account_id: params.account_id,
         name: params.name,
         target_amount: params.target_amount,
@@ -70,7 +67,7 @@ class MilestoneController {
         status: params.status,
       });
       return res.status(STATUS_CODES.success.code).json(
-        ResponseHelper.response({
+        ResponseHelper.createResponse({
           isSuccess: true,
           responseMessage: "",
           data: null,
@@ -83,11 +80,10 @@ class MilestoneController {
 
   public async deleteMilestone(req: Request, res: Response, next: NextFunction) {
     try {
-      const user_id: string = req.cookies.user_id;
       const params: Milestone.Controller.DeleteProps = req.body;
-      await this.milestoneService.deleteMilestone({ _id: params._id, user_id: user_id });
+      await this.milestoneService.deleteMilestone({ _id: params._id, user_id: params.user_id });
       return res.status(STATUS_CODES.success.code).json(
-        ResponseHelper.response({
+        ResponseHelper.createResponse({
           isSuccess: true,
           responseMessage: "",
           data: null,

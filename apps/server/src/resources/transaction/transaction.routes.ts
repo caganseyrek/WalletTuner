@@ -5,6 +5,7 @@ import TransactionController from "@/resources/transaction/transaction.controlle
 import Validator from "@/utils/validator";
 
 import { Globals } from "@/globals";
+import Auth from "@/middleware/auth";
 import {
   createSchema,
   CreateSchemaParams,
@@ -19,12 +20,13 @@ const router: Router = express.Router();
 const transactionController: TransactionController = new TransactionController();
 
 const middlewares: Globals.MiddlewareArray = {
-  create: [Validator.validateRequestBody<CreateSchemaParams>(createSchema)],
-  update: [Validator.validateRequestBody<UpdateSchemaParams>(updateSchema)],
-  delete: [Validator.validateRequestBody<DeleteSchemaParams>(deleteSchema)],
+  get: [Auth.check],
+  create: [Auth.check, Validator.validateRequestBody<CreateSchemaParams>(createSchema)],
+  update: [Auth.check, Validator.validateRequestBody<UpdateSchemaParams>(updateSchema)],
+  delete: [Auth.check, Validator.validateRequestBody<DeleteSchemaParams>(deleteSchema)],
 };
 
-router.post("/getAllTransactions", transactionController.getTransactions);
+router.post("/getAllTransactions", middlewares.get, transactionController.getTransactions);
 router.post("/createTransactions", middlewares.create, transactionController.createTransaction);
 router.patch("/updateTransactions", middlewares.update, transactionController.updateTransaction);
 router.delete("/deleteTransactions", middlewares.delete, transactionController.deleteTransaction);

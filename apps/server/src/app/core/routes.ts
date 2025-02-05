@@ -1,6 +1,7 @@
 import express from "express";
 
 import accountRoutes from "@/resources/account/account.routes";
+import authRoutes from "@/resources/auth/auth.routes";
 import milestoneRoutes from "@/resources/milestone/milestone.routes";
 import overviewRoutes from "@/resources/overview/overview.routes";
 import subscriptionRoutes from "@/resources/subscription/subscription.routes";
@@ -28,8 +29,7 @@ class Routes {
     app.use(`${this.apiPrefix}/overview`, overviewRoutes);
     app.use(`${this.apiPrefix}/subscription`, subscriptionRoutes);
     app.use(`${this.apiPrefix}/transaction`, transactionRoutes);
-    app.use(`${this.apiPrefix}/auth`);
-    app.use(`${this.apiPrefix}/user`);
+    app.use(`${this.apiPrefix}/auth`, authRoutes);
 
     return app;
   }

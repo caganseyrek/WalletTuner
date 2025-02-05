@@ -1,18 +1,15 @@
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import express from "express";
-import { auth } from "express-oauth2-jwt-bearer";
 import rateLimit, { RateLimitRequestHandler } from "express-rate-limit";
 import helmet from "helmet";
 import morgan from "morgan";
 
 import HELMET_OPTIONS from "@/constants/helmetOptions";
 
+import ErrorHandler from "../../middleware/error";
 import config from "../config";
 import { RateLimitError } from "../error";
-import Auth from "../middleware/auth";
-import errorHandler from "../middleware/errorHandler";
-import IDCheck from "../middleware/idCheck";
 
 class Middlewares {
   /**
@@ -43,16 +40,7 @@ class Middlewares {
     app.use(cookieParser(config.SECRETS.COOKIE));
     app.use(bodyParser.urlencoded({ extended: false }));
     app.use(bodyParser.json());
-    app.use(errorHandler);
-    app.use(
-      auth({
-        issuerBaseURL: config.AUTH0.ISSUER_BASE_URL,
-        audience: config.AUTH0.AUDIENCE,
-        tokenSigningAlg: "RS256",
-      }),
-    );
-    app.use(Auth.check);
-    app.use(IDCheck.check);
+    app.use(ErrorHandler.handle);
     return app;
   }
 }
