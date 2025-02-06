@@ -8,8 +8,8 @@ import morgan from "morgan";
 import HELMET_OPTIONS from "@/app/constants/helmetOptions";
 
 import config from "../config";
-import { RateLimitError } from "../errors/errors";
 import ErrorHandler from "../errors/errorHandler";
+import { RateLimitError } from "../errors/errors";
 
 class Middlewares {
   /**
