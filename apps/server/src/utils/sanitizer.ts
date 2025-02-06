@@ -59,7 +59,7 @@ class Sanitizer {
     } else if (value === null) {
       return null;
     }
-    logger.error(`Encountered invalid type '${typeof value}' with content: ${JSON.stringify(value)}`);
+    logger.error(`Encountered invalid type '${typeof value}'`);
     throw new BadRequestError();
   }
 
