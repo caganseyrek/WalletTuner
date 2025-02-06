@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
-import GlobalTypes from "@/types/globals";
+import GlobalTypes from "@/shared/types/globals";
 
 const useAuthDetails = () => {
   const queryClient = useQueryClient();

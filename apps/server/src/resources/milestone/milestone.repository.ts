@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-import { InternalError } from "@/app/error";
+import { InternalError } from "@/app/errors/errors";
 
 import logger from "@/utils/logger";
 import Sanitizer from "@/utils/sanitizer";

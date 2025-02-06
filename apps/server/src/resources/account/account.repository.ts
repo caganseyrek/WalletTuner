@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-import { InternalError } from "@/app/error";
+import { InternalError } from "@/app/errors/errors";
 
 import accountModel from "@/resources/account/account.model";
 

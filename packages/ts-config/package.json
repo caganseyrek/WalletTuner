@@ -2,7 +2,12 @@
   "name": "@wallettuner/ts-config",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "license": "MIT",
+  "author": {
+    "name": "Çağan Seyrek",
+    "url": "https://caganseyrek.com"
+  },
   "publishConfig": {
     "access": "public"
   }

@@ -2,11 +2,14 @@ import { NextFunction, Request, Response } from "express";
 
 import AuthService from "@/resources/auth/auth.service";
 
+import Converter from "@/utils/converter";
+
+import ResponseHelper from "@/helpers/responseHelper";
+
 import STATUS_CODES from "@/constants/statusCodes";
 
 import { Auth } from "./auth.types";
 import { User } from "./user/user.types";
-import ResponseHelper from "@/helpers/responseHelper";
 
 class AuthController {
   private authService: AuthService;
@@ -65,7 +68,7 @@ class AuthController {
   public async logout(req: Request, res: Response, next: NextFunction) {
     try {
       const params: Auth.Controller.LogoutProps = req.body;
-      await this.authService.logout({ _id: params.user_id });
+      await this.authService.logout({ _id: Converter.toObjectId(params.user_id) });
       res.clearCookie("access");
       res.clearCookie("refresh");
       return res.status(STATUS_CODES.success.code).json(
@@ -84,7 +87,7 @@ class AuthController {
     try {
       const params: Auth.Controller.NewAccessTokenProps = req.body;
       const accessToken: string = await this.authService.newAccessToken({
-        _id: params.user_id,
+        _id: Converter.toObjectId(params.user_id),
         refreshToken: params.refreshToken,
       });
       res.cookie("access", accessToken, {
@@ -108,7 +111,9 @@ class AuthController {
   public async getUserDetails(req: Request, res: Response, next: NextFunction) {
     try {
       const params: Auth.Controller.GetUserDetailsProps = req.body;
-      const userDetails: User.UserDetailsObject = await this.authService.getUserDetails({ _id: params.user_id });
+      const userDetails: User.UserDetailsObject = await this.authService.getUserDetails({
+        _id: Converter.toObjectId(params.user_id),
+      });
       return res.status(STATUS_CODES.success.code).json(
         ResponseHelper.createResponse({
           isSuccess: true,
@@ -124,7 +129,10 @@ class AuthController {
   public async updateUser(req: Request, res: Response, next: NextFunction) {
     try {
       const params: Auth.Controller.UpdateUserProps = req.body;
-      await this.authService.updateUser({ _id: params.user_id, full_name: params.full_name });
+      await this.authService.updateUser({
+        _id: Converter.toObjectId(params.user_id),
+        full_name: params.full_name,
+      });
       return res.status(STATUS_CODES.success.code).json(
         ResponseHelper.createResponse({
           isSuccess: true,
@@ -140,7 +148,7 @@ class AuthController {
   public async deleteUser(req: Request, res: Response, next: NextFunction) {
     try {
       const params: Auth.Controller.DeleteUserProps = req.body;
-      await this.authService.deleteUser({ _id: params.user_id });
+      await this.authService.deleteUser({ _id: Converter.toObjectId(params.user_id) });
       return res.status(STATUS_CODES.success.code).json(
         ResponseHelper.createResponse({
           isSuccess: true,

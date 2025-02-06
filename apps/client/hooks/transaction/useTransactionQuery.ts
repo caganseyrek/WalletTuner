@@ -4,7 +4,8 @@ import { TransactionObject } from "@/components/columns/TransactionColumns";
 
 import { EasyRequester } from "@/lib/EasyRequester/src";
 
-import GlobalTypes from "@/types/globals";
+import GlobalTypes from "@/shared/types/globals";
+
 import TransactionTypes from "@/types/transaction";
 
 const useTransactionQuery = (transactionQueryData: TransactionTypes.Queries.TransactionQueryRequestProps) => {

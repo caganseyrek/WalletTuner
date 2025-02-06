@@ -2,7 +2,8 @@ import { useMutation } from "@tanstack/react-query";
 
 import { EasyRequester } from "@/lib/EasyRequester/src";
 
-import GlobalTypes from "@/types/globals";
+import GlobalTypes from "@/shared/types/globals";
+
 import UserTypes from "@/types/user";
 
 const useLoginMutation = () => {

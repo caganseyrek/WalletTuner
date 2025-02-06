@@ -1,7 +1,7 @@
-import { UnauthorizedError } from "express-oauth2-jwt-bearer";
 import jwt from "jsonwebtoken";
 
 import config from "@/app/config";
+import { UnauthorizedError } from "@/app/errors/errors";
 
 type TokenType = "access" | "refresh";
 

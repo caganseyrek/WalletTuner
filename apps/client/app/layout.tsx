@@ -1,33 +1,23 @@
-"use client";
-
 import React from "react";
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import Providers from "@/components/Providers";
+import MainSidebar from "@/components/sidebar/MainSidebar";
 
-import "@/styles/globals.css";
+import "@/shared/styles/globals.css";
 
-interface LayoutProps {
+interface RootLayoutProps {
   children: React.ReactNode;
 }
 
-const RootLayout = ({ children }: LayoutProps) => {
-  const queryClient: QueryClient = new QueryClient({
-    defaultOptions: {
-      queries: { retry: 5, retryDelay: 2000 },
-    },
-  });
-
+const RootLayout = ({ children }: RootLayoutProps) => {
   return (
     <html>
-      <head>
-        <link rel="icon" href="/images/favicon.png" sizes="any" />
-      </head>
+      <head></head>
       <body>
-        <QueryClientProvider client={queryClient}>
-          {children}
-          <ReactQueryDevtools initialIsOpen={false} />
-        </QueryClientProvider>
+        <Providers>
+          <MainSidebar />
+          <main className="w-full">{children}</main>
+        </Providers>
       </body>
     </html>
   );

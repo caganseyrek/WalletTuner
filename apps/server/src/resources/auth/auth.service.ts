@@ -1,6 +1,9 @@
-import mongoose from "mongoose";
+import { BadRequestError, NotFoundError, UnauthorizedError } from "@/app/errors/errors";
 
-import { BadRequestError, NotFoundError, UnauthorizedError } from "@/app/error";
+import Converter from "@/utils/converter";
+
+import PasswordHelper from "@/helpers/passwordHelper";
+import TokenHelper from "@/helpers/tokenHelper";
 
 import AccountRepository from "../account/account.repository";
 import { Account } from "../account/account.types";
@@ -17,8 +20,6 @@ import TokenRepository from "./token/token.repository";
 import { Token } from "./token/token.types";
 import UserRepository from "./user/user.repository";
 import { User } from "./user/user.types";
-import PasswordHelper from "@/helpers/passwordHelper";
-import TokenHelper from "@/helpers/tokenHelper";
 
 class AuthService {
   private tokenRepository: TokenRepository;
@@ -86,7 +87,7 @@ class AuthService {
   public async newAccessToken(params: Auth.Service.NewAccessTokenProps): Promise<string> {
     const userIdFromToken: string = TokenHelper.getUserId({ type: "refresh", payload: params.refreshToken });
     const doesUserExists: User.UserProps | null = await this.userRepository.findById({
-      _id: new mongoose.Types.ObjectId(userIdFromToken),
+      _id: Converter.toObjectId(userIdFromToken),
     });
     if (!doesUserExists) {
       throw new UnauthorizedError();

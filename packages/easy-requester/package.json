@@ -1,22 +1,21 @@
 {
   "name": "@wallettuner/easy-requester",
   "version": "2.6.6",
-  "description": "A custom and flexible HTTP requester",
   "type": "module",
+  "license": "MIT",
+  "author": {
+    "name": "Çağan Seyrek",
+    "url": "https://caganseyrek.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/caganseyrek/EasyRequester.git"
+  },
   "keywords": [
     "typescript",
     "http-requester",
     "fetch-api"
   ],
-  "author": {
-    "name": "Çağan Seyrek",
-    "url": "https://caganseyrek.com"
-  },
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/caganseyrek/EasyRequester.git"
-  },
   "scripts": {
     "build": "tsc -b",
     "lint": "eslint .",

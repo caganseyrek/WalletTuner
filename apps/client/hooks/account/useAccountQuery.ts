@@ -1,26 +1,24 @@
 import { useQuery } from "@tanstack/react-query";
+import { EasyRequester } from "@wallettuner/easy-requester";
 
-import { AccountObject } from "@/components/columns/AccountColumns";
+import { AccountProps } from "@/components/data_display/columns/AccountColumns";
 
-import { EasyRequester } from "@/lib/EasyRequester/src";
+import GlobalTypes from "@/shared/types/globals";
 
-import AccountHooksTypes from "@/types/account";
-import GlobalTypes from "@/types/globals";
-
-const useAccountQuery = (accountQueryData: AccountHooksTypes.Queries.RequestParams) => {
+const useAccountQuery = () => {
   const account = useQuery({
-    queryKey: ["accountQuery", accountQueryData],
+    queryKey: ["accountQuery"],
     queryFn: async () => {
       const response = await new EasyRequester()
         .setConfig({
           requestConfig: {
             method: "GET",
-            baseURL: process.env.NEXT_PUBLIC_BACKEND_URL!,
-            endpoint: { route: "account", action: "getAllAccounts" },
+            baseURL: process.env.NEXT_PUBLIC_SERVER_URL!,
+            endpoint: { route: "account", action: "getAccounts" },
             includeCookies: true,
           },
         })
-        .sendRequest<GlobalTypes.BackendResponseParams<AccountObject[]>>();
+        .sendRequest<GlobalTypes.ServerResponseParams<AccountProps[]>>();
       return response;
     },
   });

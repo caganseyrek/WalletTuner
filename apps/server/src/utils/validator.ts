@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { ZodSchema } from "zod";
 
-import { BadRequestError } from "@/app/error";
+import { BadRequestError } from "@/app/errors/errors";
 
 class Validator {
   public static validateRequestBody<T>(schema: ZodSchema<T>) {

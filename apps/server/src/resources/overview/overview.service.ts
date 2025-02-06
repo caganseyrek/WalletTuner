@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
-import { BadRequestError, NotFoundError } from "@/app/error";
+import { BadRequestError, NotFoundError } from "@/app/errors/errors";
 
 import OverviewRepository from "@/resources/overview/overview.repository";
 
@@ -71,16 +71,20 @@ class OverviewService {
       total_income: totalIncome,
       total_expense: totalExpense,
       active_milestone_ids: [
-        ...milestones.filter(
-          (milestone) => dayjs(milestone.end_date).isAfter(dayjs()) && dayjs(milestone.start_date).isAfter(dayjs()),
-        ),
+        ...milestones
+          .filter(
+            (milestone) => dayjs(milestone.end_date).isAfter(dayjs()) && dayjs(milestone.start_date).isAfter(dayjs()),
+          )
+          .map((milestone) => milestone._id),
       ],
       upcoming_subscription_ids: [
-        ...subscriptions.filter(
-          (subscription) =>
-            dayjs(subscription.next_payment_date).isBefore(dayjs()) &&
-            dayjs(subscription.next_payment_date).diff(dayjs(), "days") <= 31,
-        ),
+        ...subscriptions
+          .filter(
+            (subscription) =>
+              dayjs(subscription.next_payment_date).isBefore(dayjs()) &&
+              dayjs(subscription.next_payment_date).diff(dayjs(), "days") <= 31,
+          )
+          .map((subscription) => subscription._id),
       ],
     });
   }

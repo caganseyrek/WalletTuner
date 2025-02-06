@@ -5,13 +5,13 @@
     "declarationMap": false,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "rootDir": "src",
+    "rootDir": ".",
     "baseUrl": "src",
     "paths": {
       "@/*": ["./*"]
     },
     "outDir": "dist"
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "index.ts"],
   "exclude": ["node_modules"]
 }

@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-import { InternalError } from "@/app/error";
+import { InternalError } from "@/app/errors/errors";
 
 import transactionModel from "@/resources/transaction/transaction.model";
 
@@ -52,7 +52,6 @@ class TransactionRepository {
       logger.error(`An error occured while saving a new transaction that belongs to user id ${params.user_id}`);
       throw new InternalError();
     }
-    return saveNewTransaction;
   }
 
   public async updateTransaction(params: Transaction.Repository.UpdateProps): Promise<void> {

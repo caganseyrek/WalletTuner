@@ -1,4 +1,4 @@
-import { AppError, InternalError, NotFoundError } from "@/app/error";
+import { AppError, InternalError, NotFoundError } from "@/app/errors/errors";
 
 import AccountRepository from "@/resources/account/account.repository";
 import TransactionRepository from "@/resources/transaction/transaction.repository";

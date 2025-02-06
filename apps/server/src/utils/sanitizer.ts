@@ -1,6 +1,6 @@
 import { FilterQuery } from "mongoose";
 
-import { BadRequestError } from "@/app/error";
+import { BadRequestError } from "@/app/errors/errors";
 
 import logger from "./logger";
 

@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-import { InternalError } from "@/app/error";
+import { InternalError } from "@/app/errors/errors";
 
 import logger from "@/utils/logger";
 import Sanitizer from "@/utils/sanitizer";
@@ -13,11 +13,11 @@ class OverviewRepository {
     const sanitizedQuery = Sanitizer.sanitizeQuery<Overview.FindByUserIdProps>({
       user_id: params.user_id,
     });
-    const overviews: Overview.OverviewProps[] = await overviewModel.find(sanitizedQuery).exec();
-    if (overviews.length > 0 || overviews.length !== 1) {
+    const overview: Overview.OverviewProps | null = await overviewModel.findOne(sanitizedQuery).exec();
+    if (!overview) {
       throw new InternalError();
     }
-    return overviews[0];
+    return overview;
   }
 
   public async createOverview(params: Overview.Repository.CreateProps): Promise<void> {

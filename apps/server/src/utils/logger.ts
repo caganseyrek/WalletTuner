@@ -8,7 +8,14 @@ const logger = winston.createLogger({
       return `[${timestamp}] ${level.toUpperCase()}: ${message}`;
     }),
   ),
-  transports: [new winston.transports.Console()],
+  transports: [
+    new winston.transports.Console(),
+    new winston.transports.File({
+      dirname: "logs",
+      filename: "errors.log",
+      level: "error",
+    }),
+  ],
 });
 
 export default logger;

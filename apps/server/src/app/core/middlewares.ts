@@ -5,11 +5,11 @@ import rateLimit, { RateLimitRequestHandler } from "express-rate-limit";
 import helmet from "helmet";
 import morgan from "morgan";
 
-import HELMET_OPTIONS from "@/constants/helmetOptions";
+import HELMET_OPTIONS from "@/app/constants/helmetOptions";
 
-import ErrorHandler from "../../middleware/error";
 import config from "../config";
-import { RateLimitError } from "../error";
+import { RateLimitError } from "../errors/errors";
+import ErrorHandler from "../errors/errorHandler";
 
 class Middlewares {
   /**
@@ -24,7 +24,7 @@ class Middlewares {
    * @param {express.Application} app - The Express application instance.
    * @returns {express.Application} The modified Express application with the applied middlewares.
    */
-  public static apply(app: express.Application): express.Application {
+  public apply(app: express.Application): express.Application {
     const rateLimiter: RateLimitRequestHandler = rateLimit({
       windowMs: 5 * 60 * 1000, // 5 minute window
       limit: 20, // maximum 100 requests per window

@@ -1,35 +1,50 @@
 import express from "express";
 
-import accountRoutes from "@/resources/account/account.routes";
-import authRoutes from "@/resources/auth/auth.routes";
-import milestoneRoutes from "@/resources/milestone/milestone.routes";
-import overviewRoutes from "@/resources/overview/overview.routes";
-import subscriptionRoutes from "@/resources/subscription/subscription.routes";
-import transactionRoutes from "@/resources/transaction/transaction.routes";
+import AccountRouter from "@/resources/account/account.router";
+import AuthRouter from "@/resources/auth/auth.router";
+import MilestoneRouter from "@/resources/milestone/milestone.router";
+import OverviewRouter from "@/resources/overview/overview.router";
+import SubscriptionRouter from "@/resources/subscription/subscription.router";
+import TransactionRouter from "@/resources/transaction/transaction.router";
 
 /**
  * Class for defining and applying API routes to the Express application.
  * This class configures the route paths for different sections of the application.
  */
 class Routes {
-  private static base: string = "api";
-  private static version: string = "v1";
-  private static apiPrefix: string = `/${this.base}/${this.version}`;
+  private base: string = "api";
+  private version: string = "v2";
+  private apiPrefix: string = `/${this.base}/${this.version}`;
+
+  private authRouter: AuthRouter;
+  private accountRouter: AccountRouter;
+  private milestoneRouter: MilestoneRouter;
+  private overviewRouter: OverviewRouter;
+  private subscriptionRouter: SubscriptionRouter;
+  private transactionRouter: TransactionRouter;
+
+  constructor() {
+    this.authRouter = new AuthRouter();
+    this.accountRouter = new AccountRouter();
+    this.milestoneRouter = new MilestoneRouter();
+    this.overviewRouter = new OverviewRouter();
+    this.subscriptionRouter = new SubscriptionRouter();
+    this.transactionRouter = new TransactionRouter();
+  }
 
   /**
    * Applies the API routes to the Express application.
-   * The routes defined are for account, budget, challenge, insight, subscription, transaction, and user resources.
    *
    * @param {express.Application} app - The Express application instance.
    * @returns {express.Application} The modified Express application with the applied API routes.
    */
-  public static apply(app: express.Application): express.Application {
-    app.use(`${this.apiPrefix}/account`, accountRoutes);
-    app.use(`${this.apiPrefix}/milestone`, milestoneRoutes);
-    app.use(`${this.apiPrefix}/overview`, overviewRoutes);
-    app.use(`${this.apiPrefix}/subscription`, subscriptionRoutes);
-    app.use(`${this.apiPrefix}/transaction`, transactionRoutes);
-    app.use(`${this.apiPrefix}/auth`, authRoutes);
+  public apply(app: express.Application): express.Application {
+    app.use(`${this.apiPrefix}/auth`, this.authRouter.getRouter());
+    app.use(`${this.apiPrefix}/account`, this.accountRouter.getRouter());
+    app.use(`${this.apiPrefix}/milestone`, this.milestoneRouter.getRouter());
+    app.use(`${this.apiPrefix}/overview`, this.overviewRouter.getRouter());
+    app.use(`${this.apiPrefix}/subscription`, this.subscriptionRouter.getRouter());
+    app.use(`${this.apiPrefix}/transaction`, this.transactionRouter.getRouter());
 
     return app;
   }

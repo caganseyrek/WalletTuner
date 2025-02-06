@@ -2,9 +2,9 @@ import express, { NextFunction, Request, Response } from "express";
 
 import logger from "@/utils/logger";
 
-import STATUS_CODES from "@/constants/statusCodes";
-
 import ResponseHelper from "@/helpers/responseHelper";
+
+import STATUS_CODES from "@/constants/statusCodes";
 
 /**
  * Class for handling global middlewares for the Express application.
@@ -20,7 +20,7 @@ class Handlers {
    * @param {express.Application} app - The Express application instance.
    * @returns {express.Application} The modified Express application with the said middlewares applied.
    */
-  public static apply(app: express.Application): express.Application {
+  public apply(app: express.Application): express.Application {
     // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
     app.use((_req: Request, res: Response, _next: NextFunction) => {
       res.status(STATUS_CODES.notFound.code).json(

@@ -1,4 +1,4 @@
-import { BadRequestError, NotFoundError } from "@/app/error";
+import { BadRequestError, NotFoundError } from "@/app/errors/errors";
 
 import AccountRepository from "@/resources/account/account.repository";
 import SubscriptionRepository from "@/resources/subscription/subscription.repository";

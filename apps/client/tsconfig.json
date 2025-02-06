@@ -1,7 +1,9 @@
 {
   "extends": "@wallettuner/ts-config/nextjs.tsconfig.json",
   "compilerOptions": {
-    "plugins": [{ "name": "next" }]
+    "plugins": [{ "name": "next" }],
+    "baseUrl": "./",
+    "paths": { "@/*": ["./*"] }
   },
   "include": ["**/*.ts", "**/*.tsx", "next-env.d.ts", "next.config.js", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]

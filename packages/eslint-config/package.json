@@ -1,8 +1,13 @@
 {
   "name": "@wallettuner/eslint-config",
   "version": "0.0.0",
-  "type": "module",
   "private": true,
+  "type": "module",
+  "license": "MIT",
+  "author": {
+    "name": "Çağan Seyrek",
+    "url": "https://caganseyrek.com"
+  },
   "exports": {
     "./base": "./base-eslint.config.mjs",
     "./nextjs": "./next-eslint.config.mjs"

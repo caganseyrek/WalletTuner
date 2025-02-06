@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { EasyRequester } from "@/lib/EasyRequester/src";
 
-import GlobalTypes from "@/types/globals";
+import GlobalTypes from "@/shared/types/globals";
 
 const useLogoutMutation = () => {
   const queryClient = useQueryClient();

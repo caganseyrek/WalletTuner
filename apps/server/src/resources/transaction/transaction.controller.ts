@@ -1,10 +1,14 @@
 import { NextFunction, Request, Response } from "express";
 
+import Converter from "@/utils/converter";
+
+import ResponseHelper from "@/helpers/responseHelper";
+
 import STATUS_CODES from "@/constants/statusCodes";
 
 import TransactionService from "./transaction.service";
 import { Transaction } from "./transaction.types";
-import ResponseHelper from "@/helpers/responseHelper";
+import { Globals } from "@/globals";
 
 class TransactionController {
   private transactionService: TransactionService;
@@ -15,8 +19,10 @@ class TransactionController {
 
   public async getTransactions(req: Request, res: Response, next: NextFunction) {
     try {
-      const params: Transaction.FindByUserIdProps = req.body;
-      const transactions = await this.transactionService.getTransactions({ user_id: params.user_id });
+      const params: Globals.UserIdFromCookie = req.body;
+      const transactions = await this.transactionService.getTransactions({
+        user_id: Converter.toObjectId(params.user_id),
+      });
       return res.status(STATUS_CODES.success.code).json(
         ResponseHelper.createResponse({
           isSuccess: true,
@@ -33,8 +39,8 @@ class TransactionController {
     try {
       const params: Transaction.Controller.CreateProps = req.body;
       await this.transactionService.createTransaction({
-        user_id: params.user_id,
-        account_id: params.account_id,
+        user_id: Converter.toObjectId(params.user_id),
+        account_id: Converter.toObjectId(params.account_id),
         type: params.type,
         amount: params.amount,
         timestamp: params.timestamp,
@@ -56,9 +62,9 @@ class TransactionController {
     try {
       const params: Transaction.Controller.UpdateProps = req.body;
       await this.transactionService.updateTransaction({
-        _id: params._id,
-        user_id: params.user_id,
-        account_id: params.account_id,
+        _id: Converter.toObjectId(params._id),
+        user_id: Converter.toObjectId(params.user_id),
+        account_id: Converter.toObjectId(params.account_id),
         type: params.type,
         amount: params.amount,
         timestamp: params.timestamp,
@@ -79,7 +85,10 @@ class TransactionController {
   public async deleteTransaction(req: Request, res: Response, next: NextFunction) {
     try {
       const params: Transaction.Controller.DeleteProps = req.body;
-      await this.transactionService.deleteTransaction({ _id: params._id, user_id: params.user_id });
+      await this.transactionService.deleteTransaction({
+        _id: Converter.toObjectId(params._id),
+        user_id: Converter.toObjectId(params.user_id),
+      });
       return res.status(STATUS_CODES.success.code).json(
         ResponseHelper.createResponse({
           isSuccess: true,

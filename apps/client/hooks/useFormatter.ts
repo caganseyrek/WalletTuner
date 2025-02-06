@@ -1,5 +1,6 @@
+import GlobalTypes from "@/shared/types/globals";
+
 import useSettings from "./temp/useSettings";
-import GlobalTypes from "@/types/globals";
 
 function useFormatter() {
   const { data: savedSettings } = useSettings();

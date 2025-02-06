@@ -2,7 +2,7 @@ import mongoose, { Model, Schema } from "mongoose";
 
 import { Overview } from "./overview.types";
 
-const overviewSchema: Schema = new Schema<Overview.OverviewModelProps>({
+const overviewSchema: Schema = new Schema<Overview.OverviewProps>({
   _id: mongoose.Schema.Types.ObjectId,
   user_id: {
     type: mongoose.Schema.Types.ObjectId,
@@ -26,7 +26,4 @@ const overviewSchema: Schema = new Schema<Overview.OverviewModelProps>({
   ],
 });
 
-export default mongoose.model<Overview.OverviewModelProps>(
-  "overviewModel",
-  overviewSchema,
-) as Model<Overview.OverviewModelProps>;
+export default mongoose.model<Overview.OverviewProps>("overviewModel", overviewSchema) as Model<Overview.OverviewProps>;
