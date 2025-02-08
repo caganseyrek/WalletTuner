@@ -14,25 +14,25 @@ const externals: ExternalProps[] = [
     key: "app-status",
     title: "App Status",
     icon: SearchCheck,
-    path: "#",
+    path: `${process.env.NEXT_PUBLIC_SITE_URL}/status`,
   },
   {
     key: "documentation",
     title: "Documentation",
     icon: ScrollText,
-    path: "#",
+    path: `${process.env.NEXT_PUBLIC_SITE_URL}/docs`,
   },
   {
     key: "repository",
     title: "Repository",
     icon: CodeXml,
-    path: "#",
+    path: "https://github.com/caganseyrek/WalletTuner",
   },
   {
     key: "feedback",
     title: "Feedback",
     icon: MessageSquare,
-    path: "#",
+    path: "https://github.com/caganseyrek/WalletTuner/issues",
   },
 ];
 
