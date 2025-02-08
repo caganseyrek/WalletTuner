@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack --port 3001",
+    "dev": "next dev --turbopack --port 3000",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -41,6 +41,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@wallettuner/eslint-config": "workspace:*",
+    "@wallettuner/resource-types": "workspace:*",
     "@wallettuner/ts-config": "workspace:*",
     "eslint": "^9",
     "postcss": "^8",

@@ -7,10 +7,6 @@
     "name": "Çağan Seyrek",
     "url": "https://caganseyrek.com"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/caganseyrek/EasyRequester.git"
-  },
   "keywords": [
     "typescript",
     "http-requester",

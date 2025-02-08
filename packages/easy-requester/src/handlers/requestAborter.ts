@@ -1,6 +1,4 @@
-import Debugger from "../utils/debugger";
-
-class Aborter {
+class RequestAborter {
   private controllers: Map<string, AbortController>;
   private abortController?: AbortController;
 
@@ -23,12 +21,9 @@ class Aborter {
     this.controllers.set(generatedURL, this.abortController);
   }
 
-  public handleAbortError(error: Error, generatedURL: string): void {
-    if ((error as Error).name === "AbortError") {
-      Debugger.log(`${this.handleAbortError.name} at ${Aborter.name}`, `Request to ${generatedURL} was aborted.`);
-    }
+  public handleAbortError(generatedURL: string): void {
     this.getControllers().delete(generatedURL);
   }
 }
 
-export default Aborter;
+export default RequestAborter;
