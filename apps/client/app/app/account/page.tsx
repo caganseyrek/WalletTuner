@@ -15,11 +15,11 @@ const AccountsPage = () => {
     return "loading...";
   }
 
-  if (accountQueryError) {
+  if (accountQueryError || !accounts) {
     return "error";
   }
 
-  return <DataTable columns={accountColumns} data={accounts?.data ?? []} createDialog={<AccountDialog />} />;
+  return <DataTable columns={accountColumns} data={accounts.data} createDialog={<AccountDialog />} />;
 };
 
 export default AccountsPage;
