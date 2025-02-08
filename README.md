@@ -6,59 +6,65 @@
 
 ## Overview
 
-Wallet Tuner is a full-stack personal finance tracking app built with Vite, React, and TypeScript for frontend, and Express and TypeScript for the backend. It uses MongoDB with Mongoose for database operations.
+WalletTuner is a flexible personal finance tracking application designed to help users manage and monitor their financial activities effectively.
+
+## Features
+
+- **Finance Accounts**: Open and manage multiple finance accounts to track separate bank accounts and/or financial sources.
+- **Transaction Logging**: Record income and expenses while associating them with specific accounts.
+- **Milestones**: Set savings goals for accounts to reach a target balance.
+- **Subscriptions**: Automate recurring expenses by scheduling subscriptions that deduct a specific amount at set intervals.
+- **Comprehensive Overview**: View all incomes, expenses, total balance, active milestones, and upcoming subscriptions in an interactive dashboard with charts.
 
 ## Prerequisites
 
-Before running the application, ensure you have the following installed:
+Before setting up and running the project, ensure you have the following installed:
 
-- Node.js (v20.14 or higher)
-- pnpm (v9.15.0 or higher)
+- [Git](https://git-scm.com/)
+- [Node.js](https://nodejs.org/en)
+- [Node Version Manager](https://github.com/nvm-sh/nvm)
+- [pnpm](https://pnpm.io/)
 
-Also if you want to use the provided scripts, ensure your system supports running Bash scripts (e.g., Linux, macOS, or Windows Subsystem for Linux).
+Additionally, if you plan to use the provided scripts, ensure your system supports running Bash scripts.
 
-## Getting Started
+## Installation
 
-### 1. Clone the repository
+1. Clone the repository
 
 ```bash
 git clone https://github.com/caganseyrek/WalletTuner.git
 cd path/to/WalletTuner
 ```
 
-### 2. Run the setup script
+2. Run the installation script to install the prerequisites
 
 ```bash
 cd scripts/ # from the project root
-./setup_project.sh
+./install_apps.sh
 ```
 
-First, the script will download the required packages for frontend, backend, and the root folder, so you don't need to run `pnpm install` seperately.
+3. Setup the environment variables
 
-Then, the script will check for `.env` files and rename the `.env.sample` files to `.env`.
-
-Ensure you added valid configurations to both frontend and backend's `.env` files.
-
-Backend's .env file only needs strings of random characters for secrets. You can generate these secrets running the `generate_secrets` script.
+Each app/package in the project that uses environment variables has a `.env.sample` in their folder. You can generate random strings of characters for server's .env file by running the `generate_secrets` script.
 
 ```bash
-cd server/scripts
+cd scripts/
 ./generate_secrets.sh
 ```
 
 ### 3. Run the Application
 
-After setting everything up, you can start the project with the run script.
+After setting everything up, you can start the project:
 
 ```bash
-cd scripts/ # from the project root
-./run_app.sh (dev | build | preview)
+pnpm dev # from the project root
 ```
 
 This will:
 
-- Run the frontend at `http://localhost:5173`.
-- Run the backend at `http://localhost:3000`.
+- Run the frontend at `http://localhost:3000`.
+- Run the backend at `http://localhost:3001`.
+- Run the landing site at `http://localhost:3002`.
 
 ## Docker Usage
 
@@ -70,36 +76,12 @@ You can build and start the entire stack using Docker Compose:
 docker-compose up --build
 ```
 
-### Individual Dockerfiles
-
-If you want to build and run the services seperately:
-
-**Frontend**
-
-```bash
-cd client/ # from the project root
-docker build -t wtclient .
-docker run -p 5173:5173 wtclient
-```
-
-**Backend**
-
-```bash
-cd server/ # from the project root
-docker build -t wtserver .
-docker run -p 5173:5173 wtserver
-```
-
 ## Bug Reports and Feature Requests
 
 The project uses GitHub templates to streamline reporting bugs and requesting new features. To contribute:
 
 - **Bug Reports:** Open a new issue and select "Bug Report" template. Provide as much detail as possible to help us reproduce the issue.
 - **Feature Request:** Open a new issue and select "Feature Request" template. Describe the new feature and its intended purpose clearly.
-
-## Documentation
-
-For detailed documentation, please see the [project documentation](https://caganseyrek.com/projects/WalletTuner).
 
 ## License
 
