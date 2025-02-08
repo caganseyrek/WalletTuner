@@ -31,50 +31,40 @@ Additionally, if you plan to use the provided scripts, ensure your system suppor
 
 1. Clone the repository
 
-```bash
-git clone https://github.com/caganseyrek/WalletTuner.git
-cd path/to/WalletTuner
-```
+   ```bash
+   git clone https://github.com/caganseyrek/WalletTuner.git
+   cd path/to/WalletTuner
+   ```
 
 2. Run the installation script to install the prerequisites
 
-```bash
-cd scripts/ # from the project root
-./install_apps.sh
-```
+   ```bash
+   cd scripts/ # from the project root
+   ./install_apps.sh
+   ```
 
 3. Setup the environment variables
 
-Each app/package in the project that uses environment variables has a `.env.sample` in their folder. You can generate random strings of characters for server's .env file by running the `generate_secrets` script.
+   Each app/package in the project that uses environment variables has a `.env.sample` in their folder. You can generate random strings of characters for server's .env file by running the `generate_secrets` script.
 
-```bash
-cd scripts/
-./generate_secrets.sh
-```
+   ```bash
+   cd scripts/
+   ./generate_secrets.sh
+   ```
 
-### 3. Run the Application
+4. Run the Application
 
-After setting everything up, you can start the project:
+   After setting everything up, you can start the project:
 
-```bash
-pnpm dev # from the project root
-```
+   ```bash
+   pnpm dev # from the project root
+   ```
 
-This will:
+   This will:
 
-- Run the frontend at `http://localhost:3000`.
-- Run the backend at `http://localhost:3001`.
-- Run the landing site at `http://localhost:3002`.
-
-## Docker Usage
-
-### Build and Run with Docker Compose
-
-You can build and start the entire stack using Docker Compose:
-
-```bash
-docker-compose up --build
-```
+   - Run the frontend at `http://localhost:3000`.
+   - Run the backend at `http://localhost:3001`.
+   - Run the landing site at `http://localhost:3002`.
 
 ## Bug Reports and Feature Requests
 
