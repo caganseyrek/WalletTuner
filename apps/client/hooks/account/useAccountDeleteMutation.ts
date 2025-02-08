@@ -1,26 +1,25 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Account } from "@wallettuner/resource-types";
 
-import { EasyRequester } from "@/lib/EasyRequester/src";
-
-import AccountHooksTypes from "@/types/account";
+import requester from "@/shared/lib/requester";
 
 const useAccountDeleteMutation = () => {
   const queryClient = useQueryClient();
 
   const accountDelete = useMutation({
     mutationKey: ["deleteAccountMutation"],
-    mutationFn: async (accountDeleteData: AccountHooksTypes.Mutations.DeleteRequestParams) => {
-      const response = await new EasyRequester()
-        .setConfig({
-          requestConfig: {
-            method: "DELETE",
+    mutationFn: async (accountDeleteData: Account.Hook.DeleteProps) => {
+      const response = await requester
+        .setRequestConfig({
+          url: {
             baseURL: process.env.NEXT_PUBLIC_BACKEND_URL!,
             endpoint: { route: "account", action: "deleteAccount" },
-            payload: accountDeleteData,
-            includeCookies: true,
           },
+          header: { method: "DELETE" },
+          auth: { includeCookies: true },
+          payload: accountDeleteData,
         })
-        .sendRequest();
+        .sendRequest<void, Account.Hook.DeleteProps>();
       return response;
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["accountQuery"] }),

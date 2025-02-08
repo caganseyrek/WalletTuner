@@ -1,26 +1,25 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Account } from "@wallettuner/resource-types";
 
-import { EasyRequester } from "@/lib/EasyRequester/src";
-
-import AccountHooksTypes from "@/types/account";
+import requester from "@/shared/lib/requester";
 
 const useAccountUpdateMutation = () => {
   const queryClient = useQueryClient();
 
   const accountUpdate = useMutation({
     mutationKey: ["updateAccountMutation"],
-    mutationFn: async (accountUpdateData: AccountHooksTypes.Mutations.UpdateRequestParams) => {
-      const response = await new EasyRequester()
-        .setConfig({
-          requestConfig: {
-            method: "PATCH",
+    mutationFn: async (accountUpdateData: Account.Hook.UpdateProps) => {
+      const response = await requester
+        .setRequestConfig({
+          url: {
             baseURL: process.env.NEXT_PUBLIC_BACKEND_URL!,
             endpoint: { route: "account", action: "updateAcount" },
-            payload: accountUpdateData,
-            includeCookies: true,
           },
+          header: { method: "PATCH" },
+          auth: { includeCookies: true },
+          payload: accountUpdateData,
         })
-        .sendRequest();
+        .sendRequest<void, Account.Hook.UpdateProps>();
       return response;
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["accountQuery"] }),
