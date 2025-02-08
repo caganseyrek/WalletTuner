@@ -1,12 +1,11 @@
+import { Account, Milestone } from "@wallettuner/resource-types";
+
 import { BadRequestError, NotFoundError } from "@/app/errors/errors";
 
 import AccountRepository from "@/resources/account/account.repository";
 import MilestoneRepository from "@/resources/milestone/milestone.repository";
 
 import ProgressHelper from "@/helpers/progressHelper";
-
-import { Account } from "../account/account.types";
-import { Milestone } from "./milestone.types";
 
 class MilestoneService {
   private milestoneRepository: MilestoneRepository;

@@ -1,3 +1,4 @@
+import { Auth, User } from "@wallettuner/resource-types";
 import { NextFunction, Request, Response } from "express";
 
 import AuthService from "@/resources/auth/auth.service";
@@ -7,9 +8,6 @@ import Converter from "@/utils/converter";
 import ResponseHelper from "@/helpers/responseHelper";
 
 import STATUS_CODES from "@/constants/statusCodes";
-
-import { Auth } from "./auth.types";
-import { User } from "./user/user.types";
 
 class AuthController {
   private authService: AuthService;

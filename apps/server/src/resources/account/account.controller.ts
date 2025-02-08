@@ -1,3 +1,4 @@
+import { Account, Globals } from "@wallettuner/resource-types";
 import { NextFunction, Request, Response } from "express";
 
 import AccountService from "@/resources/account/account.service";
@@ -7,9 +8,6 @@ import Converter from "@/utils/converter";
 import ResponseHelper from "@/helpers/responseHelper";
 
 import STATUS_CODES from "@/constants/statusCodes";
-
-import { Account } from "./account.types";
-import { Globals } from "@/globals";
 
 class AccountController {
   private accountService: AccountService;

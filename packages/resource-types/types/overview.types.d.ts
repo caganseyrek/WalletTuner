@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
-
-import { Globals } from "@/globals";
+import { Globals } from "./global.types";
 
 export namespace Overview {
   interface OverviewProps {

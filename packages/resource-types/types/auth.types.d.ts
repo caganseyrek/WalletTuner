@@ -1,9 +1,14 @@
-import { User } from "./user/user.types";
-import { Globals } from "@/globals";
+import { Globals } from "./global.types";
+import { User } from "./user.types";
 
 export namespace Auth {
   type AccessToken = { accessToken: string };
   type RefreshToken = { refreshToken: string };
+  export namespace Hook {
+    export type RegisterProps = Omit<Omit<User.UserProps, "_id">, "created_at">;
+    export type LoginProps = Pick<User.UserProps, "email"> & Pick<User.UserProps, "password">;
+    export type UpdateUserProps = Pick<User.UserProps, "full_name">;
+  }
   export namespace Controller {
     export type RegisterProps = Omit<Omit<User.UserProps, "_id">, "created_at">;
     export type LoginProps = Pick<User.UserProps, "email"> & Pick<User.UserProps, "password">;
@@ -22,6 +27,6 @@ export namespace Auth {
     export type UpdateUserProps = Pick<User.UserProps, "_id"> & Pick<User.UserProps, "full_name">;
     export type DeleteUserProps = Pick<User.UserProps, "_id">;
   }
-  export type FindByIdProps = Pick<UserProps, "_id">;
+  export type FindByIdProps = Pick<User.UserProps, "_id">;
   export type TokensObject = AccessToken & RefreshToken;
 }

@@ -1,0 +1,19 @@
+{
+  "name": "@wallettuner/resource-types",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "author": {
+    "name": "Çağan Seyrek",
+    "url": "https://caganseyrek.com"
+  },
+  "exports": {
+    "default": "./index.ts"
+  },
+  "devDependencies": {
+    "@wallettuner/ts-config": "workspace:*",
+    "mongoose": "^8.9.5",
+    "typescript": "^5.7.3"
+  }
+}

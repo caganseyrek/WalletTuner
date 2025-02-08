@@ -1,3 +1,4 @@
+import { Globals, Overview } from "@wallettuner/resource-types";
 import { NextFunction, Request, Response } from "express";
 
 import OverviewService from "@/resources/overview/overview.service";
@@ -7,9 +8,6 @@ import Converter from "@/utils/converter";
 import ResponseHelper from "@/helpers/responseHelper";
 
 import STATUS_CODES from "@/constants/statusCodes";
-
-import { Overview } from "./overview.types";
-import { Globals } from "@/globals";
 
 class OverviewController {
   private overviewService: OverviewService;

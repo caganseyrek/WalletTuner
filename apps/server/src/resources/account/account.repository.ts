@@ -1,3 +1,4 @@
+import { Account } from "@wallettuner/resource-types";
 import mongoose from "mongoose";
 
 import { InternalError } from "@/app/errors/errors";
@@ -6,8 +7,6 @@ import accountModel from "@/resources/account/account.model";
 
 import logger from "@/utils/logger";
 import Sanitizer from "@/utils/sanitizer";
-
-import { Account } from "./account.types";
 
 class AccountRepository {
   public async findByName(params: Account.FindByNameProps): Promise<Account.AccountProps | null> {

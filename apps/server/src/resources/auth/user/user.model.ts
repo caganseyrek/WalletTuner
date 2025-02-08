@@ -1,6 +1,5 @@
+import { User } from "@wallettuner/resource-types";
 import mongoose, { Model, Schema } from "mongoose";
-
-import { User } from "./user.types";
 
 const userSchema: Schema = new Schema<User.UserProps>({
   _id: mongoose.Schema.Types.ObjectId,

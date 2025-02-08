@@ -1,6 +1,5 @@
+import { Overview } from "@wallettuner/resource-types";
 import mongoose, { Model, Schema } from "mongoose";
-
-import { Overview } from "./overview.types";
 
 const overviewSchema: Schema = new Schema<Overview.OverviewProps>({
   _id: mongoose.Schema.Types.ObjectId,

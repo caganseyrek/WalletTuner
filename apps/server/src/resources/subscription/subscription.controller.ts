@@ -1,3 +1,4 @@
+import { Globals, Subscription } from "@wallettuner/resource-types";
 import { NextFunction, Request, Response } from "express";
 
 import Converter from "@/utils/converter";
@@ -7,8 +8,6 @@ import ResponseHelper from "@/helpers/responseHelper";
 import STATUS_CODES from "@/constants/statusCodes";
 
 import SubscriptionService from "./subscription.service";
-import { Subscription } from "./subscription.types";
-import { Globals } from "@/globals";
 
 class SubscriptionController {
   private subscriptionService: SubscriptionService;

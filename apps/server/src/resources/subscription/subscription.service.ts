@@ -1,10 +1,9 @@
+import { Account, Subscription } from "@wallettuner/resource-types";
+
 import { BadRequestError, NotFoundError } from "@/app/errors/errors";
 
 import AccountRepository from "@/resources/account/account.repository";
 import SubscriptionRepository from "@/resources/subscription/subscription.repository";
-
-import { Account } from "../account/account.types";
-import { Subscription } from "./subscription.types";
 
 class SubscriptionService {
   private subscriptionRepository: SubscriptionRepository;

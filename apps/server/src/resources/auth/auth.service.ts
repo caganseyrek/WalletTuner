@@ -1,3 +1,14 @@
+import {
+  Account,
+  Auth,
+  Milestone,
+  Overview,
+  Subscription,
+  Token,
+  Transaction,
+  User,
+} from "@wallettuner/resource-types";
+
 import { BadRequestError, NotFoundError, UnauthorizedError } from "@/app/errors/errors";
 
 import Converter from "@/utils/converter";
@@ -6,20 +17,12 @@ import PasswordHelper from "@/helpers/passwordHelper";
 import TokenHelper from "@/helpers/tokenHelper";
 
 import AccountRepository from "../account/account.repository";
-import { Account } from "../account/account.types";
 import MilestoneRepository from "../milestone/milestone.repository";
-import { Milestone } from "../milestone/milestone.types";
 import OverviewRepository from "../overview/overview.repository";
-import { Overview } from "../overview/overview.types";
 import SubscriptionRepository from "../subscription/subscription.repository";
-import { Subscription } from "../subscription/subscription.types";
 import TransactionRepository from "../transaction/transaction.repository";
-import { Transaction } from "../transaction/transaction.types";
-import { Auth } from "./auth.types";
 import TokenRepository from "./token/token.repository";
-import { Token } from "./token/token.types";
 import UserRepository from "./user/user.repository";
-import { User } from "./user/user.types";
 
 class AuthService {
   private tokenRepository: TokenRepository;

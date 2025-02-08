@@ -1,12 +1,11 @@
+import { Account, Transaction } from "@wallettuner/resource-types";
+
 import { BadRequestError, NotFoundError } from "@/app/errors/errors";
 
 import AccountRepository from "@/resources/account/account.repository";
 import TransactionRepository from "@/resources/transaction/transaction.repository";
 
 import BalanceHelper, { TransactionType, UpdatedBalanceProps } from "@/helpers/balanceHelper";
-
-import { Account } from "../account/account.types";
-import { Transaction } from "./transaction.types";
 
 class TransactionService {
   private transactionRepository: TransactionRepository;

@@ -1,3 +1,4 @@
+import { User } from "@wallettuner/resource-types";
 import mongoose from "mongoose";
 
 import { InternalError } from "@/app/errors/errors";
@@ -6,8 +7,6 @@ import userModel from "@/resources/auth/user/user.model";
 
 import logger from "@/utils/logger";
 import Sanitizer from "@/utils/sanitizer";
-
-import { User } from "./user.types";
 
 class UserRepository {
   public async findById(params: User.FindByIdProps): Promise<User.UserProps | null> {

@@ -50,6 +50,7 @@
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.7",
     "@wallettuner/eslint-config": "workspace:*",
+    "@wallettuner/resource-types": "workspace:*",
     "@wallettuner/ts-config": "workspace:*",
     "eslint": "^9.19.0",
     "globals": "^15.14.0",

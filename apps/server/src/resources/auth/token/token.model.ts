@@ -1,6 +1,5 @@
+import { Token } from "@wallettuner/resource-types";
 import mongoose, { Model, Schema } from "mongoose";
-
-import { Token } from "./token.types";
 
 const refreshTokenSchema: Schema = new Schema<Token.RefreshTokenProps>({
   _id: mongoose.Schema.Types.ObjectId,

@@ -1,3 +1,4 @@
+import { Subscription } from "@wallettuner/resource-types";
 import mongoose from "mongoose";
 
 import { InternalError } from "@/app/errors/errors";
@@ -6,7 +7,6 @@ import logger from "@/utils/logger";
 import Sanitizer from "@/utils/sanitizer";
 
 import subscriptionModel from "./subscription.model";
-import { Subscription } from "./subscription.types";
 
 class SubscriptionRepository {
   public async findByAccountName(params: Subscription.FindByAccountProps): Promise<Subscription.SubscriptionProps[]> {

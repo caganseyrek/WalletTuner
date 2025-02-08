@@ -1,3 +1,4 @@
+import { Milestone } from "@wallettuner/resource-types";
 import mongoose from "mongoose";
 
 import { InternalError } from "@/app/errors/errors";
@@ -6,7 +7,6 @@ import logger from "@/utils/logger";
 import Sanitizer from "@/utils/sanitizer";
 
 import milestoneModel from "./milestone.model";
-import { Milestone } from "./milestone.types";
 
 class MilestoneRepository {
   public async findByAccountName(params: Milestone.FindByAccountProps): Promise<Milestone.MilestoneProps[]> {

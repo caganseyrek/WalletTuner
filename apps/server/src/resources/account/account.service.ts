@@ -1,3 +1,5 @@
+import { Account, Milestone, Subscription, Transaction } from "@wallettuner/resource-types";
+
 import { AppError, InternalError, NotFoundError } from "@/app/errors/errors";
 
 import AccountRepository from "@/resources/account/account.repository";
@@ -6,11 +8,7 @@ import TransactionRepository from "@/resources/transaction/transaction.repositor
 import STATUS_CODES from "@/constants/statusCodes";
 
 import MilestoneRepository from "../milestone/milestone.repository";
-import { Milestone } from "../milestone/milestone.types";
 import SubscriptionRepository from "../subscription/subscription.repository";
-import { Subscription } from "../subscription/subscription.types";
-import { Transaction } from "../transaction/transaction.types";
-import { Account } from "./account.types";
 
 class AccountService {
   private accountRepository: AccountRepository;

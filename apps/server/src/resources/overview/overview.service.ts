@@ -1,3 +1,4 @@
+import { Account, Milestone, Overview, Subscription } from "@wallettuner/resource-types";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
@@ -6,12 +7,8 @@ import { BadRequestError, NotFoundError } from "@/app/errors/errors";
 import OverviewRepository from "@/resources/overview/overview.repository";
 
 import AccountRepository from "../account/account.repository";
-import { Account } from "../account/account.types";
 import MilestoneRepository from "../milestone/milestone.repository";
-import { Milestone } from "../milestone/milestone.types";
 import SubscriptionRepository from "../subscription/subscription.repository";
-import { Subscription } from "../subscription/subscription.types";
-import { Overview } from "./overview.types";
 
 dayjs.extend(relativeTime);
 

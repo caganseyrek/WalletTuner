@@ -1,6 +1,5 @@
+import { Subscription } from "@wallettuner/resource-types";
 import mongoose, { Model, Schema } from "mongoose";
-
-import { Subscription } from "./subscription.types";
 
 const subscriptionSchema: Schema = new Schema<Subscription.SubscriptionProps>({
   _id: mongoose.Schema.Types.ObjectId,

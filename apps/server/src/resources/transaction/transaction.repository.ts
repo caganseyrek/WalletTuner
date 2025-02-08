@@ -1,3 +1,4 @@
+import { Transaction } from "@wallettuner/resource-types";
 import mongoose from "mongoose";
 
 import { InternalError } from "@/app/errors/errors";
@@ -6,8 +7,6 @@ import transactionModel from "@/resources/transaction/transaction.model";
 
 import logger from "@/utils/logger";
 import Sanitizer from "@/utils/sanitizer";
-
-import { Transaction } from "./transaction.types";
 
 class TransactionRepository {
   public async findById(params: Transaction.FindByIdProps): Promise<Transaction.TransactionProps | null> {

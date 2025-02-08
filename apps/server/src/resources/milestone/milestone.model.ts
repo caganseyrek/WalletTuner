@@ -1,6 +1,5 @@
+import { Milestone } from "@wallettuner/resource-types";
 import mongoose, { Model, Schema } from "mongoose";
-
-import { Milestone } from "./milestone.types";
 
 const milestoneSchema: Schema = new Schema<Milestone.MilestoneProps>({
   _id: mongoose.Schema.Types.ObjectId,

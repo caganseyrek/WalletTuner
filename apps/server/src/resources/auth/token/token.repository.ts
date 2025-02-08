@@ -1,3 +1,4 @@
+import { Token } from "@wallettuner/resource-types";
 import mongoose from "mongoose";
 
 import { InternalError } from "@/app/errors/errors";
@@ -6,8 +7,6 @@ import authModel from "@/resources/auth/token/token.model";
 
 import logger from "@/utils/logger";
 import Sanitizer from "@/utils/sanitizer";
-
-import { Token } from "./token.types";
 
 class TokenRepository {
   public async findByUserId(params: Token.FindByUserIdProps): Promise<Token.RefreshTokenProps[]> {

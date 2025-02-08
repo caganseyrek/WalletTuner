@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
-
-import { Globals } from "@/globals";
+import { Globals } from "./global.types";
 
 export namespace Milestone {
   export interface MilestoneProps {
@@ -18,6 +17,11 @@ export namespace Milestone {
     _id: string;
     user_id: string;
     account_id: string;
+  }
+  export namespace Hook {
+    export type CreateProps = Omit<Omit<Omit<MilestonePropsWithString, "_id">, "user_id">, "progress">;
+    export type UpdateProps = Omit<Omit<MilestonePropsWithString, "user_id">, "progress">;
+    export type DeleteProps = Pick<MilestonePropsWithString, "_id">;
   }
   export namespace Controller {
     export type CreateProps = Globals.UserIdFromCookie &

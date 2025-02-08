@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
-
-import { Globals } from "@/globals";
+import { Globals } from "./global.types";
 
 export namespace Subscription {
   export interface SubscriptionProps {
@@ -19,6 +18,11 @@ export namespace Subscription {
     _id: string;
     user_id: string;
     paid_from: string;
+  }
+  export namespace Hook {
+    export type CreateProps = Omit<Omit<Omit<SubscriptionPropsWithString, "_id">, "user_id">, "created_at">;
+    export type UpdateProps = Omit<Omit<SubscriptionPropsWithString, "user_id">, "created_at">;
+    export type DeleteProps = Pick<SubscriptionPropsWithString, "_id">;
   }
   export namespace Controller {
     export type CreateProps = Globals.UserIdFromCookie &

@@ -1,3 +1,4 @@
+import { Overview } from "@wallettuner/resource-types";
 import mongoose from "mongoose";
 
 import { InternalError } from "@/app/errors/errors";
@@ -6,7 +7,6 @@ import logger from "@/utils/logger";
 import Sanitizer from "@/utils/sanitizer";
 
 import overviewModel from "./overview.model";
-import { Overview } from "./overview.types";
 
 class OverviewRepository {
   public async findByUserId(params: Overview.FindByUserIdProps): Promise<Overview.OverviewProps | null> {

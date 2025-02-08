@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
-
-import { Globals } from "@/globals";
+import { Globals } from "./global.types";
 
 export namespace Account {
   export interface AccountProps {
@@ -15,6 +14,11 @@ export namespace Account {
   export interface AccountPropsWithString extends Omit<Omit<AccountProps, "_id">, "user_id"> {
     _id: string;
     user_id: string;
+  }
+  export namespace Hook {
+    export type CreateProps = Pick<AccountPropsWithString, "name">;
+    export type UpdateProps = Pick<AccountPropsWithString, "_id"> & Pick<AccountPropsWithString, "name">;
+    export type DeleteProps = Pick<AccountPropsWithString, "_id">;
   }
   export namespace Controller {
     export type CreateProps = Globals.UserIdFromCookie & Pick<AccountPropsWithString, "name">;

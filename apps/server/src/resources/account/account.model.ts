@@ -1,6 +1,5 @@
+import { Account } from "@wallettuner/resource-types";
 import mongoose, { Model, Schema } from "mongoose";
-
-import { Account } from "./account.types";
 
 const accountSchema: Schema = new Schema<Account.AccountProps>({
   _id: mongoose.Schema.Types.ObjectId,

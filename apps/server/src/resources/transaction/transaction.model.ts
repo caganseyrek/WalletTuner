@@ -1,6 +1,5 @@
+import { Transaction } from "@wallettuner/resource-types";
 import mongoose, { Model, Schema } from "mongoose";
-
-import { Transaction } from "./transaction.types";
 
 const transactionSchema: Schema = new Schema<Transaction.TransactionProps>({
   _id: mongoose.Schema.Types.ObjectId,
