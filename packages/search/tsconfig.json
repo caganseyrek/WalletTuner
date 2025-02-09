@@ -1,0 +1,9 @@
+{
+  "extends": "@wallettuner/ts-config/base.tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": { "@/*": ["./*"] }
+  },
+  "include": ["types/**/*.d.ts", "index.ts"],
+  "exclude": ["node_modules"]
+}
