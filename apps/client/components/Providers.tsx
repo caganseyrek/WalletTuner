@@ -4,6 +4,7 @@ import React from "react";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { ThemeProvider as NextThemesProvider } from "next-themes";
 
 import { SidebarProvider } from "./base/sidebar";
 
@@ -20,8 +21,10 @@ const Providers = ({ children }: ProvidersProps) => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <SidebarProvider>{children}</SidebarProvider>
-      <ReactQueryDevtools initialIsOpen={false} />
+      <NextThemesProvider attribute="class" enableSystem defaultTheme="system" disableTransitionOnChange>
+        <SidebarProvider>{children}</SidebarProvider>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </NextThemesProvider>
     </QueryClientProvider>
   );
 };

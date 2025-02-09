@@ -1,29 +1,26 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 
 import requester from "@/shared/lib/requester";
 import { ServerResponseParams } from "@/shared/types/globals";
 
-const useLogoutMutation = () => {
-  const queryClient = useQueryClient();
-
-  const logout = useMutation({
-    mutationKey: ["logoutMutation"],
+const useDeleteUserMutation = () => {
+  const deleteUser = useMutation({
+    mutationKey: ["deleteUserMutation"],
     mutationFn: async () => {
       const response = await requester
         .setRequestConfig({
           url: {
             baseURL: process.env.NEXT_PUBLIC_BACKEND_URL!,
-            endpoint: { route: "auth", action: "logout" },
+            endpoint: { route: "auth", subroute: "user", action: "deleteUser" },
           },
-          header: { method: "POST" },
+          header: { method: "DELETE" },
           auth: { includeCookies: true },
         })
         .sendRequest<ServerResponseParams<null>, null>();
       return response;
     },
-    onSuccess: () => queryClient.resetQueries(),
   });
-  return logout;
+  return deleteUser;
 };
 
-export default useLogoutMutation;
+export default useDeleteUserMutation;

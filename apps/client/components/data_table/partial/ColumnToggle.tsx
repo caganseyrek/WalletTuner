@@ -22,7 +22,7 @@ function ColumnToggle<TData>({ table }: ColumnToggleProps<TData>) {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" className="ml-auto hidden lg:flex">
-          <Columns3 /> Column Views
+          <Columns3 /> View
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[150px]">

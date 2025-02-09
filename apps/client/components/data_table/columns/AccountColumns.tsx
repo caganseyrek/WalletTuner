@@ -1,27 +1,18 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
+import { Account } from "@wallettuner/resource-types";
 import { Trash2 } from "lucide-react";
 
 import { Button } from "@/components/base/button";
 import { Checkbox } from "@/components/base/checkbox";
 
-import Formatter from "@/utils/formatter";
+import Formatter from "@/shared/lib/formatter";
 
-import AccountDialog from "../edit_dialogs/AccountDialog";
+import AccountDialog from "../../dialogs/AccountDialog";
 import ColumnHeader from "../partial/ColumnHeader";
 
-export type AccountProps = {
-  _id: string;
-  user_id: string;
-  name: string;
-  balance: number;
-  total_income: number;
-  total_expense: number;
-  created_at: string;
-};
-
-export const accountColumns: ColumnDef<AccountProps>[] = [
+export const accountColumns: ColumnDef<Account.AccountPropsWithString>[] = [
   {
     id: "select",
     header: ({ table }) => (

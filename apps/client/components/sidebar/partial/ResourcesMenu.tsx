@@ -21,7 +21,7 @@ const ResourcesMenu = () => {
           {resources.map((item) => (
             <SidebarMenuItem key={item.key}>
               <SidebarMenuButton asChild>
-                <Link href={item.path}>
+                <Link href={"/" + item.key}>
                   <item.icon />
                   <span>{item.title}</span>
                 </Link>

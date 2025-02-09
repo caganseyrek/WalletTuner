@@ -1,5 +1,6 @@
 import React from "react";
 
+import { Account } from "@wallettuner/resource-types";
 import { Pen, PlusCircle, Save } from "lucide-react";
 
 import { Button } from "@/components/base/button";
@@ -15,10 +16,8 @@ import {
 import { Input } from "@/components/base/input";
 import { Label } from "@/components/base/label";
 
-import { AccountProps } from "../columns/AccountColumns";
-
 interface AccountDialogProps {
-  account?: AccountProps;
+  account?: Account.AccountPropsWithString;
 }
 
 const AccountDialog = ({ account }: AccountDialogProps) => {
@@ -38,7 +37,7 @@ const AccountDialog = ({ account }: AccountDialogProps) => {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{account ? "Edit Account" : "Create a new Account"}</DialogTitle>
-          <DialogDescription>You fill or edit the field below then click save.</DialogDescription>
+          <DialogDescription>You can fill or edit the field below then click save.</DialogDescription>
         </DialogHeader>
         <div>
           <Label htmlFor="accountname">Account Name</Label>

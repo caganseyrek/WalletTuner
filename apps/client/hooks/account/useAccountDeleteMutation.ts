@@ -2,11 +2,12 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Account } from "@wallettuner/resource-types";
 
 import requester from "@/shared/lib/requester";
+import { ServerResponseParams } from "@/shared/types/globals";
 
 const useAccountDeleteMutation = () => {
   const queryClient = useQueryClient();
 
-  const accountDelete = useMutation({
+  const deleteAccount = useMutation({
     mutationKey: ["deleteAccountMutation"],
     mutationFn: async (accountDeleteData: Account.Hook.DeleteProps) => {
       const response = await requester
@@ -19,12 +20,12 @@ const useAccountDeleteMutation = () => {
           auth: { includeCookies: true },
           payload: accountDeleteData,
         })
-        .sendRequest<void, Account.Hook.DeleteProps>();
+        .sendRequest<ServerResponseParams<void>, Account.Hook.DeleteProps>();
       return response;
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["accountQuery"] }),
   });
-  return accountDelete;
+  return deleteAccount;
 };
 
 export default useAccountDeleteMutation;

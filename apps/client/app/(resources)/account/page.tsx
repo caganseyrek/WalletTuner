@@ -4,9 +4,9 @@ import React from "react";
 
 import useAccountQuery from "@/hooks/account/useAccountQuery";
 
-import { accountColumns } from "@/components/data_display/columns/AccountColumns";
-import DataTable from "@/components/data_display/DataTable";
-import AccountDialog from "@/components/data_display/edit_dialogs/AccountDialog";
+import { accountColumns } from "@/components/data_table/columns/AccountColumns";
+import DataTable from "@/components/data_table/DataTable";
+import AccountDialog from "@/components/dialogs/AccountDialog";
 
 const AccountsPage = () => {
   const { isLoading: isAccountQueryLoading, error: accountQueryError, data: accounts } = useAccountQuery();

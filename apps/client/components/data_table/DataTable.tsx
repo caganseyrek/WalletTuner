@@ -53,13 +53,11 @@ const DataTable = <TData, TValue>({ columns, data, createDialog }: DataTableProp
         </div>
       </section>
       <Table>
-        <TableHeader className="border-t">
+        <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header, index) => (
-                <TableHead
-                  key={header.id}
-                  className={`[&>[role=checkbox]]:translate-y-[-2px] [&:has([role=checkbox])]:pr-2 ${index === headerGroup.headers.length - 1 && "text-right"}`}>
+                <TableHead key={header.id} className={index === headerGroup.headers.length - 1 ? "text-right" : ""}>
                   {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                 </TableHead>
               ))}
@@ -71,9 +69,7 @@ const DataTable = <TData, TValue>({ columns, data, createDialog }: DataTableProp
             table.getRowModel().rows.map((row) => (
               <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
                 {row.getVisibleCells().map((cell, index) => (
-                  <TableCell
-                    key={cell.id}
-                    className={`py-1 [&>[role=checkbox]]:translate-y-[-2px] [&:has([role=checkbox])]:pr-2 ${index === row.getAllCells().length - 1 && "text-right"}`}>
+                  <TableCell key={cell.id} className={index === row.getAllCells().length - 1 ? "text-right" : ""}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}

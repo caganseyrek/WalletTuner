@@ -11,7 +11,7 @@ interface RootLayoutProps {
 
 const RootLayout = ({ children }: RootLayoutProps) => {
   return (
-    <html>
+    <html suppressHydrationWarning>
       <head></head>
       <body>
         <Providers>
