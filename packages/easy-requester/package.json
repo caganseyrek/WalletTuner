@@ -18,7 +18,7 @@
     "format": "prettier --write ."
   },
   "devDependencies": {
-    "@types/node": "^22.10.6",
+    "@types/node": "^22.13.4",
     "@wallettuner/eslint-config": "workspace:*",
     "@wallettuner/ts-config": "workspace:*",
     "eslint": "^9.18.0",
