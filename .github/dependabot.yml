@@ -14,7 +14,7 @@ updates:
     reviewers:
       - "caganseyrek"
   - package-ecosystem: "npm"
-    directory: "/client"
+    directory: "/apps/client"
     schedule:
       interval: "weekly"
       day: "monday"
@@ -22,7 +22,7 @@ updates:
     reviewers:
       - "caganseyrek"
   - package-ecosystem: "npm"
-    directory: "/server"
+    directory: "/apps/server"
     schedule:
       interval: "weekly"
       day: "monday"
