@@ -53,7 +53,7 @@
     "@wallettuner/resource-types": "workspace:*",
     "@wallettuner/ts-config": "workspace:*",
     "eslint": "^9.19.0",
-    "globals": "^15.14.0",
+    "globals": "^15.15.0",
     "nodemon": "^3.1.9",
     "prettier": "3.3.3",
     "tsconfig-paths": "^4.2.0",
