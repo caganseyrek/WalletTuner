@@ -52,7 +52,7 @@
     "@wallettuner/eslint-config": "workspace:*",
     "@wallettuner/resource-types": "workspace:*",
     "@wallettuner/ts-config": "workspace:*",
-    "eslint": "^9.19.0",
+    "eslint": "^9.21.0",
     "globals": "^15.14.0",
     "nodemon": "^3.1.9",
     "prettier": "3.3.3",
