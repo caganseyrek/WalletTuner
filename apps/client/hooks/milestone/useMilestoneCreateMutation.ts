@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Milestone } from "@wallettuner/resource-types";
 
 import requester from "@/shared/lib/requester";
-import { ServerResponseParams } from "@/shared/types/globals";
+import { ServerResponseParams } from "@/types/globals";
 
 const useMilestoneCreateMutation = () => {
   const queryClient = useQueryClient();
@@ -13,14 +13,13 @@ const useMilestoneCreateMutation = () => {
       const response = await requester
         .setRequestConfig({
           url: {
-            baseURL: process.env.NEXT_PUBLIC_BACKEND_URL!,
+            baseURL: process.env.NEXT_PUBLIC_SERVER_URL!,
             endpoint: { route: "milestone", action: "createMilestone" },
           },
-          header: { method: "POST" },
+          method: "POST",
           auth: { includeCookies: true },
-          payload: milestoneCreateData,
         })
-        .sendRequest<ServerResponseParams<void>, Milestone.Hook.CreateProps>();
+        .sendRequest<ServerResponseParams<void>, Milestone.Hook.CreateProps>(milestoneCreateData);
       return response;
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["milestoneQuery"] }),

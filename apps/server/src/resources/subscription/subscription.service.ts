@@ -1,6 +1,6 @@
 import { Account, Subscription } from "@wallettuner/resource-types";
 
-import { BadRequestError, NotFoundError } from "@/app/errors/errors";
+import { BadRequestError, NotFoundError } from "@/app/error/errors";
 
 import AccountRepository from "@/resources/account/account.repository";
 import SubscriptionRepository from "@/resources/subscription/subscription.repository";

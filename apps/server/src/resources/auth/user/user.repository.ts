@@ -1,51 +1,43 @@
 import { User } from "@wallettuner/resource-types";
 import mongoose from "mongoose";
 
-import { InternalError } from "@/app/errors/errors";
+import { InternalError } from "@/app/error/errors";
 
 import userModel from "@/resources/auth/user/user.model";
 
 import logger from "@/utils/logger";
-import Sanitizer from "@/utils/sanitizer";
 
 class UserRepository {
   public async findById(params: User.FindByIdProps): Promise<User.UserProps | null> {
-    const sanitizedQuery = Sanitizer.sanitizeQuery<User.FindByIdProps>({ _id: params._id });
-    const user: User.UserProps | null = await userModel.findOne(sanitizedQuery).exec();
+    const user: User.UserProps | null = await userModel.findOne({ _id: params._id }).exec();
     return user;
   }
 
-  public async findByEmail(params: User.FindByEmailProps): Promise<User.UserProps> {
-    const sanitizedQuery = Sanitizer.sanitizeQuery<User.FindByEmailProps>({ email: params.email });
-    const users: User.UserProps[] = await userModel.find(sanitizedQuery).exec();
-    if (users.length > 0 || users.length !== 0) {
+  public async findByEmail({ email }: User.FindByEmailProps): Promise<User.UserProps> {
+    const users: User.UserProps[] = await userModel.find({ email: email }).exec();
+    if (users.length < 1 || users.length === 0) {
       throw new InternalError();
     }
     return users[0];
   }
 
   public async createUser(params: User.Repository.CreateProps): Promise<void> {
-    const sanitizedNewUserObject = Sanitizer.sanitize<User.UserProps>({
+    const newUserObject = new userModel<User.UserProps>({
       _id: new mongoose.Types.ObjectId(),
       full_name: params.full_name,
       email: params.email,
       password: params.password,
       created_at: params.created_at,
     });
-    const newUserObject = new userModel<User.UserProps>(sanitizedNewUserObject);
     const saveNewUser = await newUserObject.save();
     if (!saveNewUser) {
-      logger.error(`An error occured while saving a new user that belongs to user id ${sanitizedNewUserObject._id}`);
+      logger.error(`An error occured while saving a new user that belongs to user id ${newUserObject._id}`);
       throw new InternalError();
     }
   }
 
   public async updateUser(params: User.Repository.UpdateProps): Promise<void> {
-    const sanitizedUserId = Sanitizer.sanitize<mongoose.Types.ObjectId>(params._id);
-    const sanitizedUserModel = Sanitizer.sanitize<Omit<User.Repository.UpdateProps, "_id">>({
-      full_name: params.full_name,
-    });
-    const updateUser = await userModel.findByIdAndUpdate(sanitizedUserId, { ...sanitizedUserModel }).exec();
+    const updateUser = await userModel.findByIdAndUpdate(params._id, { full_name: params.full_name }).exec();
     if (!updateUser) {
       logger.error(`An error occured while updating a user with id ${params._id}`);
       throw new InternalError();
@@ -53,8 +45,7 @@ class UserRepository {
   }
 
   public async deleteUser(params: User.Repository.DeleteProps): Promise<void> {
-    const sanitizedQuery = Sanitizer.sanitizeQuery<User.Repository.DeleteProps>({ _id: params._id });
-    const deleteUser = await userModel.findOneAndDelete(sanitizedQuery).exec();
+    const deleteUser = await userModel.findOneAndDelete({ _id: params._id }).exec();
     if (!deleteUser) {
       logger.error(`An error occured while deleting a user with id ${params._id}`);
       throw new InternalError();

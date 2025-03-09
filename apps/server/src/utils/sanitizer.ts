@@ -1,27 +1,13 @@
-import { FilterQuery } from "mongoose";
+import { BadRequestError } from "@/app/error/errors";
 
-import { BadRequestError } from "@/app/errors/errors";
-
-import logger from "./logger";
+import logger from "@/utils/logger";
 
 class Sanitizer {
-  /**
-   * Sanitizes a MongoDB query object to prevent NoSQL injection.
-   *
-   * @template TData - The type of the MongoDB document.
-   * @param {FilterQuery<TData>} query - The query object to sanitize.
-   * @returns {FilterQuery<TData>} - The sanitized query object.
-   */
-  public static sanitizeQuery<TData>(query: FilterQuery<TData>): FilterQuery<TData> {
-    return this._sanitize(query, new WeakSet<object>()) as FilterQuery<TData>;
-  }
-
   /**
    * Escapes potentially dangerous characters (`$` and `.`) in strings
    * to prevent NoSQL injection.
    *
-   * @private
-   * @param {string} value - The string to sanitize.
+   * @param {string} object - The string to sanitize.
    * @returns {string} - The sanitized string.
    */
   public static sanitize<TObject>(object: TObject): TObject {
@@ -44,7 +30,7 @@ class Sanitizer {
    */
   private static _sanitize(value: unknown, _visitedObjects: WeakSet<object>): unknown {
     if (typeof value === "string") {
-      return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      return value.replace(/[*+?^${}()|[\]]/g, "\\$&");
     } else if (Array.isArray(value)) {
       return value.map((e) => this._sanitize(e, _visitedObjects));
     } else if (value && typeof value === "object") {
@@ -58,6 +44,8 @@ class Sanitizer {
       return value;
     } else if (value === null) {
       return null;
+    } else if (value === undefined) {
+      return undefined;
     }
     logger.error(`Encountered invalid type '${typeof value}'`);
     throw new BadRequestError();

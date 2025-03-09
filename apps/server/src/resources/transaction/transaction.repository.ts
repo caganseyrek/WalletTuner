@@ -1,42 +1,36 @@
 import { Transaction } from "@wallettuner/resource-types";
 import mongoose from "mongoose";
 
-import { InternalError } from "@/app/errors/errors";
+import { InternalError } from "@/app/error/errors";
 
 import transactionModel from "@/resources/transaction/transaction.model";
 
 import logger from "@/utils/logger";
-import Sanitizer from "@/utils/sanitizer";
 
 class TransactionRepository {
   public async findById(params: Transaction.FindByIdProps): Promise<Transaction.TransactionProps | null> {
-    const sanitizedQuery = Sanitizer.sanitizeQuery<Transaction.FindByIdProps>({
-      _id: params._id,
-      user_id: params.user_id,
-    });
-    const transaction: Transaction.TransactionProps | null = await transactionModel.findOne(sanitizedQuery).exec();
+    const transaction: Transaction.TransactionProps | null = await transactionModel
+      .findOne({ _id: params._id, user_id: params.user_id })
+      .exec();
     return transaction;
   }
 
   public async findByAccountId(params: Transaction.FindByAccountIdProps): Promise<Transaction.TransactionProps[]> {
-    const sanitizedQuery = Sanitizer.sanitizeQuery<Transaction.FindByAccountIdProps>({
-      user_id: params.user_id,
-      account_id: params.account_id,
-    });
-    const transactions: Transaction.TransactionProps[] = await transactionModel.find(sanitizedQuery).exec();
+    const transactions: Transaction.TransactionProps[] = await transactionModel
+      .find({ user_id: params.user_id, account_id: params.account_id })
+      .exec();
     return transactions;
   }
 
   public async findByUserId(params: Transaction.FindByUserIdProps): Promise<Transaction.TransactionProps[]> {
-    const sanitizedQuery = Sanitizer.sanitizeQuery<Transaction.FindByUserIdProps>({
-      user_id: params.user_id,
-    });
-    const transactions: Transaction.TransactionProps[] = await transactionModel.find(sanitizedQuery).exec();
+    const transactions: Transaction.TransactionProps[] = await transactionModel
+      .find({ user_id: params.user_id })
+      .exec();
     return transactions;
   }
 
   public async createTransaction(params: Transaction.Repository.CreateProps): Promise<void> {
-    const sanitizedNewTransactionObject = Sanitizer.sanitize<Transaction.TransactionProps>({
+    const newTransactionObject = new transactionModel<Transaction.TransactionProps>({
       _id: new mongoose.Types.ObjectId(),
       user_id: params.user_id,
       account_id: params.account_id,
@@ -45,7 +39,6 @@ class TransactionRepository {
       timestamp: params.timestamp,
       note: params.note,
     });
-    const newTransactionObject = new transactionModel<Transaction.TransactionProps>(sanitizedNewTransactionObject);
     const saveNewTransaction = await newTransactionObject.save();
     if (!saveNewTransaction) {
       logger.error(`An error occured while saving a new transaction that belongs to user id ${params.user_id}`);
@@ -54,17 +47,15 @@ class TransactionRepository {
   }
 
   public async updateTransaction(params: Transaction.Repository.UpdateProps): Promise<void> {
-    const sanitizedTransactionId = Sanitizer.sanitize<mongoose.Types.ObjectId>(params._id);
-    const sanitizedTransactionModel = Sanitizer.sanitize<Omit<Transaction.Repository.UpdateProps, "_id">>({
-      user_id: params.user_id,
-      account_id: params.account_id,
-      type: params.type,
-      amount: params.amount,
-      timestamp: params.timestamp,
-      note: params.note,
-    });
     const updateTransaction = await transactionModel
-      .findByIdAndUpdate(sanitizedTransactionId, { ...sanitizedTransactionModel })
+      .findByIdAndUpdate(params._id, {
+        user_id: params.user_id,
+        account_id: params.account_id,
+        type: params.type,
+        amount: params.amount,
+        timestamp: params.timestamp,
+        note: params.note,
+      })
       .exec();
     if (!updateTransaction) {
       logger.error(`An error occured while updating a transaction with id ${params._id}`);
@@ -73,11 +64,9 @@ class TransactionRepository {
   }
 
   public async deleteTransaction(params: Transaction.Repository.DeleteProps): Promise<void> {
-    const sanitizedQuery = Sanitizer.sanitizeQuery<Transaction.Repository.DeleteProps>({
-      _id: params._id,
-      user_id: params.user_id,
-    });
-    const deleteTransaction = await transactionModel.findOneAndDelete(sanitizedQuery).exec();
+    const deleteTransaction = await transactionModel
+      .findOneAndDelete({ _id: params._id, user_id: params.user_id })
+      .exec();
     if (!deleteTransaction) {
       logger.error(`An error occured while deleting a transaction with id ${params._id}`);
       throw new InternalError();

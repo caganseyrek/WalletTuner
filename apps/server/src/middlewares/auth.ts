@@ -1,13 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 
-import { UnauthorizedError } from "@/app/errors/errors";
+import { UnauthorizedError } from "@/app/error/errors";
 
 import TokenHelper from "@/helpers/tokenHelper";
 
 class Auth {
   public static check(req: Request, _res: Response, next: NextFunction): void {
     try {
-      const access: string | undefined = req.signedCookies.access;
+      const access: string | undefined = req.signedCookies.wt_at;
       if (!access) {
         return next(new UnauthorizedError());
       }

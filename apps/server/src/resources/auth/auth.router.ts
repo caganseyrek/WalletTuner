@@ -1,10 +1,9 @@
 import express, { Router } from "express";
 
 import Auth from "@/middlewares/auth";
+import Validator from "@/middlewares/validator";
 
 import AuthController from "@/resources/auth/auth.controller";
-
-import Validator from "@/utils/validator";
 
 import {
   deleteUserSchema,
@@ -48,7 +47,7 @@ class AuthRouter {
     this.router.post("/register", ...this.middlewares.register, (req, res, next) => {
       return this.authController.register(req, res, next);
     });
-    this.router.post("/login", ...this.middlewares.login, (req, res, next) => {
+    this.router.post("/login", (req, res, next) => {
       return this.authController.login(req, res, next);
     });
     this.router.post("/logout", ...this.middlewares.logout, (req, res, next) => {

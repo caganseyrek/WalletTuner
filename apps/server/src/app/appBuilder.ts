@@ -8,7 +8,7 @@ import Handlers from "./core/handlers";
 import HttpServer from "./core/httpServer";
 import Middlewares from "./core/middlewares";
 import Routes from "./core/routes";
-import Swagger from "./extensions/swagger";
+import Swagger from "./extension/swagger";
 
 class AppBuilder {
   private app: express.Application;
@@ -47,7 +47,7 @@ class AppBuilder {
   /**
    * Establishes a connection to the MongoDB database and starts the HTTP server.
    */
-  public startApp(): void {
+  public startServer(): void {
     mongoose.connect(config.DATABASE_URI);
     mongoose.connection.on("error", (error) =>
       logger.error("Something went wrong with the database connection: " + error),

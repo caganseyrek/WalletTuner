@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { Auth } from "@wallettuner/resource-types";
 
 import requester from "@/shared/lib/requester";
-import { ServerResponseParams } from "@/shared/types/globals";
+import { ServerResponseParams } from "@/types/globals";
 
 const useRegisterMutation = () => {
   const register = useMutation({
@@ -11,14 +11,12 @@ const useRegisterMutation = () => {
       const response = await requester
         .setRequestConfig({
           url: {
-            baseURL: process.env.NEXT_PUBLIC_BACKEND_URL!,
+            baseURL: process.env.NEXT_PUBLIC_SERVER_URL!,
             endpoint: { route: "auth", action: "register" },
           },
-          auth: {},
-          header: { method: "POST" },
-          payload: registerData,
+          method: "POST",
         })
-        .sendRequest<ServerResponseParams<null>, Auth.Hook.RegisterProps>();
+        .sendRequest<ServerResponseParams<null>, Auth.Hook.RegisterProps>(registerData);
       return response;
     },
   });

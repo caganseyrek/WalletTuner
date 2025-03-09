@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Account } from "@wallettuner/resource-types";
 
 import requester from "@/shared/lib/requester";
-import { ServerResponseParams } from "@/shared/types/globals";
+import { ServerResponseParams } from "@/types/globals";
 
 const useAccountQuery = () => {
   const accountQuery = useQuery({
@@ -14,7 +14,7 @@ const useAccountQuery = () => {
             baseURL: process.env.NEXT_PUBLIC_SERVER_URL!,
             endpoint: { route: "account", action: "getAccounts" },
           },
-          header: { method: "GET" },
+          method: "GET",
           auth: { includeCookies: true },
         })
         .sendRequest<ServerResponseParams<Account.AccountPropsWithString[]>, null>();

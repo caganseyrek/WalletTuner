@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Subscription } from "@wallettuner/resource-types";
 
 import requester from "@/shared/lib/requester";
-import { ServerResponseParams } from "@/shared/types/globals";
+import { ServerResponseParams } from "@/types/globals";
 
 const useSubscriptionUpdateMutation = () => {
   const queryClient = useQueryClient();
@@ -13,14 +13,13 @@ const useSubscriptionUpdateMutation = () => {
       const response = await requester
         .setRequestConfig({
           url: {
-            baseURL: process.env.NEXT_PUBLIC_BACKEND_URL!,
+            baseURL: process.env.NEXT_PUBLIC_SERVER_URL!,
             endpoint: { route: "subscription", action: "updateSubscription" },
           },
-          header: { method: "PATCH" },
+          method: "PATCH",
           auth: { includeCookies: true },
-          payload: subscriptionUpdateData,
         })
-        .sendRequest<ServerResponseParams<void>, Subscription.Hook.UpdateProps>();
+        .sendRequest<ServerResponseParams<void>, Subscription.Hook.UpdateProps>(subscriptionUpdateData);
       return response;
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["subscriptionQuery"] }),

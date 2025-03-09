@@ -10,7 +10,7 @@ import { Progress } from "@/components/base/progress";
 
 import Formatter from "@/shared/lib/formatter";
 
-import MilestoneDialog from "../../dialogs/MilestoneDialog";
+import MilestoneDialog from "../dialogs/MilestoneDialog";
 import ColumnHeader from "../partial/ColumnHeader";
 
 export const milestoneColumns: ColumnDef<Milestone.MilestonePropsWithString>[] = [

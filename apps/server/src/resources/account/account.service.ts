@@ -1,6 +1,6 @@
 import { Account, Milestone, Subscription, Transaction } from "@wallettuner/resource-types";
 
-import { AppError, InternalError, NotFoundError } from "@/app/errors/errors";
+import { AppError, InternalError, NotFoundError } from "@/app/error/errors";
 
 import AccountRepository from "@/resources/account/account.repository";
 import TransactionRepository from "@/resources/transaction/transaction.repository";

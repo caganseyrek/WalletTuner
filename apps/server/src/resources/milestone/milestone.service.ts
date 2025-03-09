@@ -1,6 +1,6 @@
 import { Account, Milestone } from "@wallettuner/resource-types";
 
-import { BadRequestError, NotFoundError } from "@/app/errors/errors";
+import { BadRequestError, NotFoundError } from "@/app/error/errors";
 
 import AccountRepository from "@/resources/account/account.repository";
 import MilestoneRepository from "@/resources/milestone/milestone.repository";

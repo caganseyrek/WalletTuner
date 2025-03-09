@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Milestone } from "@wallettuner/resource-types";
 
 import requester from "@/shared/lib/requester";
-import GlobalTypes from "@/shared/types/globals";
+import GlobalTypes from "@/types/globals";
 
 const useMilestoneQuery = () => {
   const milestoneQuery = useQuery({
@@ -14,7 +14,7 @@ const useMilestoneQuery = () => {
             baseURL: process.env.NEXT_PUBLIC_SERVER_URL!,
             endpoint: { route: "milestone", action: "getMilestones" },
           },
-          header: { method: "GET" },
+          method: "GET",
           auth: { includeCookies: true },
         })
         .sendRequest<GlobalTypes.ServerResponseParams<Milestone.MilestonePropsWithString[]>>();

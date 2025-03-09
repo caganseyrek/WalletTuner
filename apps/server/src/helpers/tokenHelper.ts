@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 
 import config from "@/app/config";
-import { UnauthorizedError } from "@/app/errors/errors";
+import { UnauthorizedError } from "@/app/error/errors";
 
 type TokenType = "access" | "refresh";
 

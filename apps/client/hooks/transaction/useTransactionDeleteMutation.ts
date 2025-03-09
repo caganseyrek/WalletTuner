@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Transaction } from "@wallettuner/resource-types";
 
 import requester from "@/shared/lib/requester";
-import { ServerResponseParams } from "@/shared/types/globals";
+import { ServerResponseParams } from "@/types/globals";
 
 const useTransactionDeleteMutation = () => {
   const queryClient = useQueryClient();
@@ -13,14 +13,13 @@ const useTransactionDeleteMutation = () => {
       const response = await requester
         .setRequestConfig({
           url: {
-            baseURL: process.env.NEXT_PUBLIC_BACKEND_URL!,
+            baseURL: process.env.NEXT_PUBLIC_SERVER_URL!,
             endpoint: { route: "transaction", action: "deleteTransaction" },
           },
-          header: { method: "DELETE" },
+          method: "DELETE",
           auth: { includeCookies: true },
-          payload: transactionDeleteData,
         })
-        .sendRequest<ServerResponseParams<null>, Transaction.Hook.DeleteProps>();
+        .sendRequest<ServerResponseParams<null>, Transaction.Hook.DeleteProps>(transactionDeleteData);
       return response;
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["transactionQuery"] }),

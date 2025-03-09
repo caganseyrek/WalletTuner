@@ -2,7 +2,7 @@ import { Account, Milestone, Overview, Subscription } from "@wallettuner/resourc
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
-import { BadRequestError, NotFoundError } from "@/app/errors/errors";
+import { BadRequestError, NotFoundError } from "@/app/error/errors";
 
 import OverviewRepository from "@/resources/overview/overview.repository";
 

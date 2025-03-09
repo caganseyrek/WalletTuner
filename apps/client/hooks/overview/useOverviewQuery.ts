@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Overview } from "@wallettuner/resource-types";
 
 import requester from "@/shared/lib/requester";
-import { ServerResponseParams } from "@/shared/types/globals";
+import { ServerResponseParams } from "@/types/globals";
 
 const useOverviewQuery = () => {
   const overviewQuery = useQuery({
@@ -14,7 +14,7 @@ const useOverviewQuery = () => {
             baseURL: process.env.NEXT_PUBLIC_SERVER_URL!,
             endpoint: { route: "overview", action: "getOverviews" },
           },
-          header: { method: "GET" },
+          method: "GET",
           auth: { includeCookies: true },
         })
         .sendRequest<ServerResponseParams<Overview.OverviewPropsWithString[]>, null>();

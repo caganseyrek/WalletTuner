@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Account } from "@wallettuner/resource-types";
 
 import requester from "@/shared/lib/requester";
-import { ServerResponseParams } from "@/shared/types/globals";
+import { ServerResponseParams } from "@/types/globals";
 
 const useAccountCreateMutation = () => {
   const queryClient = useQueryClient();
@@ -13,14 +13,13 @@ const useAccountCreateMutation = () => {
       const response = await requester
         .setRequestConfig({
           url: {
-            baseURL: process.env.NEXT_PUBLIC_BACKEND_URL!,
+            baseURL: process.env.NEXT_PUBLIC_SERVER_URL!,
             endpoint: { route: "accont", action: "createAccount" },
           },
-          header: { method: "POST" },
+          method: "POST",
           auth: { includeCookies: true },
-          payload: accountCreateData,
         })
-        .sendRequest<ServerResponseParams<null>, Account.Hook.CreateProps>();
+        .sendRequest<ServerResponseParams<null>, Account.Hook.CreateProps>(accountCreateData);
       return response;
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["accountQuery"] }),

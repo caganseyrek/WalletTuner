@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Milestone } from "@wallettuner/resource-types";
 
 import requester from "@/shared/lib/requester";
-import { ServerResponseParams } from "@/shared/types/globals";
+import { ServerResponseParams } from "@/types/globals";
 
 const useMilestoneDeleteMutation = () => {
   const queryClient = useQueryClient();
@@ -13,14 +13,13 @@ const useMilestoneDeleteMutation = () => {
       const response = await requester
         .setRequestConfig({
           url: {
-            baseURL: process.env.NEXT_PUBLIC_BACKEND_URL!,
+            baseURL: process.env.NEXT_PUBLIC_SERVER_URL!,
             endpoint: { route: "milestone", action: "deleteMilestone" },
           },
-          header: { method: "DELETE" },
+          method: "DELETE",
           auth: { includeCookies: true },
-          payload: milestoneDeleteData,
         })
-        .sendRequest<ServerResponseParams<void>, Milestone.Hook.DeleteProps>();
+        .sendRequest<ServerResponseParams<void>, Milestone.Hook.DeleteProps>(milestoneDeleteData);
       return response;
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["milestoneQuery"] }),

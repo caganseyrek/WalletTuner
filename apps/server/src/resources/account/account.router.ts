@@ -4,7 +4,7 @@ import Auth from "@/middlewares/auth";
 
 import AccountController from "@/resources/account/account.controller";
 
-import Validator from "@/utils/validator";
+import Validator from "@/middlewares/validator";
 
 import {
   createSchema,

@@ -6,6 +6,8 @@ import ResponseHelper from "@/helpers/responseHelper";
 
 import STATUS_CODES from "@/constants/statusCodes";
 
+import { AppError } from "../error/errors";
+
 /**
  * Class for handling global middlewares for the Express application.
  * This class manages error handling by providing middleware for 404 and 500 responses.
@@ -34,7 +36,17 @@ class Handlers {
 
     // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
     app.use((error: Error, _req: Request, res: Response, _next: NextFunction) => {
-      logger.error(`An error ocurred: ${error}`);
+      logger.error(`An error ocurred: ${error.stack}`);
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json(
+          ResponseHelper.createResponse({
+            isSuccess: false,
+            responseMessage: error.message,
+            data: null,
+          }),
+        );
+        return;
+      }
       res.status(STATUS_CODES.internalServerError.code).json(
         ResponseHelper.createResponse({
           isSuccess: false,

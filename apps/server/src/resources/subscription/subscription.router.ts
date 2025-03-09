@@ -4,7 +4,7 @@ import Auth from "@/middlewares/auth";
 
 import SubscriptionController from "@/resources/subscription/subscription.controller";
 
-import Validator from "@/utils/validator";
+import Validator from "@/middlewares/validator";
 
 import {
   createSchema,

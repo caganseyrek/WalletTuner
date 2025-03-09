@@ -1,7 +1,7 @@
 import React from "react";
 
+import { Toaster } from "@/components/base/toaster";
 import Providers from "@/components/Providers";
-import MainSidebar from "@/components/sidebar/MainSidebar";
 
 import "@/shared/styles/globals.css";
 
@@ -13,10 +13,10 @@ const RootLayout = ({ children }: RootLayoutProps) => {
   return (
     <html suppressHydrationWarning>
       <head></head>
-      <body>
+      <body className="p-0 m-0">
         <Providers>
-          <MainSidebar />
           <main className="w-full">{children}</main>
+          <Toaster />
         </Providers>
       </body>
     </html>

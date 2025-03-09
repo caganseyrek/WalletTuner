@@ -39,17 +39,17 @@ class AuthController {
         email: params.email,
         password: params.password,
       });
-      res.cookie("access", tokens.accessToken, {
+      res.cookie("wt_at", tokens.accessToken, {
         signed: true,
         httpOnly: true,
         sameSite: "strict",
         path: "/",
       });
-      res.cookie("refresh", tokens.refreshToken, {
+      res.cookie("wt_rt", tokens.refreshToken, {
         signed: true,
         httpOnly: true,
         sameSite: "strict",
-        path: "/api/v1/auth/newRefreshToken",
+        path: "/",
       });
       return res.status(STATUS_CODES.success.code).json(
         ResponseHelper.createResponse({

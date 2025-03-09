@@ -9,7 +9,7 @@ import {
   User,
 } from "@wallettuner/resource-types";
 
-import { BadRequestError, NotFoundError, UnauthorizedError } from "@/app/errors/errors";
+import { BadRequestError, NotFoundError, UnauthorizedError } from "@/app/error/errors";
 
 import Converter from "@/utils/converter";
 

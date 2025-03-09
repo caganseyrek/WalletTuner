@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { Auth } from "@wallettuner/resource-types";
 
 import requester from "@/shared/lib/requester";
-import { ServerResponseParams } from "@/shared/types/globals";
+import { ServerResponseParams } from "@/types/globals";
 
 const useUpdateUserMutation = () => {
   const updateUser = useMutation({
@@ -11,14 +11,13 @@ const useUpdateUserMutation = () => {
       const response = await requester
         .setRequestConfig({
           url: {
-            baseURL: process.env.NEXT_PUBLIC_BACKEND_URL!,
+            baseURL: process.env.NEXT_PUBLIC_SERVER_URL!,
             endpoint: { route: "auth", subroute: "user", action: "updateUser" },
           },
-          header: { method: "POST" },
+          method: "POST",
           auth: { includeCookies: true },
-          payload: updateUserProps,
         })
-        .sendRequest<ServerResponseParams<Auth.Hook.UpdateUserProps>, null>();
+        .sendRequest<ServerResponseParams<null>, Auth.Hook.UpdateUserProps>(updateUserProps);
       return response;
     },
   });

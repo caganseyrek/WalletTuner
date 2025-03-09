@@ -9,7 +9,7 @@ import { Checkbox } from "@/components/base/checkbox";
 
 import Formatter from "@/shared/lib/formatter";
 
-import AccountDialog from "../../dialogs/AccountDialog";
+import AccountDialog from "../dialogs/AccountDialog";
 import ColumnHeader from "../partial/ColumnHeader";
 
 export const accountColumns: ColumnDef<Account.AccountPropsWithString>[] = [

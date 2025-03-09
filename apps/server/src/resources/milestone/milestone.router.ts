@@ -4,7 +4,7 @@ import Auth from "@/middlewares/auth";
 
 import MilestoneController from "@/resources/milestone/milestone.controller";
 
-import Validator from "@/utils/validator";
+import Validator from "@/middlewares/validator";
 
 import {
   createSchema,
