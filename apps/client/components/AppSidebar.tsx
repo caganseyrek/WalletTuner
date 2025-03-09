@@ -6,6 +6,8 @@ import Link from "next/link";
 
 import { useIsMobile } from "@/hooks/interface/useMobile";
 
+import navigation from "../shared/data/navigation";
+
 import {
   Sidebar,
   SidebarContent,
@@ -20,7 +22,6 @@ import {
   useSidebar,
 } from "./base/sidebar";
 import SettingsDialog from "./data_table/dialogs/SettingsDialog";
-import navigation from "../shared/data/navigation";
 
 const MainSidebar = () => {
   const { setOpen } = useSidebar();

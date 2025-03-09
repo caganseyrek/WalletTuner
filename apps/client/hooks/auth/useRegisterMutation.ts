@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { Auth } from "@wallettuner/resource-types";
 
 import requester from "@/shared/lib/requester";
+
 import { ServerResponseParams } from "@/types/globals";
 
 const useRegisterMutation = () => {

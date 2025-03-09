@@ -1,10 +1,9 @@
 import express, { Router } from "express";
 
 import Auth from "@/middlewares/auth";
+import Validator from "@/middlewares/validator";
 
 import MilestoneController from "@/resources/milestone/milestone.controller";
-
-import Validator from "@/middlewares/validator";
 
 import {
   createSchema,

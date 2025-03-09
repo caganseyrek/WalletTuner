@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import requester from "@/shared/lib/requester";
+
 import { ServerResponseParams } from "@/types/globals";
 
 const useLogoutMutation = () => {

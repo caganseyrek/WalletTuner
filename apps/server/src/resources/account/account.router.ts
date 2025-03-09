@@ -1,10 +1,9 @@
 import express, { Router } from "express";
 
 import Auth from "@/middlewares/auth";
+import Validator from "@/middlewares/validator";
 
 import AccountController from "@/resources/account/account.controller";
-
-import Validator from "@/middlewares/validator";
 
 import {
   createSchema,

@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Account } from "@wallettuner/resource-types";
 
 import requester from "@/shared/lib/requester";
+
 import { ServerResponseParams } from "@/types/globals";
 
 const useAccountCreateMutation = () => {

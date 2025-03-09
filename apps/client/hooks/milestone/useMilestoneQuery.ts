@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Milestone } from "@wallettuner/resource-types";
 
 import requester from "@/shared/lib/requester";
+
 import GlobalTypes from "@/types/globals";
 
 const useMilestoneQuery = () => {
